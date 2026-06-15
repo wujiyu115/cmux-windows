@@ -94,6 +94,17 @@ public partial class WorkspaceViewModel : ObservableObject, IDisposable
         SelectedSurface = surfaceVm;
     }
 
+    public void CreateNewSurfaceWithShell(string shellPath)
+    {
+        var surface = new Surface { Name = $"Terminal {Surfaces.Count + 1}" };
+        Workspace.Surfaces.Add(surface);
+
+        var surfaceVm = new SurfaceViewModel(surface, Workspace.Id, _notificationService, shellPath);
+        surfaceVm.WorkingDirectoryChanged += OnSurfaceWorkingDirectoryChanged;
+        Surfaces.Add(surfaceVm);
+        SelectedSurface = surfaceVm;
+    }
+
     [RelayCommand]
     public void CloseSurface(SurfaceViewModel? surface)
     {

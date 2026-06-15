@@ -48,7 +48,7 @@ public partial class SurfaceViewModel : ObservableObject, IDisposable
         }
     }
 
-    public SurfaceViewModel(Surface surface, string workspaceId, NotificationService notificationService)
+    public SurfaceViewModel(Surface surface, string workspaceId, NotificationService notificationService, string? initialShell = null)
     {
         Surface = surface;
         _workspaceId = workspaceId;
@@ -81,7 +81,7 @@ public partial class SurfaceViewModel : ObservableObject, IDisposable
                         .ToList();
                 }
 
-                StartSession(leaf.PaneId, snapshot?.WorkingDirectory, snapshot, snapshot?.Shell);
+                StartSession(leaf.PaneId, snapshot?.WorkingDirectory, snapshot, initialShell ?? snapshot?.Shell);
             }
         }
 
@@ -401,7 +401,7 @@ public partial class SurfaceViewModel : ObservableObject, IDisposable
             {
                 DaemonLog($"[DaemonSession:{paneId}] Calling CreateSessionAsync ({initCols}x{initRows})...");
                 var result = await daemon.CreateSessionAsync(
-                    paneId, initCols, initRows, effectiveCwd);
+                    paneId, initCols, initRows, effectiveCwd, shell);
 
                 if (result == null)
                 {

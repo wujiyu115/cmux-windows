@@ -9,6 +9,7 @@
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
 
         <!-- Tab list -->
@@ -156,7 +157,14 @@
         <Button Grid.Column="2" Content="&#xE710;" FontFamily="Segoe MDL2 Assets" FontSize="12"
                 Style="{StaticResource CmuxButton}"
                 Click="AddTab_Click"
-                Padding="8,0" Margin="2,2,4,2" Opacity="0.6" />
+                Padding="8,0" Margin="2,2,0,2" Opacity="0.6" />
+
+        <!-- Shell type dropdown arrow -->
+        <Button Grid.Column="3" Content="&#xE70D;" FontFamily="Segoe MDL2 Assets" FontSize="8"
+                Style="{StaticResource CmuxButton}"
+                Click="AddTabDropdown_Click"
+                Padding="4,0" Margin="0,2,4,2" Opacity="0.6"
+                ToolTip="New terminal with specific shell" />
 
         <!-- Inline rename overlay -->
         <TextBox x:Name="TabRenameBox" Visibility="Collapsed"

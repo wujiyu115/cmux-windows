@@ -3,6 +3,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Linq;
 using Cmux.ViewModels;
+using Cmux.Core.Services;
 
 namespace Cmux.Controls;
 
@@ -94,6 +95,27 @@ public partial class SurfaceTabBar : UserControl
     {
         if (DataContext is WorkspaceViewModel workspace)
             workspace.CreateNewSurface();
+    }
+
+    private void AddTabDropdown_Click(object sender, RoutedEventArgs e)
+    {
+        if (DataContext is not WorkspaceViewModel workspace) return;
+        if (sender is not Button button) return;
+
+        var shells = ShellDetector.DetectShells();
+        var menu = new ContextMenu();
+        foreach (var shell in shells)
+        {
+            var item = new MenuItem { Header = shell.Name, Tag = shell.Path };
+            item.Click += (s, _) =>
+            {
+                if (s is MenuItem mi && mi.Tag is string path)
+                    workspace.CreateNewSurfaceWithShell(path);
+            };
+            menu.Items.Add(item);
+        }
+        menu.PlacementTarget = button;
+        menu.IsOpen = true;
     }
 
     private void RenameTab_Click(object sender, RoutedEventArgs e)
