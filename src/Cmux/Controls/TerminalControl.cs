@@ -49,9 +49,6 @@ public class TerminalControl : FrameworkElement
     private DateTime _bellFlashUntil;
     private System.Windows.Threading.DispatcherTimer? _bellTimer;
 
-    // TSF/IME input proxy
-    private TextBox? _imeProxy;
-
     // URL detection
     private (int row, int startCol, int endCol, string url)? _hoveredUrl;
     private int _lastUrlRow = -1;
@@ -146,19 +143,8 @@ public class TerminalControl : FrameworkElement
 
         _selection.SelectionChanged += () => RequestRender(System.Windows.Threading.DispatcherPriority.Render);
 
-        _imeProxy = new TextBox
-        {
-            Width = 1, Height = 1, Opacity = 0,
-            IsHitTestVisible = false, Background = Brushes.Transparent,
-            BorderThickness = new Thickness(0),
-            Focusable = false, AcceptsReturn = false, AcceptsTab = false,
-        };
-        _imeProxy.TextChanged += OnImeProxyTextChanged;
-        _imeProxy.PreviewTextInput += OnImeProxyPreviewTextInput;
-        AddVisualChild(_imeProxy);
-        AddLogicalChild(_imeProxy);
-
-        Loaded += OnTerminalLoaded;
+        InputMethod.SetIsInputMethodEnabled(this, true);
+        InputMethod.SetPreferredImeState(this, InputMethodState.DoNotCare);
 
         // Cursor blink
         _cursorTimer = new System.Windows.Threading.DispatcherTimer
@@ -224,7 +210,6 @@ public class TerminalControl : FrameworkElement
 
         _lastScrollbackCount = currentScrollback;
         RequestRender();
-        InvalidateArrange();
     }
 
     private void OnBell()
@@ -992,107 +977,12 @@ public class TerminalControl : FrameworkElement
         _selection.ClearSelection();
     }
 
-    // --- TSF/IME support ---
-
-    private void OnTerminalLoaded(object sender, RoutedEventArgs e)
-    {
-        if (_imeProxy == null || _session == null) return;
-
-        RemoveVisualChild(_imeProxy);
-        RemoveLogicalChild(_imeProxy);
-
-        _imeProxy = new TextBox
-        {
-            Width = 1, Height = 1, Opacity = 0,
-            IsHitTestVisible = false, Background = Brushes.Transparent,
-            BorderThickness = new Thickness(0),
-            Focusable = true, AcceptsReturn = true, AcceptsTab = true,
-            IsEnabled = true, IsReadOnly = false,
-        };
-        InputMethod.SetIsInputMethodEnabled(_imeProxy, true);
-        _imeProxy.PreviewKeyDown += OnImeProxyPreviewKeyDown;
-        _imeProxy.TextChanged += OnImeProxyTextChanged;
-        _imeProxy.PreviewTextInput += OnImeProxyPreviewTextInput;
-
-        AddVisualChild(_imeProxy);
-        AddLogicalChild(_imeProxy);
-        InvalidateArrange();
-    }
+    // --- IME support ---
 
     protected override void OnGotKeyboardFocus(KeyboardFocusChangedEventArgs e)
     {
         base.OnGotKeyboardFocus(e);
-        if (_imeProxy != null && !_imeProxy.IsFocused)
-        {
-            e.Handled = true;
-            _imeProxy.Focus();
-        }
-    }
-
-    private void OnImeProxyPreviewKeyDown(object sender, KeyEventArgs e)
-    {
-        if (!ShouldForwardImeProxyKeyDown(e))
-            return;
-        e.Handled = true;
-        var args = new KeyEventArgs(e.KeyboardDevice, e.InputSource, e.Timestamp, e.Key)
-        {
-            RoutedEvent = Keyboard.KeyDownEvent,
-        };
-        RaiseEvent(args);
-    }
-
-    private static bool ShouldForwardImeProxyKeyDown(KeyEventArgs e)
-    {
-        var key = e.Key == Key.System ? e.SystemKey : e.Key;
-        var modifiers = Keyboard.Modifiers;
-
-        if (modifiers.HasFlag(ModifierKeys.Control) || modifiers.HasFlag(ModifierKeys.Alt))
-            return true;
-        if (key is Key.Back or Key.Enter or Key.Tab or Key.Escape or Key.Insert or Key.Delete)
-            return true;
-        if (key >= Key.Left && key <= Key.Down)
-            return true;
-        if (key >= Key.Home && key <= Key.PageDown)
-            return true;
-        if (key >= Key.F1 && key <= Key.F24)
-            return true;
-        return false;
-    }
-
-    private void OnImeProxyPreviewTextInput(object sender, TextCompositionEventArgs e)
-    {
-        e.Handled = true;
-        if (_session != null && !string.IsNullOrEmpty(e.Text))
-        {
-            EnsureLiveView();
-            _session.Write(e.Text);
-            TrackInputText(e.Text);
-        }
-    }
-
-    private void OnImeProxyTextChanged(object sender, TextChangedEventArgs e)
-    {
-        if (_imeProxy == null || _session == null) return;
-        var text = _imeProxy.Text;
-        if (!string.IsNullOrEmpty(text))
-        {
-            EnsureLiveView();
-            _session.Write(text);
-            TrackInputText(text);
-            _imeProxy.Clear();
-        }
-    }
-
-    protected override Size ArrangeOverride(Size finalSize)
-    {
-        if (_imeProxy != null && _session != null)
-        {
-            var buffer = _session.Buffer;
-            double x = buffer.CursorCol * _cellWidth;
-            double y = buffer.CursorRow * _cellHeight;
-            _imeProxy.Arrange(new Rect(x, y, Math.Max(1, _cellWidth), Math.Max(1, _cellHeight)));
-        }
-        return base.ArrangeOverride(finalSize);
+        InputMethod.SetIsInputMethodEnabled(this, true);
     }
 
     private void PasteFromClipboard()
@@ -1672,8 +1562,8 @@ public class TerminalControl : FrameworkElement
 
     // --- Visual tree ---
 
-    protected override int VisualChildrenCount => _imeProxy != null ? 2 : 1;
-    protected override Visual GetVisualChild(int index) => index == 0 ? _visual : _imeProxy!;
+    protected override int VisualChildrenCount => 1;
+    protected override Visual GetVisualChild(int index) => _visual;
 
     private static bool TryGetCtrlLetterSequence(Key key, out string sequence)
     {
