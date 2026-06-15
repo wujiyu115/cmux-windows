@@ -109,21 +109,25 @@ public class TerminalSelection
 
             for (int col = startCol; col <= endCol && col < buffer.Cols; col++)
             {
-                char ch;
+                TerminalCell cell;
                 if (isScrollback)
                 {
                     var line = buffer.GetScrollbackLine(virtualLine);
-                    ch = (line != null && col < line.Length) ? line[col].Character : '\0';
+                    cell = (line != null && col < line.Length) ? line[col] : TerminalCell.Empty;
                 }
                 else if (bufferRow >= 0 && bufferRow < buffer.Rows)
                 {
-                    ch = buffer.CellAt(bufferRow, col).Character;
+                    cell = buffer.CellAt(bufferRow, col);
                 }
                 else
                 {
-                    ch = '\0';
+                    cell = TerminalCell.Empty;
                 }
-                sb.Append(ch == '\0' ? ' ' : ch);
+
+                if (cell.Width == 0)
+                    continue;
+
+                sb.Append(cell.Character == '\0' ? ' ' : cell.Character);
             }
 
             // Trim trailing spaces on each line

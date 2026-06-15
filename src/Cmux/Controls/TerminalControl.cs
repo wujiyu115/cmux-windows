@@ -69,6 +69,7 @@ public class TerminalControl : FrameworkElement
     private Typeface? _typefaceItalic;
     private Typeface? _typefaceBoldItalic;
     private readonly StringBuilder _textRunBuffer = new();
+    private readonly List<int> _textRunWidths = [];
     private bool _suppressNextEnterTextInput;
 
     /// <summary>Fired when the pane wants focus.</summary>
@@ -423,6 +424,7 @@ public class TerminalControl : FrameworkElement
                 bool runBold = false, runItalic = false, runDim = false;
                 bool runUnderline = false, runStrikethrough = false;
                 _textRunBuffer.Clear();
+                _textRunWidths.Clear();
 
                 for (int c = 0; c < _cols; c++)
                 {
@@ -442,7 +444,12 @@ public class TerminalControl : FrameworkElement
                         cell = TerminalCell.Empty;
                     }
 
+                    // Skip continuation cells (second half of wide char)
+                    if (cell.Width == 0)
+                        continue;
+
                     double x = c * _cellWidth;
+                    double cellPixelWidth = cell.Width * _cellWidth;
                     var attr = cell.Attribute;
                     bool isSelected = _selection.IsSelected(visRow, c);
                     bool isInverse = attr.Flags.HasFlag(CellFlags.Inverse) != isSelected;
@@ -467,23 +474,23 @@ public class TerminalControl : FrameworkElement
                     if (!cellBg.IsDefault)
                     {
                         dc.DrawRectangle(GetCachedBrush(ToWpfColor(cellBg)), null,
-                            new Rect(x, y, _cellWidth, _cellHeight));
+                            new Rect(x, y, cellPixelWidth, _cellHeight));
                     }
 
                     // Search match highlight (behind text)
                     bool isSearchMatch = searchMatchSet.Contains((visRow, c));
                     bool isCurrentMatch = currentMatchSet.Contains((visRow, c));
                     if (isCurrentMatch)
-                        dc.DrawRectangle(currentMatchBrush, null, new Rect(x, y, _cellWidth, _cellHeight));
+                        dc.DrawRectangle(currentMatchBrush, null, new Rect(x, y, cellPixelWidth, _cellHeight));
                     else if (isSearchMatch)
-                        dc.DrawRectangle(searchMatchBrush, null, new Rect(x, y, _cellWidth, _cellHeight));
+                        dc.DrawRectangle(searchMatchBrush, null, new Rect(x, y, cellPixelWidth, _cellHeight));
 
                     // URL hover highlight
                     if (_hoveredUrl is { } url && visRow == url.row && c >= url.startCol && c <= url.endCol)
                     {
                         var urlPen = new Pen(GetCachedBrush(Color.FromRgb(0x81, 0x8C, 0xF8)), 1);
                         urlPen.Freeze();
-                        dc.DrawLine(urlPen, new Point(x, y + _cellHeight - 1), new Point(x + _cellWidth, y + _cellHeight - 1));
+                        dc.DrawLine(urlPen, new Point(x, y + _cellHeight - 1), new Point(x + cellPixelWidth, y + _cellHeight - 1));
                     }
 
                     // Text batching: group consecutive characters with same visual style
@@ -517,9 +524,11 @@ public class TerminalControl : FrameworkElement
                             runUnderline = underline;
                             runStrikethrough = strikethrough;
                             _textRunBuffer.Clear();
+                            _textRunWidths.Clear();
                         }
 
                         _textRunBuffer.Append(cell.Character);
+                        _textRunWidths.Add(cell.Width);
                     }
                     else if (runStartCol >= 0)
                     {
@@ -598,19 +607,47 @@ public class TerminalControl : FrameworkElement
             ? GetCachedBrush(Color.FromArgb(128, fgColor.R, fgColor.G, fgColor.B))
             : GetCachedBrush(fgColor);
         var tf = GetTypeface(bold, italic);
-        var text = new FormattedText(
-            _textRunBuffer.ToString(),
-            CultureInfo.CurrentCulture,
-            FlowDirection.LeftToRight,
-            tf,
-            _fontSize,
-            brush,
-            dpi);
 
         double x = startCol * _cellWidth;
-        dc.DrawText(text, new Point(x, y));
+        int totalCellWidth = 0;
+        foreach (var w in _textRunWidths)
+            totalCellWidth += w;
+        double runWidth = totalCellWidth * _cellWidth;
 
-        double runWidth = _textRunBuffer.Length * _cellWidth;
+        bool hasWideChars = _textRunWidths.Count > 0 && totalCellWidth != _textRunWidths.Count;
+
+        if (hasWideChars)
+        {
+            // Draw each character individually at its correct cell position
+            double charX = x;
+            string runStr = _textRunBuffer.ToString();
+            for (int i = 0; i < runStr.Length; i++)
+            {
+                double charCellWidth = _textRunWidths[i] * _cellWidth;
+                var charText = new FormattedText(
+                    runStr[i].ToString(),
+                    CultureInfo.CurrentCulture,
+                    FlowDirection.LeftToRight,
+                    tf,
+                    _fontSize,
+                    brush,
+                    dpi);
+                dc.DrawText(charText, new Point(charX, y));
+                charX += charCellWidth;
+            }
+        }
+        else
+        {
+            var text = new FormattedText(
+                _textRunBuffer.ToString(),
+                CultureInfo.CurrentCulture,
+                FlowDirection.LeftToRight,
+                tf,
+                _fontSize,
+                brush,
+                dpi);
+            dc.DrawText(text, new Point(x, y));
+        }
 
         if (underline)
         {

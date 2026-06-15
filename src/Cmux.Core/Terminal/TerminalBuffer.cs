@@ -123,7 +123,17 @@ public class TerminalBuffer
         if (!ClampCursorToBounds())
             return;
 
+        int charWidth = UnicodeWidth.GetCharWidth(c);
+
         if (_wrapPending && AutoWrapMode)
+        {
+            CarriageReturn();
+            LineFeed();
+            _wrapPending = false;
+        }
+
+        // Wide char at last column: wrap first
+        if (charWidth == 2 && CursorCol >= Cols - 1 && AutoWrapMode)
         {
             CarriageReturn();
             LineFeed();
@@ -132,29 +142,56 @@ public class TerminalBuffer
 
         if (InsertMode)
         {
-            // Shift characters right
-            for (int col = Cols - 1; col > CursorCol; col--)
-                _cells[CursorRow, col] = _cells[CursorRow, col - 1];
+            int shift = charWidth;
+            for (int col = Cols - 1; col > CursorCol + shift - 1; col--)
+                _cells[CursorRow, col] = _cells[CursorRow, col - shift];
         }
 
         if (CursorRow >= 0 && CursorRow < Rows && CursorCol >= 0 && CursorCol < Cols)
         {
+            // Clear any previous wide char that overlaps this position
+            if (CursorCol > 0 && _cells[CursorRow, CursorCol].Width == 0)
+            {
+                _cells[CursorRow, CursorCol - 1] = TerminalCell.Empty;
+            }
+            if (CursorCol + 1 < Cols && _cells[CursorRow, CursorCol].Width == 2)
+            {
+                _cells[CursorRow, CursorCol + 1] = TerminalCell.Empty;
+            }
+
             _cells[CursorRow, CursorCol] = new TerminalCell
             {
                 Character = c,
                 Attribute = CurrentAttribute,
                 IsDirty = true,
-                Width = 1,
+                Width = charWidth,
             };
+
+            if (charWidth == 2 && CursorCol + 1 < Cols)
+            {
+                // Clear any wide char that the continuation cell would overwrite
+                if (CursorCol + 2 < Cols && _cells[CursorRow, CursorCol + 1].Width == 2)
+                {
+                    _cells[CursorRow, CursorCol + 2] = TerminalCell.Empty;
+                }
+
+                _cells[CursorRow, CursorCol + 1] = new TerminalCell
+                {
+                    Character = '\0',
+                    Attribute = CurrentAttribute,
+                    IsDirty = true,
+                    Width = 0,
+                };
+            }
         }
 
-        if (CursorCol + 1 >= Cols)
+        if (CursorCol + charWidth >= Cols)
         {
             _wrapPending = true;
         }
         else
         {
-            CursorCol++;
+            CursorCol += charWidth;
         }
     }
 
@@ -612,16 +649,35 @@ public class TerminalBuffer
         for (int row = 0; row < rowCount; row++)
         {
             var text = snapshot.ScreenLines[row];
-            int colCount = Math.Min(Cols, text.Length);
-            for (int col = 0; col < colCount; col++)
+            int cellCol = 0;
+            for (int i = 0; i < text.Length && cellCol < Cols; i++)
             {
-                _cells[row, col] = new TerminalCell
+                char ch = text[i];
+                int w = UnicodeWidth.GetCharWidth(ch);
+
+                if (w == 2 && cellCol + 1 >= Cols)
+                    break;
+
+                _cells[row, cellCol] = new TerminalCell
                 {
-                    Character = text[col],
+                    Character = ch,
                     Attribute = TerminalAttribute.Default,
                     IsDirty = true,
-                    Width = 1,
+                    Width = w,
                 };
+
+                if (w == 2 && cellCol + 1 < Cols)
+                {
+                    _cells[row, cellCol + 1] = new TerminalCell
+                    {
+                        Character = '\0',
+                        Attribute = TerminalAttribute.Default,
+                        IsDirty = true,
+                        Width = 0,
+                    };
+                }
+
+                cellCol += w;
             }
         }
 
@@ -644,14 +700,16 @@ public class TerminalBuffer
 
     private static string LineToText(TerminalCell[] line, int cols)
     {
-        var chars = new char[cols];
+        var sb = new System.Text.StringBuilder(cols);
         for (int i = 0; i < cols; i++)
         {
+            if (i < line.Length && line[i].Width == 0)
+                continue;
             var ch = i < line.Length ? line[i].Character : ' ';
-            chars[i] = ch == '\0' ? ' ' : ch;
+            sb.Append(ch == '\0' ? ' ' : ch);
         }
 
-        return new string(chars).TrimEnd();
+        return sb.ToString().TrimEnd();
     }
 
     private static TerminalCell[] TextToLine(string? text, int cols)
@@ -662,16 +720,35 @@ public class TerminalBuffer
 
         if (string.IsNullOrEmpty(text)) return line;
 
-        int len = Math.Min(cols, text.Length);
-        for (int i = 0; i < len; i++)
+        int col = 0;
+        for (int i = 0; i < text.Length && col < cols; i++)
         {
-            line[i] = new TerminalCell
+            char ch = text[i];
+            int w = UnicodeWidth.GetCharWidth(ch);
+
+            if (w == 2 && col + 1 >= cols)
+                break;
+
+            line[col] = new TerminalCell
             {
-                Character = text[i],
+                Character = ch,
                 Attribute = TerminalAttribute.Default,
                 IsDirty = true,
-                Width = 1,
+                Width = w,
             };
+
+            if (w == 2 && col + 1 < cols)
+            {
+                line[col + 1] = new TerminalCell
+                {
+                    Character = '\0',
+                    Attribute = TerminalAttribute.Default,
+                    IsDirty = true,
+                    Width = 0,
+                };
+            }
+
+            col += w;
         }
 
         return line;
