@@ -96,6 +96,7 @@ public partial class MainViewModel : ObservableObject
             IconGlyph = source.IconGlyph,
             AccentColor = source.AccentColor,
             WorkingDirectory = source.WorkingDirectory,
+            StartDirectory = source.StartDirectory,
         };
 
         var surfaceMap = new Dictionary<string, Surface>();
@@ -308,6 +309,7 @@ public partial class MainViewModel : ObservableObject
                 IconGlyph = string.IsNullOrWhiteSpace(wsState.IconGlyph) ? "\uE8A5" : wsState.IconGlyph,
                 AccentColor = string.IsNullOrWhiteSpace(wsState.AccentColor) ? "#FF818CF8" : wsState.AccentColor,
                 WorkingDirectory = wsState.WorkingDirectory,
+                StartDirectory = wsState.StartDirectory,
             };
 
             foreach (var surfState in wsState.Surfaces)

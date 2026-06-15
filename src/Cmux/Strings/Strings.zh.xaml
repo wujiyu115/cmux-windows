@@ -131,6 +131,7 @@
     <system:String x:Key="Workspace_IconTitle">工作区图标</system:String>
     <system:String x:Key="Workspace_IconMessage">输入一个图标（表情/符号）或字形代码，如 E8A5、U+E8A5、0xE8A5。</system:String>
     <system:String x:Key="Workspace_SvgNotSupported">工作区图标暂不支持 SVG。请使用表情/符号或 MDL2 十六进制代码。</system:String>
+    <system:String x:Key="Workspace_SetWorkingDirectory">设置工作目录...</system:String>
 
     <!-- Terminal Context Menu -->
     <system:String x:Key="Terminal_Copy">复制</system:String>

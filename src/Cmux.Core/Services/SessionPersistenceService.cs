@@ -83,6 +83,7 @@ public class SessionPersistenceService
                 IconGlyph = ws.IconGlyph,
                 AccentColor = ws.AccentColor,
                 WorkingDirectory = ws.WorkingDirectory,
+                StartDirectory = ws.StartDirectory,
                 SelectedSurfaceIndex = ws.Surfaces.IndexOf(ws.SelectedSurface!),
             };
 

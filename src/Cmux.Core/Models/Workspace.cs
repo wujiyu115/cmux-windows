@@ -12,6 +12,7 @@ public class Workspace
     public Surface? SelectedSurface { get; set; }
     public string? GitBranch { get; set; }
     public string? WorkingDirectory { get; set; }
+    public string? StartDirectory { get; set; }
     public string? LinkedPrStatus { get; set; }
     public string? LinkedPrNumber { get; set; }
     public List<int> ListeningPorts { get; set; } = [];

@@ -86,6 +86,22 @@ public partial class WorkspaceSidebarItem : UserControl
             Vm.AccentColor = picker.SelectedHex;
     }
 
+    private void SetWorkingDirectory_Click(object sender, RoutedEventArgs e)
+    {
+        if (Vm == null) return;
+
+        var dialog = new Microsoft.Win32.OpenFolderDialog
+        {
+            Title = LanguageService.Lang("Workspace_SetWorkingDirectory"),
+        };
+
+        if (!string.IsNullOrEmpty(Vm.StartDirectory) && System.IO.Directory.Exists(Vm.StartDirectory))
+            dialog.InitialDirectory = Vm.StartDirectory;
+
+        if (dialog.ShowDialog(Window.GetWindow(this)) == true)
+            Vm.StartDirectory = dialog.FolderName;
+    }
+
     private void MoveUp_Click(object sender, RoutedEventArgs e)
     {
         if (MainVm is { } main && Vm is { } ws)

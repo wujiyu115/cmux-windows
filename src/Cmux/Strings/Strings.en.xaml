@@ -131,6 +131,7 @@
     <system:String x:Key="Workspace_IconTitle">Workspace Icon</system:String>
     <system:String x:Key="Workspace_IconMessage">Enter a single icon (emoji/symbol) or a glyph code like E8A5, U+E8A5, 0xE8A5.</system:String>
     <system:String x:Key="Workspace_SvgNotSupported">SVG is not supported in workspace icon yet. Use emoji/symbol or MDL2 hex code.</system:String>
+    <system:String x:Key="Workspace_SetWorkingDirectory">Set Working Directory...</system:String>
 
     <!-- Terminal Context Menu -->
     <system:String x:Key="Terminal_Copy">Copy</system:String>

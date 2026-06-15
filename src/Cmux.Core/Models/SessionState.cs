@@ -34,6 +34,9 @@ public class WorkspaceState
     [JsonPropertyName("workingDirectory")]
     public string? WorkingDirectory { get; set; }
 
+    [JsonPropertyName("startDirectory")]
+    public string? StartDirectory { get; set; }
+
     [JsonPropertyName("surfaces")]
     public List<SurfaceState> Surfaces { get; set; } = [];
 

@@ -18,6 +18,7 @@ public partial class SurfaceViewModel : ObservableObject, IDisposable
     private readonly Dictionary<string, TerminalSession> _sessions = [];
     private readonly Dictionary<string, List<string>> _paneCommandHistory = [];
     private readonly Dictionary<string, string?> _paneShells = [];
+    private readonly string? _workspaceStartDirectory;
     private readonly HashSet<string> _daemonPanes = [];
     private readonly HashSet<string> _daemonOutputLogged = [];
     private static readonly object _daemonWaitLock = new();
@@ -48,10 +49,11 @@ public partial class SurfaceViewModel : ObservableObject, IDisposable
         }
     }
 
-    public SurfaceViewModel(Surface surface, string workspaceId, NotificationService notificationService, string? initialShell = null)
+    public SurfaceViewModel(Surface surface, string workspaceId, NotificationService notificationService, string? initialShell = null, string? workspaceStartDirectory = null)
     {
         Surface = surface;
         _workspaceId = workspaceId;
+        _workspaceStartDirectory = workspaceStartDirectory;
         _notificationService = notificationService;
         _name = surface.Name;
         _rootNode = surface.RootSplitNode;
@@ -338,6 +340,9 @@ public partial class SurfaceViewModel : ObservableObject, IDisposable
         var effectiveShell = shell ?? GetConfiguredShell();
         // Store the explicit override (null = use default shell from settings)
         _paneShells[paneId] = shell;
+
+        // Fallback chain: explicit cwd → restored snapshot cwd → workspace start directory
+        workingDirectory ??= restoredState?.WorkingDirectory ?? _workspaceStartDirectory;
 
         // Wait for daemon connect task (includes starting daemon if needed).
         // First pane blocks up to 5s; subsequent panes get the cached result instantly.

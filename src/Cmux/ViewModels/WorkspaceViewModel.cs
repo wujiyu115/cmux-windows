@@ -33,6 +33,9 @@ public partial class WorkspaceViewModel : ObservableObject, IDisposable
     private string? _workingDirectory;
 
     [ObservableProperty]
+    private string? _startDirectory;
+
+    [ObservableProperty]
     private string? _latestNotificationText;
 
     [ObservableProperty]
@@ -60,12 +63,13 @@ public partial class WorkspaceViewModel : ObservableObject, IDisposable
         _name = workspace.Name;
         _iconGlyph = workspace.IconGlyph;
         _accentColor = workspace.AccentColor;
+        _startDirectory = workspace.StartDirectory;
         _notificationService = notificationService;
 
         // Create surface VMs for existing surfaces
         foreach (var surface in workspace.Surfaces)
         {
-            var surfaceVm = new SurfaceViewModel(surface, workspace.Id, notificationService);
+            var surfaceVm = new SurfaceViewModel(surface, workspace.Id, notificationService, workspaceStartDirectory: workspace.StartDirectory);
             surfaceVm.WorkingDirectoryChanged += OnSurfaceWorkingDirectoryChanged;
             Surfaces.Add(surfaceVm);
         }
@@ -89,7 +93,7 @@ public partial class WorkspaceViewModel : ObservableObject, IDisposable
         var surface = new Surface { Name = LanguageService.Lang("Default_Terminal", Surfaces.Count + 1) };
         Workspace.Surfaces.Add(surface);
 
-        var surfaceVm = new SurfaceViewModel(surface, Workspace.Id, _notificationService);
+        var surfaceVm = new SurfaceViewModel(surface, Workspace.Id, _notificationService, workspaceStartDirectory: Workspace.StartDirectory);
         surfaceVm.WorkingDirectoryChanged += OnSurfaceWorkingDirectoryChanged;
         Surfaces.Add(surfaceVm);
         SelectedSurface = surfaceVm;
@@ -100,7 +104,7 @@ public partial class WorkspaceViewModel : ObservableObject, IDisposable
         var surface = new Surface { Name = LanguageService.Lang("Default_Terminal", Surfaces.Count + 1) };
         Workspace.Surfaces.Add(surface);
 
-        var surfaceVm = new SurfaceViewModel(surface, Workspace.Id, _notificationService, shellPath);
+        var surfaceVm = new SurfaceViewModel(surface, Workspace.Id, _notificationService, shellPath, workspaceStartDirectory: Workspace.StartDirectory);
         surfaceVm.WorkingDirectoryChanged += OnSurfaceWorkingDirectoryChanged;
         Surfaces.Add(surfaceVm);
         SelectedSurface = surfaceVm;
@@ -205,6 +209,11 @@ public partial class WorkspaceViewModel : ObservableObject, IDisposable
     partial void OnAccentColorChanged(string value)
     {
         Workspace.AccentColor = value;
+    }
+
+    partial void OnStartDirectoryChanged(string? value)
+    {
+        Workspace.StartDirectory = value;
     }
 
     private static bool IsPrivateUseGlyph(string? value)
