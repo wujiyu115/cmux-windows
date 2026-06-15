@@ -2,11 +2,13 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Cmux.Core.Config;
@@ -632,6 +634,9 @@ public class TerminalControl : FrameworkElement
         {
             Debug.WriteLine($"[TerminalControl] Render failed: {ex}");
         }
+
+        if (IsKeyboardFocusWithin)
+            UpdateImePosition();
     }
 
     /// <summary>
@@ -979,10 +984,68 @@ public class TerminalControl : FrameworkElement
 
     // --- IME support ---
 
+    [DllImport("imm32.dll")]
+    private static extern IntPtr ImmGetContext(IntPtr hWnd);
+
+    [DllImport("imm32.dll")]
+    private static extern bool ImmSetCompositionWindow(IntPtr hIMC, ref COMPOSITIONFORM lpCompForm);
+
+    [DllImport("imm32.dll")]
+    private static extern bool ImmReleaseContext(IntPtr hWnd, IntPtr hIMC);
+
+    [StructLayout(LayoutKind.Sequential)]
+    private struct COMPOSITIONFORM
+    {
+        public uint dwStyle;
+        public int ptX;
+        public int ptY;
+        public int rcLeft;
+        public int rcTop;
+        public int rcRight;
+        public int rcBottom;
+    }
+
+    private const uint CFS_POINT = 0x0002;
+
     protected override void OnGotKeyboardFocus(KeyboardFocusChangedEventArgs e)
     {
         base.OnGotKeyboardFocus(e);
         InputMethod.SetIsInputMethodEnabled(this, true);
+        UpdateImePosition();
+    }
+
+    private void UpdateImePosition()
+    {
+        if (_session == null) return;
+        var source = PresentationSource.FromVisual(this) as HwndSource;
+        if (source == null) return;
+
+        var buffer = _session.Buffer;
+        double x = buffer.CursorCol * _cellWidth;
+        double y = buffer.CursorRow * _cellHeight;
+
+        var point = TranslatePoint(new Point(x, y), null);
+        var transform = source.CompositionTarget.TransformToDevice;
+        var devicePoint = transform.Transform(point);
+
+        var hWnd = source.Handle;
+        var hIMC = ImmGetContext(hWnd);
+        if (hIMC == IntPtr.Zero) return;
+
+        try
+        {
+            var cf = new COMPOSITIONFORM
+            {
+                dwStyle = CFS_POINT,
+                ptX = (int)devicePoint.X,
+                ptY = (int)devicePoint.Y,
+            };
+            ImmSetCompositionWindow(hIMC, ref cf);
+        }
+        finally
+        {
+            ImmReleaseContext(hWnd, hIMC);
+        }
     }
 
     private void PasteFromClipboard()
