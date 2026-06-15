@@ -654,9 +654,16 @@ public partial class MainWindow : Window
         var shells = ShellDetector.DetectShells();
         var menu = new ContextMenu();
 
-        foreach (var shell in shells)
+        for (int i = 0; i < shells.Count; i++)
         {
-            var item = new MenuItem { Header = shell.Name, Tag = shell.Path };
+            var shell = shells[i];
+            var item = new MenuItem
+            {
+                Header = shell.Name,
+                Tag = shell.Path,
+                Icon = shell.Icon,
+                InputGestureText = i < 9 ? $"Ctrl+Shift+{i + 1}" : null,
+            };
             item.Click += (s, _) =>
             {
                 if (s is MenuItem mi && mi.Tag is string path)
