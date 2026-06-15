@@ -493,9 +493,11 @@ public class TerminalBuffer
     {
         if (!IsAlternateScreen) return;
 
-        // Restore main screen state
         if (_savedMainCells != null)
         {
+            if (_savedMainCells.GetLength(0) != Rows || _savedMainCells.GetLength(1) != Cols)
+                _savedMainCells = ResizeCells(_savedMainCells, Cols, Rows);
+
             _cells = _savedMainCells;
             _savedMainCells = null;
         }
@@ -507,8 +509,8 @@ public class TerminalBuffer
             _savedMainScrollbackList = null;
         }
 
-        CursorRow = _savedMainCursorRow;
-        CursorCol = _savedMainCursorCol;
+        CursorRow = Math.Min(_savedMainCursorRow, Rows - 1);
+        CursorCol = Math.Min(_savedMainCursorCol, Cols - 1);
         CurrentAttribute = _savedMainAttribute;
         SetScrollRegion(0, Rows - 1);
         IsAlternateScreen = false;
@@ -580,6 +582,14 @@ public class TerminalBuffer
                 newCells[r, c] = _cells[r, c];
 
         _cells = newCells;
+
+        if (IsAlternateScreen && _savedMainCells != null)
+        {
+            _savedMainCells = ResizeCells(_savedMainCells, newCols, newRows);
+            _savedMainCursorRow = Math.Min(_savedMainCursorRow, newRows - 1);
+            _savedMainCursorCol = Math.Min(_savedMainCursorCol, newCols - 1);
+        }
+
         Cols = newCols;
         Rows = newRows;
         ScrollTop = 0;
@@ -588,6 +598,24 @@ public class TerminalBuffer
         CursorCol = Math.Min(CursorCol, newCols - 1);
 
         RaiseContentChanged();
+    }
+
+    private static TerminalCell[,] ResizeCells(TerminalCell[,] source, int newCols, int newRows)
+    {
+        var result = new TerminalCell[newRows, newCols];
+        for (int r = 0; r < newRows; r++)
+            for (int c = 0; c < newCols; c++)
+                result[r, c] = TerminalCell.Empty;
+
+        int srcRows = source.GetLength(0);
+        int srcCols = source.GetLength(1);
+        int cr = Math.Min(srcRows, newRows);
+        int cc = Math.Min(srcCols, newCols);
+        for (int r = 0; r < cr; r++)
+            for (int c = 0; c < cc; c++)
+                result[r, c] = source[r, c];
+
+        return result;
     }
 
     public string ExportPlainText(int maxScrollbackLines = 20000)
