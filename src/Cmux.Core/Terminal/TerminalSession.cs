@@ -23,6 +23,7 @@ public sealed class TerminalSession : IDisposable
     private volatile bool _daemonWriteLogged;
     private volatile bool _localWriteNullLogged;
     private readonly object _lock = new();
+    private Timer? _cwdPollTimer;
 
     public TerminalBuffer Buffer { get; }
     public string PaneId { get; }
@@ -182,6 +183,38 @@ public sealed class TerminalSession : IDisposable
 
         if (!string.IsNullOrWhiteSpace(WorkingDirectory))
             WorkingDirectoryChanged?.Invoke(WorkingDirectory);
+
+        _cwdPollTimer = new Timer(_ => PollWorkingDirectory(), null,
+            TimeSpan.FromSeconds(2), TimeSpan.FromSeconds(2));
+    }
+
+    private void PollWorkingDirectory()
+    {
+        try
+        {
+            if (_process == null || _process.HasExited)
+            {
+                _cwdPollTimer?.Change(Timeout.Infinite, Timeout.Infinite);
+                return;
+            }
+
+            var dir = ProcessCwdReader.GetCurrentDirectory(_process.ProcessHandle);
+            if (string.IsNullOrEmpty(dir))
+                return;
+
+            var current = WorkingDirectory;
+            var normalizedCurrent = current != null ? ProcessCwdReader.NormalizePath(current) : null;
+
+            if (!string.Equals(dir, normalizedCurrent, StringComparison.OrdinalIgnoreCase))
+            {
+                WorkingDirectory = dir;
+                WorkingDirectoryChanged?.Invoke(dir);
+            }
+        }
+        catch
+        {
+            // Process may have exited between the check and the read
+        }
     }
 
     private void ReadLoop()
@@ -638,6 +671,9 @@ public sealed class TerminalSession : IDisposable
     {
         if (_disposed) return;
         _disposed = true;
+
+        _cwdPollTimer?.Change(Timeout.Infinite, Timeout.Infinite);
+        _cwdPollTimer?.Dispose();
 
         _readStream?.Dispose();
         _writeStream?.Dispose();
