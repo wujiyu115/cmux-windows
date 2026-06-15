@@ -4,6 +4,7 @@ using System.Windows.Media;
 using Cmux.Core.Models;
 using Cmux.Core.Config;
 using Cmux.Core.Terminal;
+using Cmux.Services;
 using Cmux.ViewModels;
 using Cmux.Views;
 
@@ -172,7 +173,7 @@ public class SplitPaneContainer : ContentControl
             terminal.AttachSession(session);
 
         // Get pane title (custom name takes precedence over shell title)
-        var title = _surface?.GetPaneTitle(paneId, session?.Title) ?? "Terminal";
+        var title = _surface?.GetPaneTitle(paneId, session?.Title) ?? LanguageService.Lang("Pane_DefaultName");
 
         // Create panel with header
         var panel = new DockPanel { LastChildFill = true };
@@ -186,13 +187,13 @@ public class SplitPaneContainer : ContentControl
         };
 
         var headerMenu = new ContextMenu();
-        var renamePane = new MenuItem { Header = "Rename Pane" };
+        var renamePane = new MenuItem { Header = LanguageService.Lang("Pane_Rename") };
         renamePane.Click += (_, _) =>
         {
-            var currentName = _surface?.GetPaneTitle(paneId, session?.Title) ?? "Terminal";
+            var currentName = _surface?.GetPaneTitle(paneId, session?.Title) ?? LanguageService.Lang("Pane_DefaultName");
             var prompt = new TextPromptWindow(
-                title: "Rename Pane",
-                message: "Set a custom name for this pane.",
+                title: LanguageService.Lang("Pane_RenameTitle"),
+                message: LanguageService.Lang("Pane_RenameMessage"),
                 defaultValue: currentName)
             {
                 Owner = Window.GetWindow(this),
@@ -203,7 +204,7 @@ public class SplitPaneContainer : ContentControl
         };
         headerMenu.Items.Add(renamePane);
 
-        var resetPaneName = new MenuItem { Header = "Reset Pane Name" };
+        var resetPaneName = new MenuItem { Header = LanguageService.Lang("Pane_ResetName") };
         resetPaneName.Click += (_, _) => _surface?.SetPaneCustomName(paneId, string.Empty);
         headerMenu.Items.Add(resetPaneName);
 
@@ -252,7 +253,7 @@ public class SplitPaneContainer : ContentControl
             Foreground = GetThemeBrush("ForegroundDimBrush"),
             BorderThickness = new Thickness(0),
             Cursor = System.Windows.Input.Cursors.Hand,
-            ToolTip = "Close pane",
+            ToolTip = LanguageService.Lang("Terminal_ClosePaneTooltip"),
         };
         closeButton.Click += (s, e) => _surface?.ClosePane(paneId);
         Grid.SetColumn(closeButton, 2);

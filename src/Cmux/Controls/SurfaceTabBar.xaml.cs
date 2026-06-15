@@ -4,6 +4,7 @@ using System.Windows.Input;
 using System.Linq;
 using Cmux.ViewModels;
 using Cmux.Core.Services;
+using Cmux.Services;
 
 namespace Cmux.Controls;
 
@@ -152,7 +153,7 @@ public partial class SurfaceTabBar : UserControl
             ws.CreateNewSurface();
             var newSurf = ws.Surfaces[^1];
             var original = GetSurfaceFromMenu(sender);
-            if (original != null) newSurf.Name = original.Name + " (copy)";
+            if (original != null) newSurf.Name = original.Name + LanguageService.Lang("Tab_Copy");
         }
     }
 

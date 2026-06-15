@@ -2,6 +2,7 @@ using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using Cmux.Services;
 using Cmux.ViewModels;
 using Cmux.Views;
 
@@ -34,8 +35,8 @@ public partial class WorkspaceSidebarItem : UserControl
         if (Vm == null) return;
 
         var prompt = new TextPromptWindow(
-            title: "Workspace Icon",
-            message: "Enter a single icon (emoji/symbol) or a glyph code like E8A5, U+E8A5, 0xE8A5.",
+            title: LanguageService.Lang("Workspace_IconTitle"),
+            message: LanguageService.Lang("Workspace_IconMessage"),
             defaultValue: Vm.IconGlyph)
         {
             Owner = Window.GetWindow(this),
@@ -52,8 +53,8 @@ public partial class WorkspaceSidebarItem : UserControl
 
         if (value.StartsWith("<svg", StringComparison.OrdinalIgnoreCase))
         {
-            MessageBox.Show("SVG is not supported in workspace icon yet. Use emoji/symbol or MDL2 hex code.",
-                "Workspace Icon", MessageBoxButton.OK, MessageBoxImage.Information);
+            MessageBox.Show(LanguageService.Lang("Workspace_SvgNotSupported"),
+                LanguageService.Lang("Workspace_IconTitle"), MessageBoxButton.OK, MessageBoxImage.Information);
             return;
         }
 

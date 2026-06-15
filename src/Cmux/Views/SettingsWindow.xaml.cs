@@ -6,6 +6,7 @@ using System.Windows.Media;
 using Microsoft.Win32;
 using Cmux.Core.Config;
 using Cmux.Core.Services;
+using Cmux.Services;
 
 namespace Cmux.Views;
 
@@ -48,9 +49,18 @@ public partial class SettingsWindow : Window
         ShellCombo.DisplayMemberPath = "Name";
         ShellCombo.SelectedValuePath = "Path";
 
+        // Language options
+        LanguageCombo.ItemsSource = new[]
+        {
+            new { Display = "English", Value = "en" },
+            new { Display = "中文", Value = "zh" },
+        };
+        LanguageCombo.DisplayMemberPath = "Display";
+        LanguageCombo.SelectedValuePath = "Value";
+
         // Detect system theme
         var isLight = IsSystemLightTheme();
-        SystemThemeText.Text = isLight ? "Light" : "Dark";
+        SystemThemeText.Text = isLight ? LanguageService.Lang("Settings_SystemThemeLight") : LanguageService.Lang("Settings_SystemThemeDark");
     }
 
     private void LoadSettings()
@@ -60,6 +70,8 @@ public partial class SettingsWindow : Window
 
     private void LoadSettingsFrom(CmuxSettings s)
     {
+        LanguageCombo.SelectedValue = s.Language;
+
         FontFamilyCombo.SelectedItem = s.FontFamily;
         if (FontFamilyCombo.SelectedItem == null)
             FontFamilyCombo.Text = s.FontFamily;
@@ -92,6 +104,7 @@ public partial class SettingsWindow : Window
         ConfirmCloseCheck.IsChecked = s.ConfirmOnClose;
         AutoCopyCheck.IsChecked = s.AutoCopyOnSelect;
         CtrlClickUrlCheck.IsChecked = s.CtrlClickOpensUrls;
+        AgentChatDefaultOpenCheck.IsChecked = s.AgentChatDefaultOpen;
         AutoSaveBox.Text = s.AutoSaveIntervalSeconds.ToString();
         LogRetentionDaysBox.Text = Math.Clamp(s.CommandLogRetentionDays, 0, 3650).ToString();
         CaptureOnCloseCheck.IsChecked = s.CaptureTranscriptsOnClose;
@@ -100,11 +113,11 @@ public partial class SettingsWindow : Window
 
         var agent = s.Agent ?? new AgentSettings();
         AgentEnabledCheck.IsChecked = agent.Enabled;
-        AgentNameBox.Text = string.IsNullOrWhiteSpace(agent.AgentName) ? "assistant" : agent.AgentName;
-        AgentHandlerBox.Text = string.IsNullOrWhiteSpace(agent.Handler) ? "/agent" : agent.Handler;
+        AgentNameBox.Text = string.IsNullOrWhiteSpace(agent.AgentName) ? LanguageService.Lang("AgentDefault_Name") : agent.AgentName;
+        AgentHandlerBox.Text = string.IsNullOrWhiteSpace(agent.Handler) ? LanguageService.Lang("AgentDefault_Handler") : agent.Handler;
         AgentAdditionalHandlersBox.Text = agent.AdditionalHandlers ?? "";
         AgentSystemPromptBox.Text = string.IsNullOrWhiteSpace(agent.SystemPrompt)
-            ? "You are a pragmatic engineering assistant running inside cmux. Keep responses concise and action-oriented."
+            ? LanguageService.Lang("AgentDefault_SystemPrompt")
             : agent.SystemPrompt;
 
         var activeProvider = string.IsNullOrWhiteSpace(agent.ActiveProvider) ? "openai" : agent.ActiveProvider;
@@ -182,6 +195,7 @@ public partial class SettingsWindow : Window
     private bool SaveSettings()
     {
         var s = SettingsService.Current;
+        s.Language = LanguageCombo.SelectedValue as string ?? "en";
         s.FontFamily = FontFamilyCombo.SelectedItem as string ?? FontFamilyCombo.Text;
         s.FontSize = (int)Math.Round(FontSizeSlider.Value);
         s.ThemeName = TerminalThemePresetCombo.SelectedItem as string
@@ -201,6 +215,7 @@ public partial class SettingsWindow : Window
         s.ConfirmOnClose = ConfirmCloseCheck.IsChecked == true;
         s.AutoCopyOnSelect = AutoCopyCheck.IsChecked == true;
         s.CtrlClickOpensUrls = CtrlClickUrlCheck.IsChecked == true;
+        s.AgentChatDefaultOpen = AgentChatDefaultOpenCheck.IsChecked == true;
         if (int.TryParse(AutoSaveBox.Text, out int asv)) s.AutoSaveIntervalSeconds = asv;
         if (int.TryParse(LogRetentionDaysBox.Text, out int retentionDays))
             s.CommandLogRetentionDays = Math.Clamp(retentionDays, 0, 3650);
@@ -217,8 +232,8 @@ public partial class SettingsWindow : Window
 
         var agent = s.Agent ?? new AgentSettings();
         agent.Enabled = AgentEnabledCheck.IsChecked == true;
-        agent.AgentName = string.IsNullOrWhiteSpace(AgentNameBox.Text) ? "assistant" : AgentNameBox.Text.Trim();
-        agent.Handler = string.IsNullOrWhiteSpace(AgentHandlerBox.Text) ? "/agent" : AgentHandlerBox.Text.Trim();
+        agent.AgentName = string.IsNullOrWhiteSpace(AgentNameBox.Text) ? LanguageService.Lang("AgentDefault_Name") : AgentNameBox.Text.Trim();
+        agent.Handler = string.IsNullOrWhiteSpace(AgentHandlerBox.Text) ? LanguageService.Lang("AgentDefault_Handler") : AgentHandlerBox.Text.Trim();
         agent.AdditionalHandlers = AgentAdditionalHandlersBox.Text?.Trim() ?? "";
         agent.SystemPrompt = AgentSystemPromptBox.Text?.Trim() ?? "";
         agent.ActiveProvider = (AgentProviderCombo.SelectedItem as ComboBoxItem)?.Content?.ToString()?.Trim().ToLowerInvariant() ?? "openai";
@@ -255,13 +270,13 @@ public partial class SettingsWindow : Window
         agent.EnableTargetSubmitProfiles = AgentEnableSubmitProfilesCheck.IsChecked == true;
         if (!TryParseSubmitProfilesJson(AgentSubmitProfilesJsonBox.Text, out var submitProfiles, out var submitProfilesParseError))
         {
-            MessageBox.Show(submitProfilesParseError, "Settings", MessageBoxButton.OK, MessageBoxImage.Warning);
+            MessageBox.Show(submitProfilesParseError, LanguageService.Lang("Settings_DialogTitle"), MessageBoxButton.OK, MessageBoxImage.Warning);
             return false;
         }
 
         if (!ValidateSubmitProfiles(submitProfiles, out var submitProfilesValidationError))
         {
-            MessageBox.Show(submitProfilesValidationError, "Settings", MessageBoxButton.OK, MessageBoxImage.Warning);
+            MessageBox.Show(submitProfilesValidationError, LanguageService.Lang("Settings_DialogTitle"), MessageBoxButton.OK, MessageBoxImage.Warning);
             return false;
         }
 
@@ -292,13 +307,13 @@ public partial class SettingsWindow : Window
         {
             if (!TryParseCustomToolsJson(CustomToolsJsonBox.Text, out var parsedTools, out var parseError))
             {
-                MessageBox.Show(parseError, "Settings", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show(parseError, LanguageService.Lang("Settings_DialogTitle"), MessageBoxButton.OK, MessageBoxImage.Warning);
                 return false;
             }
 
             if (!ValidateCustomTools(parsedTools, out var validationError))
             {
-                MessageBox.Show(validationError, "Settings", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show(validationError, LanguageService.Lang("Settings_DialogTitle"), MessageBoxButton.OK, MessageBoxImage.Warning);
                 return false;
             }
 
@@ -311,7 +326,7 @@ public partial class SettingsWindow : Window
         {
             if (!ValidateCustomTools(_customToolsDraft, out var validationError))
             {
-                MessageBox.Show(validationError, "Settings", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show(validationError, LanguageService.Lang("Settings_DialogTitle"), MessageBoxButton.OK, MessageBoxImage.Warning);
                 return false;
             }
 
@@ -325,13 +340,13 @@ public partial class SettingsWindow : Window
         {
             if (!TryParseMcpServersJson(McpServersJsonBox.Text, out var parsedServers, out var parseError))
             {
-                MessageBox.Show(parseError, "Settings", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show(parseError, LanguageService.Lang("Settings_DialogTitle"), MessageBoxButton.OK, MessageBoxImage.Warning);
                 return false;
             }
 
             if (!ValidateMcpServers(parsedServers, out var validationError))
             {
-                MessageBox.Show(validationError, "Settings", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show(validationError, LanguageService.Lang("Settings_DialogTitle"), MessageBoxButton.OK, MessageBoxImage.Warning);
                 return false;
             }
 
@@ -344,7 +359,7 @@ public partial class SettingsWindow : Window
         {
             if (!ValidateMcpServers(_mcpServersDraft, out var validationError))
             {
-                MessageBox.Show(validationError, "Settings", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show(validationError, LanguageService.Lang("Settings_DialogTitle"), MessageBoxButton.OK, MessageBoxImage.Warning);
                 return false;
             }
 
@@ -397,8 +412,15 @@ public partial class SettingsWindow : Window
         Close();
     }
 
+    private void LanguageCombo_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (LanguageCombo.SelectedValue is string lang)
+            LanguageService.SetLanguage(lang);
+    }
+
     private void Cancel_Click(object sender, RoutedEventArgs e)
     {
+        LanguageService.SetLanguage(SettingsService.Current.Language);
         DialogResult = false;
         Close();
     }
@@ -532,13 +554,13 @@ public partial class SettingsWindow : Window
 
         if (string.IsNullOrWhiteSpace(draft.Name))
         {
-            MessageBox.Show("Custom tool name is required.", "Settings", MessageBoxButton.OK, MessageBoxImage.Warning);
+            MessageBox.Show(LanguageService.Lang("Msg_ToolNameRequired"), LanguageService.Lang("Settings_DialogTitle"), MessageBoxButton.OK, MessageBoxImage.Warning);
             return;
         }
 
         if (string.IsNullOrWhiteSpace(draft.CommandTemplate))
         {
-            MessageBox.Show("Custom tool command template is required.", "Settings", MessageBoxButton.OK, MessageBoxImage.Warning);
+            MessageBox.Show(LanguageService.Lang("Msg_ToolCommandRequired"), LanguageService.Lang("Settings_DialogTitle"), MessageBoxButton.OK, MessageBoxImage.Warning);
             return;
         }
 
@@ -575,13 +597,13 @@ public partial class SettingsWindow : Window
 
         if (string.IsNullOrWhiteSpace(draft.Name))
         {
-            MessageBox.Show("MCP server name is required.", "Settings", MessageBoxButton.OK, MessageBoxImage.Warning);
+            MessageBox.Show(LanguageService.Lang("Msg_McpNameRequired"), LanguageService.Lang("Settings_DialogTitle"), MessageBoxButton.OK, MessageBoxImage.Warning);
             return;
         }
 
         if (string.IsNullOrWhiteSpace(draft.Command))
         {
-            MessageBox.Show("MCP server command is required.", "Settings", MessageBoxButton.OK, MessageBoxImage.Warning);
+            MessageBox.Show(LanguageService.Lang("Msg_McpCommandRequired"), LanguageService.Lang("Settings_DialogTitle"), MessageBoxButton.OK, MessageBoxImage.Warning);
             return;
         }
 
@@ -640,7 +662,7 @@ public partial class SettingsWindow : Window
             using var doc = JsonDocument.Parse(text);
             if (doc.RootElement.ValueKind != JsonValueKind.Array)
             {
-                error = "Custom tools JSON must be an array.";
+                error = LanguageService.Lang("Msg_ToolsJsonArray");
                 return false;
             }
 
@@ -649,7 +671,7 @@ public partial class SettingsWindow : Window
         }
         catch (Exception ex)
         {
-            error = $"Invalid custom tools JSON: {ex.Message}";
+            error = LanguageService.Lang("Msg_ToolsJsonInvalid", ex.Message);
             return false;
         }
     }
@@ -666,7 +688,7 @@ public partial class SettingsWindow : Window
             using var doc = JsonDocument.Parse(text);
             if (doc.RootElement.ValueKind != JsonValueKind.Array)
             {
-                error = "MCP servers JSON must be an array.";
+                error = LanguageService.Lang("Msg_McpJsonArray");
                 return false;
             }
 
@@ -675,7 +697,7 @@ public partial class SettingsWindow : Window
         }
         catch (Exception ex)
         {
-            error = $"Invalid MCP servers JSON: {ex.Message}";
+            error = LanguageService.Lang("Msg_McpJsonInvalid", ex.Message);
             return false;
         }
     }
@@ -692,7 +714,7 @@ public partial class SettingsWindow : Window
             using var doc = JsonDocument.Parse(text);
             if (doc.RootElement.ValueKind != JsonValueKind.Array)
             {
-                error = "Submit profiles JSON must be an array.";
+                error = LanguageService.Lang("Msg_ProfilesJsonArray");
                 return false;
             }
 
@@ -701,7 +723,7 @@ public partial class SettingsWindow : Window
         }
         catch (Exception ex)
         {
-            error = $"Invalid submit profiles JSON: {ex.Message}";
+            error = LanguageService.Lang("Msg_ProfilesJsonInvalid", ex.Message);
             return false;
         }
     }
@@ -718,19 +740,19 @@ public partial class SettingsWindow : Window
 
             if (string.IsNullOrWhiteSpace(t.Name))
             {
-                error = $"Custom tool at index {row} is missing 'name'.";
+                error = LanguageService.Lang("Msg_ToolMissingName", row);
                 return false;
             }
 
             if (!names.Add(t.Name.Trim()))
             {
-                error = $"Duplicate custom tool name: '{t.Name}'.";
+                error = LanguageService.Lang("Msg_ToolDuplicateName", t.Name);
                 return false;
             }
 
             if (string.IsNullOrWhiteSpace(t.CommandTemplate))
             {
-                error = $"Custom tool '{t.Name}' is missing 'commandTemplate'.";
+                error = LanguageService.Lang("Msg_ToolMissingCommand", t.Name);
                 return false;
             }
         }
@@ -751,19 +773,19 @@ public partial class SettingsWindow : Window
 
             if (string.IsNullOrWhiteSpace(s.Name))
             {
-                error = $"MCP server at index {row} is missing 'name'.";
+                error = LanguageService.Lang("Msg_McpMissingName", row);
                 return false;
             }
 
             if (!names.Add(s.Name.Trim()))
             {
-                error = $"Duplicate MCP server name: '{s.Name}'.";
+                error = LanguageService.Lang("Msg_McpDuplicateName", s.Name);
                 return false;
             }
 
             if (string.IsNullOrWhiteSpace(s.Command))
             {
-                error = $"MCP server '{s.Name}' is missing 'command'.";
+                error = LanguageService.Lang("Msg_McpMissingCommand", s.Name);
                 return false;
             }
         }
@@ -784,20 +806,20 @@ public partial class SettingsWindow : Window
 
             if (string.IsNullOrWhiteSpace(p.Name))
             {
-                error = $"Submit profile at index {row} is missing 'name'.";
+                error = LanguageService.Lang("Msg_ProfileMissingName", row);
                 return false;
             }
 
             if (!names.Add(p.Name.Trim()))
             {
-                error = $"Duplicate submit profile name: '{p.Name}'.";
+                error = LanguageService.Lang("Msg_ProfileDuplicateName", p.Name);
                 return false;
             }
 
             var normalizedOrder = (p.SubmitOrder ?? "").Trim();
             if (string.IsNullOrWhiteSpace(normalizedOrder))
             {
-                error = $"Submit profile '{p.Name}' is missing 'submitOrder'.";
+                error = LanguageService.Lang("Msg_ProfileMissingOrder", p.Name);
                 return false;
             }
 
@@ -806,7 +828,7 @@ public partial class SettingsWindow : Window
                 var key = token.Trim().ToLowerInvariant();
                 if (key is not ("enter" or "linefeed" or "crlf" or "lf" or "cr" or "ctrl+j" or "ctrl+m"))
                 {
-                    error = $"Submit profile '{p.Name}' has unsupported submit key '{token}'.";
+                    error = LanguageService.Lang("Msg_ProfileUnsupportedKey", p.Name, token);
                     return false;
                 }
             }

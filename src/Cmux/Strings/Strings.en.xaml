@@ -1,0 +1,492 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:system="clr-namespace:System;assembly=mscorlib">
+
+    <!-- Window Titles -->
+    <system:String x:Key="App_Title">cmux windows</system:String>
+    <system:String x:Key="App_Brand">cmuxw</system:String>
+
+    <!-- Menu - File -->
+    <system:String x:Key="Menu_File">_File</system:String>
+    <system:String x:Key="Menu_NewWorkspace">_New Workspace</system:String>
+    <system:String x:Key="Menu_NewSurface">New _Surface</system:String>
+    <system:String x:Key="Menu_OpenCommandLogs">Open Command _Logs</system:String>
+    <system:String x:Key="Menu_OpenSessionVault">Open Session _Vault</system:String>
+    <system:String x:Key="Menu_Settings">_Settings</system:String>
+    <system:String x:Key="Menu_Exit">E_xit</system:String>
+
+    <!-- Menu - Window -->
+    <system:String x:Key="Menu_Window">_Window</system:String>
+    <system:String x:Key="Menu_SplitRight">Split _Right</system:String>
+    <system:String x:Key="Menu_SplitDown">Split _Down</system:String>
+    <system:String x:Key="Menu_ZoomPane">_Zoom Pane</system:String>
+    <system:String x:Key="Menu_EqualizePanes">_Equalize Panes</system:String>
+    <system:String x:Key="Menu_Search">_Search</system:String>
+    <system:String x:Key="Menu_CommandPalette">Command _Palette</system:String>
+    <system:String x:Key="Menu_Snippets">_Snippets</system:String>
+    <system:String x:Key="Menu_ToggleAgentChat">Toggle Agent _Chat</system:String>
+    <system:String x:Key="Menu_ToggleSidebar">Toggle _Sidebar</system:String>
+
+    <!-- Menu - Help -->
+    <system:String x:Key="Menu_Help">_Help</system:String>
+    <system:String x:Key="Menu_KeyboardShortcuts">Keyboard Shortcuts</system:String>
+    <system:String x:Key="Menu_About">About</system:String>
+
+    <!-- Window Controls -->
+    <system:String x:Key="Window_Minimize">Minimize</system:String>
+    <system:String x:Key="Window_Maximize">Maximize</system:String>
+    <system:String x:Key="Window_Restore">Restore</system:String>
+    <system:String x:Key="Window_Close">Close</system:String>
+
+    <!-- Sidebar -->
+    <system:String x:Key="Sidebar_Workspaces">Workspaces</system:String>
+    <system:String x:Key="Sidebar_ManageSessions">Manage sessions and environments</system:String>
+    <system:String x:Key="Sidebar_NewWorkspaceTooltip">New Workspace (Ctrl+N)</system:String>
+    <system:String x:Key="Sidebar_SessionVaultTooltip">Session Vault (Ctrl+Shift+V)</system:String>
+    <system:String x:Key="Sidebar_CommandLogsTooltip">Command Logs (Ctrl+Shift+L)</system:String>
+    <system:String x:Key="Sidebar_FilterTooltip">Filter workspaces by name, branch, or directory</system:String>
+    <system:String x:Key="Sidebar_NewWorkspace">New Workspace</system:String>
+    <system:String x:Key="Sidebar_Notifications">Notifications</system:String>
+
+    <!-- Toolbar -->
+    <system:String x:Key="Toolbar_SplitRight">Split Right (Ctrl+D)</system:String>
+    <system:String x:Key="Toolbar_SplitDown">Split Down (Ctrl+Shift+D)</system:String>
+    <system:String x:Key="Toolbar_OpenShell">Open pane with shell...</system:String>
+    <system:String x:Key="Toolbar_Layout2Col">Layout: 2 Columns</system:String>
+    <system:String x:Key="Toolbar_LayoutGrid">Layout: Grid 2x2</system:String>
+    <system:String x:Key="Toolbar_LayoutMainStack">Layout: Main + Stack</system:String>
+    <system:String x:Key="Toolbar_Equalize">Equalize Panes</system:String>
+    <system:String x:Key="Toolbar_ZoomPane">Zoom Pane (Ctrl+Shift+Z)</system:String>
+    <system:String x:Key="Toolbar_UnzoomPane">Unzoom Pane (Ctrl+Shift+Z)</system:String>
+    <system:String x:Key="Toolbar_AgentChat">Toggle Agent Chat (Ctrl+Shift+A)</system:String>
+
+    <!-- Status Bar -->
+    <system:String x:Key="Status_PanesSingular">1 pane</system:String>
+    <system:String x:Key="Status_PanesPlural">{0} panes</system:String>
+    <system:String x:Key="Status_PanesZoomed">{0} panes (1 zoomed)</system:String>
+    <system:String x:Key="Status_NoPanes">0 panes</system:String>
+    <system:String x:Key="Status_Daemon">Daemon</system:String>
+    <system:String x:Key="Status_Local">Local</system:String>
+    <system:String x:Key="Status_DaemonConnected">Connected to cmux-daemon — sessions persist across restarts</system:String>
+    <system:String x:Key="Status_DaemonLocal">Running locally — sessions will not persist</system:String>
+    <system:String x:Key="Status_CommandsHint">Ctrl+Shift+P: Commands</system:String>
+
+    <!-- Agent Chat Panel -->
+    <system:String x:Key="Agent_Title">Agent Chat</system:String>
+    <system:String x:Key="Agent_Subtitle">Persistent threads per pane</system:String>
+    <system:String x:Key="Agent_HideChat">Hide Agent Chat</system:String>
+    <system:String x:Key="Agent_SearchThreads">Search threads</system:String>
+    <system:String x:Key="Agent_NewThread">New thread</system:String>
+    <system:String x:Key="Agent_RefreshThreads">Refresh threads</system:String>
+    <system:String x:Key="Agent_Idle">Idle</system:String>
+    <system:String x:Key="Agent_UsageDefault">Usage: -</system:String>
+    <system:String x:Key="Agent_ContextDefault">Context: -</system:String>
+    <system:String x:Key="Agent_SearchMessages">Search within selected thread</system:String>
+    <system:String x:Key="Agent_Send">Send</system:String>
+    <system:String x:Key="Agent_Streaming">streaming...</system:String>
+    <system:String x:Key="Agent_UsageFormat">Usage: in {0} · out {1} · total {2}</system:String>
+    <system:String x:Key="Agent_ContextFormat">Context: {0}/{1} tokens</system:String>
+    <system:String x:Key="Agent_ContextNearLimit"> (near limit)</system:String>
+    <system:String x:Key="Agent_ContextCompacted"> · compacted</system:String>
+    <system:String x:Key="Agent_ContextNone">Context: -</system:String>
+    <system:String x:Key="Agent_ErrorFormat">Error: {0}</system:String>
+    <system:String x:Key="Agent_MetaFormat">usage in:{0} out:{1} total:{2} · {3}/{4}</system:String>
+    <system:String x:Key="Agent_UserSent">User message sent</system:String>
+    <system:String x:Key="Agent_StreamingResponse">Streaming response...</system:String>
+    <system:String x:Key="Agent_ResponseCompleted">Response completed</system:String>
+    <system:String x:Key="Agent_NewThreadCreated">New thread created</system:String>
+    <system:String x:Key="Agent_NoPaneSelected">No active pane selected</system:String>
+    <system:String x:Key="Agent_NotAccepted">Agent did not accept the prompt</system:String>
+    <system:String x:Key="Agent_PromptSent">Prompt sent</system:String>
+
+    <!-- Tab Bar Context Menu -->
+    <system:String x:Key="Tab_Rename">Rename</system:String>
+    <system:String x:Key="Tab_Duplicate">Duplicate</system:String>
+    <system:String x:Key="Tab_SplitRight">Split Right</system:String>
+    <system:String x:Key="Tab_SplitDown">Split Down</system:String>
+    <system:String x:Key="Tab_Close">Close</system:String>
+    <system:String x:Key="Tab_CloseOthers">Close Others</system:String>
+    <system:String x:Key="Tab_PrevMatch">Previous (Shift+Enter)</system:String>
+    <system:String x:Key="Tab_NextMatch">Next (Enter)</system:String>
+    <system:String x:Key="Tab_NewShellTooltip">New terminal with specific shell</system:String>
+    <system:String x:Key="Tab_Copy"> (copy)</system:String>
+
+    <!-- Workspace Sidebar Context Menu -->
+    <system:String x:Key="Workspace_Rename">Rename</system:String>
+    <system:String x:Key="Workspace_Duplicate">Duplicate</system:String>
+    <system:String x:Key="Workspace_SetIcon">Set Workspace Icon</system:String>
+    <system:String x:Key="Workspace_AccentIndigo">Accent: Indigo</system:String>
+    <system:String x:Key="Workspace_AccentGreen">Accent: Green</system:String>
+    <system:String x:Key="Workspace_AccentAmber">Accent: Amber</system:String>
+    <system:String x:Key="Workspace_AccentRed">Accent: Red</system:String>
+    <system:String x:Key="Workspace_AccentCyan">Accent: Cyan</system:String>
+    <system:String x:Key="Workspace_AccentPurple">Accent: Purple</system:String>
+    <system:String x:Key="Workspace_AccentSlate">Accent: Slate</system:String>
+    <system:String x:Key="Workspace_AccentPink">Accent: Pink</system:String>
+    <system:String x:Key="Workspace_AccentCustom">Accent: Custom...</system:String>
+    <system:String x:Key="Workspace_NewSurface">New Surface</system:String>
+    <system:String x:Key="Workspace_MoveUp">Move Up</system:String>
+    <system:String x:Key="Workspace_MoveDown">Move Down</system:String>
+    <system:String x:Key="Workspace_CloseWorkspace">Close Workspace</system:String>
+    <system:String x:Key="Workspace_IconTitle">Workspace Icon</system:String>
+    <system:String x:Key="Workspace_IconMessage">Enter a single icon (emoji/symbol) or a glyph code like E8A5, U+E8A5, 0xE8A5.</system:String>
+    <system:String x:Key="Workspace_SvgNotSupported">SVG is not supported in workspace icon yet. Use emoji/symbol or MDL2 hex code.</system:String>
+
+    <!-- Terminal Context Menu -->
+    <system:String x:Key="Terminal_Copy">Copy</system:String>
+    <system:String x:Key="Terminal_Paste">Paste</system:String>
+    <system:String x:Key="Terminal_SelectAll">Select All</system:String>
+    <system:String x:Key="Terminal_SplitRight">Split Right</system:String>
+    <system:String x:Key="Terminal_SplitDown">Split Down</system:String>
+    <system:String x:Key="Terminal_ZoomPane">Zoom Pane</system:String>
+    <system:String x:Key="Terminal_UnzoomPane">Unzoom Pane</system:String>
+    <system:String x:Key="Terminal_ClosePane">Close Pane</system:String>
+    <system:String x:Key="Terminal_ClearTerminal">Clear Terminal</system:String>
+    <system:String x:Key="Terminal_Search">Search</system:String>
+    <system:String x:Key="Terminal_ClosePaneTooltip">Close pane</system:String>
+
+    <!-- Pane -->
+    <system:String x:Key="Pane_Rename">Rename Pane</system:String>
+    <system:String x:Key="Pane_ResetName">Reset Pane Name</system:String>
+    <system:String x:Key="Pane_RenameTitle">Rename Pane</system:String>
+    <system:String x:Key="Pane_RenameMessage">Set a custom name for this pane.</system:String>
+    <system:String x:Key="Pane_DefaultName">Terminal</system:String>
+
+    <!-- Command Palette -->
+    <system:String x:Key="Palette_NoMatching">No matching commands</system:String>
+    <system:String x:Key="Palette_NewWorkspace">New Workspace</system:String>
+    <system:String x:Key="Palette_NewSurface">New Surface</system:String>
+    <system:String x:Key="Palette_CloseSurface">Close Surface</system:String>
+    <system:String x:Key="Palette_CloseWorkspace">Close Workspace</system:String>
+    <system:String x:Key="Palette_SplitRight">Split Right</system:String>
+    <system:String x:Key="Palette_SplitDown">Split Down</system:String>
+    <system:String x:Key="Palette_ToggleSidebar">Toggle Sidebar</system:String>
+    <system:String x:Key="Palette_Notifications">Notifications</system:String>
+    <system:String x:Key="Palette_TestNotification">Test Notification</system:String>
+    <system:String x:Key="Palette_OpenCommandLogs">Open Command Logs</system:String>
+    <system:String x:Key="Palette_OpenSessionVault">Open Session Vault</system:String>
+    <system:String x:Key="Palette_OpenCommandHistory">Open Command History</system:String>
+    <system:String x:Key="Palette_InsertLastCommand">Insert Last Command</system:String>
+    <system:String x:Key="Palette_Search">Search</system:String>
+    <system:String x:Key="Palette_ToggleAgentChat">Toggle Agent Chat</system:String>
+    <system:String x:Key="Palette_ZoomPane">Zoom Pane</system:String>
+    <system:String x:Key="Palette_FocusNextPane">Focus Next Pane</system:String>
+    <system:String x:Key="Palette_FocusPrevPane">Focus Previous Pane</system:String>
+    <system:String x:Key="Palette_NextSurface">Next Surface</system:String>
+    <system:String x:Key="Palette_PrevSurface">Previous Surface</system:String>
+    <system:String x:Key="Palette_Settings">Settings</system:String>
+    <system:String x:Key="Palette_EqualizePanes">Equalize Panes</system:String>
+    <system:String x:Key="Palette_Layout2Col">Layout: 2 Columns</system:String>
+    <system:String x:Key="Palette_Layout3Col">Layout: 3 Columns</system:String>
+    <system:String x:Key="Palette_LayoutGrid">Layout: Grid 2x2</system:String>
+    <system:String x:Key="Palette_LayoutMainStack">Layout: Main + Stack</system:String>
+
+    <!-- Notifications Panel -->
+    <system:String x:Key="Notify_Title">Notifications</system:String>
+    <system:String x:Key="Notify_MarkAllRead">Mark all read</system:String>
+    <system:String x:Key="Notify_Empty">No notifications yet</system:String>
+
+    <!-- Snippet Picker -->
+    <system:String x:Key="Snippet_Title">Snippets</system:String>
+    <system:String x:Key="Snippet_NewTooltip">New snippet (Ctrl+N)</system:String>
+    <system:String x:Key="Snippet_CloseTooltip">Close</system:String>
+    <system:String x:Key="Snippet_ToggleFavorite">Toggle favorite</system:String>
+    <system:String x:Key="Snippet_Edit">Edit snippet</system:String>
+    <system:String x:Key="Snippet_Delete">Delete snippet</system:String>
+    <system:String x:Key="Snippet_NewSnippet">New snippet</system:String>
+    <system:String x:Key="Snippet_EditSnippet">Edit snippet</system:String>
+    <system:String x:Key="Snippet_Name">Name</system:String>
+    <system:String x:Key="Snippet_Category">Category</system:String>
+    <system:String x:Key="Snippet_Command">Command</system:String>
+    <system:String x:Key="Snippet_DefaultCategory">Custom</system:String>
+    <system:String x:Key="Snippet_Cancel">Cancel</system:String>
+    <system:String x:Key="Snippet_Save">Save Snippet</system:String>
+    <system:String x:Key="Snippet_Update">Update Snippet</system:String>
+    <system:String x:Key="Snippet_Empty">No snippets found</system:String>
+    <system:String x:Key="Snippet_EmptyContent">Snippet command/content cannot be empty.</system:String>
+    <system:String x:Key="Snippet_DefaultDescription">User snippet</system:String>
+    <system:String x:Key="Snippet_DeleteConfirm">Delete snippet '{0}'?</system:String>
+    <system:String x:Key="Snippet_DeleteTitle">Delete Snippet</system:String>
+
+    <!-- Color Picker -->
+    <system:String x:Key="Color_Title">Accent Color</system:String>
+    <system:String x:Key="Color_Heading">Workspace Accent Color</system:String>
+    <system:String x:Key="Color_Preview">Preview</system:String>
+    <system:String x:Key="Color_Cancel">Cancel</system:String>
+    <system:String x:Key="Color_Apply">Apply</system:String>
+
+    <!-- History Window -->
+    <system:String x:Key="History_Title">Command History</system:String>
+    <system:String x:Key="History_PaneTitle">Command History · Pane {0}</system:String>
+    <system:String x:Key="History_Search">Search</system:String>
+    <system:String x:Key="History_Hint">Enter = run, Shift+Enter = insert</system:String>
+    <system:String x:Key="History_ColNumber">#</system:String>
+    <system:String x:Key="History_ColCommand">Command</system:String>
+    <system:String x:Key="History_Copy">Copy</system:String>
+    <system:String x:Key="History_Insert">Insert</system:String>
+    <system:String x:Key="History_Run">Run</system:String>
+    <system:String x:Key="History_Close">Close</system:String>
+    <system:String x:Key="History_CountSingular">1 command</system:String>
+    <system:String x:Key="History_CountPlural">{0} commands</system:String>
+    <system:String x:Key="History_NoHistory">No command history found yet for this pane.</system:String>
+    <system:String x:Key="History_DialogTitle">History</system:String>
+
+    <!-- Logs Window -->
+    <system:String x:Key="Logs_Title">Command Logs</system:String>
+    <system:String x:Key="Logs_Date">Date</system:String>
+    <system:String x:Key="Logs_Workspace">Workspace</system:String>
+    <system:String x:Key="Logs_Surface">Surface</system:String>
+    <system:String x:Key="Logs_Pane">Pane</system:String>
+    <system:String x:Key="Logs_Search">Search</system:String>
+    <system:String x:Key="Logs_Refresh">Refresh</system:String>
+    <system:String x:Key="Logs_OpenFolder">Open Logs Folder</system:String>
+    <system:String x:Key="Logs_OpenCaptures">Open Terminal Captures</system:String>
+    <system:String x:Key="Logs_SessionVault">Session Vault</system:String>
+    <system:String x:Key="Logs_ClearFilters">Clear Filters</system:String>
+    <system:String x:Key="Logs_CopyCommand">Copy Command</system:String>
+    <system:String x:Key="Logs_InsertInPane">Insert in Focused Pane</system:String>
+    <system:String x:Key="Logs_RunInPane">Run in Focused Pane</system:String>
+    <system:String x:Key="Logs_Close">Close</system:String>
+    <system:String x:Key="Logs_ColTime">Time</system:String>
+    <system:String x:Key="Logs_ColWorkspace">Workspace</system:String>
+    <system:String x:Key="Logs_ColSurface">Surface</system:String>
+    <system:String x:Key="Logs_ColPane">Pane</system:String>
+    <system:String x:Key="Logs_ColCommand">Command</system:String>
+    <system:String x:Key="Logs_ColWorkingDir">Working Dir</system:String>
+    <system:String x:Key="Logs_ColExit">Exit</system:String>
+    <system:String x:Key="Logs_ColDuration">Duration</system:String>
+    <system:String x:Key="Logs_AllWorkspaces">All workspaces</system:String>
+    <system:String x:Key="Logs_AllSurfaces">All surfaces</system:String>
+    <system:String x:Key="Logs_AllPanes">All panes</system:String>
+    <system:String x:Key="Logs_CountSingular">1 entry</system:String>
+    <system:String x:Key="Logs_CountPlural">{0} entries</system:String>
+    <system:String x:Key="Logs_CountFiltered">{0} / {1} entries</system:String>
+    <system:String x:Key="Logs_NoPaneAvailable">No focused pane available.</system:String>
+    <system:String x:Key="Logs_DialogTitle">Logs</system:String>
+
+    <!-- Session Vault -->
+    <system:String x:Key="Vault_Title">Session Vault</system:String>
+    <system:String x:Key="Vault_Search">Search</system:String>
+    <system:String x:Key="Vault_Refresh">Refresh</system:String>
+    <system:String x:Key="Vault_OpenFolder">Open Folder</system:String>
+    <system:String x:Key="Vault_SelectCapture">Select a capture</system:String>
+    <system:String x:Key="Vault_CopyAll">Copy All</system:String>
+    <system:String x:Key="Vault_OpenFile">Open File</system:String>
+    <system:String x:Key="Vault_Close">Close</system:String>
+    <system:String x:Key="Vault_ColTime">Time</system:String>
+    <system:String x:Key="Vault_ColWorkspace">Workspace</system:String>
+    <system:String x:Key="Vault_ColSurface">Surface</system:String>
+    <system:String x:Key="Vault_CountSingular">1 capture</system:String>
+    <system:String x:Key="Vault_CountPlural">{0} captures</system:String>
+
+    <!-- Text Prompt -->
+    <system:String x:Key="Prompt_Title">Input</system:String>
+    <system:String x:Key="Prompt_Hint">Press Enter to confirm or Esc to cancel.</system:String>
+    <system:String x:Key="Prompt_Cancel">Cancel</system:String>
+    <system:String x:Key="Prompt_OK">OK</system:String>
+
+    <!-- Settings Window -->
+    <system:String x:Key="Settings_Title">Settings</system:String>
+    <system:String x:Key="Settings_Appearance">Appearance</system:String>
+    <system:String x:Key="Settings_Terminal">Terminal</system:String>
+    <system:String x:Key="Settings_Behavior">Behavior</system:String>
+    <system:String x:Key="Settings_Keyboard">Keyboard</system:String>
+    <system:String x:Key="Settings_Agent">Agent</system:String>
+    <system:String x:Key="Settings_About">About</system:String>
+    <system:String x:Key="Settings_Language">Language</system:String>
+    <system:String x:Key="Settings_FontFamily">Font Family</system:String>
+    <system:String x:Key="Settings_FontSize">Font Size</system:String>
+    <system:String x:Key="Settings_Theme">Theme</system:String>
+    <system:String x:Key="Settings_Opacity">Opacity</system:String>
+    <system:String x:Key="Settings_CursorStyle">Cursor Style</system:String>
+    <system:String x:Key="Settings_CursorBlink">Cursor Blink</system:String>
+    <system:String x:Key="Settings_SystemTheme">System Theme</system:String>
+    <system:String x:Key="Settings_Detected"> (detected)</system:String>
+    <system:String x:Key="Settings_ColorPreset">Color Preset</system:String>
+    <system:String x:Key="Settings_CustomColors">Custom Colors</system:String>
+    <system:String x:Key="Settings_OverrideColors">Override preset colors</system:String>
+    <system:String x:Key="Settings_Background">Background</system:String>
+    <system:String x:Key="Settings_Foreground">Foreground</system:String>
+    <system:String x:Key="Settings_Cursor">Cursor</system:String>
+    <system:String x:Key="Settings_Selection">Selection</system:String>
+    <system:String x:Key="Settings_Pick">Pick</system:String>
+    <system:String x:Key="Settings_Reset">Reset</system:String>
+    <system:String x:Key="Settings_DefaultShell">Default Shell</system:String>
+    <system:String x:Key="Settings_ShellArgs">Shell Arguments</system:String>
+    <system:String x:Key="Settings_ScrollbackLines">Scrollback Lines</system:String>
+    <system:String x:Key="Settings_VisualBell">Visual Bell</system:String>
+    <system:String x:Key="Settings_BracketedPaste">Bracketed Paste</system:String>
+    <system:String x:Key="Settings_RestoreSession">Restore Session</system:String>
+    <system:String x:Key="Settings_RestoreSessionDesc">Restore previous session on startup</system:String>
+    <system:String x:Key="Settings_ConfirmClose">Confirm Close</system:String>
+    <system:String x:Key="Settings_ConfirmCloseDesc">Ask before closing window</system:String>
+    <system:String x:Key="Settings_AutoCopy">Auto Copy</system:String>
+    <system:String x:Key="Settings_AutoCopyDesc">Copy to clipboard on text selection</system:String>
+    <system:String x:Key="Settings_CtrlClickUrls">Ctrl+Click URLs</system:String>
+    <system:String x:Key="Settings_CtrlClickUrlsDesc">Open URLs with Ctrl+Click</system:String>
+    <system:String x:Key="Settings_AgentChat">Agent Chat</system:String>
+    <system:String x:Key="Settings_AgentChatDesc">Open agent chat panel on startup</system:String>
+    <system:String x:Key="Settings_AutoSave">Auto Save (sec)</system:String>
+    <system:String x:Key="Settings_LogRetention">Log Retention (days)</system:String>
+    <system:String x:Key="Settings_LogRetentionTooltip">Delete log files older than this many days. Use 0 to keep logs forever.</system:String>
+    <system:String x:Key="Settings_CaptureOnClose">Capture On Close</system:String>
+    <system:String x:Key="Settings_CaptureOnCloseDesc">Save terminal transcript when pane/surface/workspace/app closes</system:String>
+    <system:String x:Key="Settings_CaptureOnClear">Capture On Clear</system:String>
+    <system:String x:Key="Settings_CaptureOnClearDesc">Save terminal transcript before Clear Terminal</system:String>
+    <system:String x:Key="Settings_CaptureRetention">Capture Retention</system:String>
+    <system:String x:Key="Settings_CaptureRetentionTooltip">Delete terminal captures older than this many days. Use 0 to keep forever.</system:String>
+    <system:String x:Key="Settings_KeyboardShortcuts">Keyboard Shortcuts</system:String>
+    <system:String x:Key="Settings_ResetDefaults">Reset to Defaults</system:String>
+    <system:String x:Key="Settings_Cancel">Cancel</system:String>
+    <system:String x:Key="Settings_Save">Save</system:String>
+
+    <!-- Settings - Keyboard shortcut descriptions -->
+    <system:String x:Key="Shortcut_NewWorkspace">New workspace</system:String>
+    <system:String x:Key="Shortcut_JumpWorkspace">Jump to workspace</system:String>
+    <system:String x:Key="Shortcut_CloseWorkspace">Close workspace</system:String>
+    <system:String x:Key="Shortcut_NewSurface">New surface</system:String>
+    <system:String x:Key="Shortcut_CloseSurface">Close surface</system:String>
+    <system:String x:Key="Shortcut_NextSurface">Next surface</system:String>
+    <system:String x:Key="Shortcut_PrevSurface">Previous surface</system:String>
+    <system:String x:Key="Shortcut_SplitRight">Split right</system:String>
+    <system:String x:Key="Shortcut_SplitDown">Split down</system:String>
+    <system:String x:Key="Shortcut_FocusPane">Focus pane directionally</system:String>
+    <system:String x:Key="Shortcut_ZoomToggle">Zoom pane toggle</system:String>
+    <system:String x:Key="Shortcut_DeleteWord">Delete previous word</system:String>
+    <system:String x:Key="Shortcut_ToggleSidebar">Toggle sidebar</system:String>
+    <system:String x:Key="Shortcut_NotificationPanel">Notification panel</system:String>
+    <system:String x:Key="Shortcut_JumpUnread">Jump to latest unread</system:String>
+    <system:String x:Key="Shortcut_SearchTerminal">Search in terminal</system:String>
+    <system:String x:Key="Shortcut_CommandPalette">Command palette</system:String>
+    <system:String x:Key="Shortcut_ToggleAgentChat">Toggle agent chat</system:String>
+    <system:String x:Key="Shortcut_OpenLogs">Open command logs</system:String>
+    <system:String x:Key="Shortcut_OpenHistory">Open command history picker</system:String>
+    <system:String x:Key="Shortcut_OpenVault">Open session vault</system:String>
+
+    <!-- Settings - Agent section -->
+    <system:String x:Key="Settings_EnableAgent">Enable Agent</system:String>
+    <system:String x:Key="Settings_EnableAgentDesc">Enable pane handler commands</system:String>
+    <system:String x:Key="Settings_AgentName">Agent Name</system:String>
+    <system:String x:Key="Settings_PrimaryHandler">Primary Handler</system:String>
+    <system:String x:Key="Settings_ExtraHandlers">Extra Handlers</system:String>
+    <system:String x:Key="Settings_ExtraHandlersTooltip">Comma/space separated aliases (e.g. /bot /assistant).</system:String>
+    <system:String x:Key="Settings_ActiveProvider">Active Provider</system:String>
+    <system:String x:Key="Settings_SystemPrompt">System Prompt</system:String>
+    <system:String x:Key="Settings_OpenAI">OpenAI-Compatible</system:String>
+    <system:String x:Key="Settings_Anthropic">Anthropic-Compatible</system:String>
+    <system:String x:Key="Settings_BaseURL">Base URL</system:String>
+    <system:String x:Key="Settings_Model">Model</system:String>
+    <system:String x:Key="Settings_APIKey">API Key</system:String>
+    <system:String x:Key="Settings_Clear">Clear</system:String>
+    <system:String x:Key="Settings_Tools">Tools</system:String>
+    <system:String x:Key="Settings_BashTool">Bash Tool</system:String>
+    <system:String x:Key="Settings_BashTimeout">Bash Timeout</system:String>
+    <system:String x:Key="Settings_WebSearch">Web Search</system:String>
+    <system:String x:Key="Settings_ExaBaseURL">Exa Base URL</system:String>
+    <system:String x:Key="Settings_ExaAPIKey">Exa API Key</system:String>
+    <system:String x:Key="Settings_PaneSubmit">Pane Submit</system:String>
+    <system:String x:Key="Settings_DefaultSubmitKey">Default Submit Key</system:String>
+    <system:String x:Key="Settings_EnableAutoFallback">Enable Auto Fallback</system:String>
+    <system:String x:Key="Settings_FallbackWait">Fallback Wait (ms)</system:String>
+    <system:String x:Key="Settings_FallbackOrder">Fallback Order</system:String>
+    <system:String x:Key="Settings_EnableSubmitProfiles">Enable Submit Profiles</system:String>
+    <system:String x:Key="Settings_SubmitProfilesDesc">Submit Profiles JSON (array). Fields: pattern (string), submitOrder (comma-separated keys).</system:String>
+    <system:String x:Key="Settings_SubmitProfilesTooltip">submitOrder keys: enter,linefeed,crlf. Patterns support substring or wildcard * and ?.</system:String>
+    <system:String x:Key="Settings_AgentFiles">Agent Files &amp; Skills</system:String>
+    <system:String x:Key="Settings_AutoDiscover">Auto Discover</system:String>
+    <system:String x:Key="Settings_InstructionsPath">Instructions Path</system:String>
+    <system:String x:Key="Settings_SkillsRootPath">Skills Root Path</system:String>
+    <system:String x:Key="Settings_InstructionsPathTooltip">Path to agents.md/AGENTS.md file. Leave empty to use auto discovery.</system:String>
+    <system:String x:Key="Settings_SkillsRootPathTooltip">Path to skills root folder. Leave empty to use auto discovery.</system:String>
+    <system:String x:Key="Settings_ChatPanel">Chat Panel</system:String>
+    <system:String x:Key="Settings_ChatFontFamily">Chat Font Family</system:String>
+    <system:String x:Key="Settings_ChatFontSize">Chat Font Size</system:String>
+    <system:String x:Key="Settings_ConversationMemory">Conversation Memory</system:String>
+    <system:String x:Key="Settings_EnableMemory">Enable Memory</system:String>
+    <system:String x:Key="Settings_EnableStreaming">Enable Streaming</system:String>
+    <system:String x:Key="Settings_AutoCompactContext">Auto Compact Context</system:String>
+    <system:String x:Key="Settings_MaxContextMessages">Max Context Messages</system:String>
+    <system:String x:Key="Settings_ContextBudgetTokens">Context Budget Tokens</system:String>
+    <system:String x:Key="Settings_CompactThreshold">Compact Threshold %</system:String>
+    <system:String x:Key="Settings_KeepRecentOnCompact">Keep Recent on Compact</system:String>
+    <system:String x:Key="Settings_CustomToolsMode">Custom Tools Mode</system:String>
+    <system:String x:Key="Settings_Creator">Creator</system:String>
+    <system:String x:Key="Settings_JSON">JSON</system:String>
+    <system:String x:Key="Settings_ToolName">Name</system:String>
+    <system:String x:Key="Settings_ToolDescription">Description</system:String>
+    <system:String x:Key="Settings_ToolCommandTemplate">Command Template</system:String>
+    <system:String x:Key="Settings_ToolEnabled">Enabled</system:String>
+    <system:String x:Key="Settings_AddUpdate">Add / Update</system:String>
+    <system:String x:Key="Settings_RemoveSelected">Remove Selected</system:String>
+    <system:String x:Key="Settings_McpServersMode">MCP Servers Mode</system:String>
+    <system:String x:Key="Settings_McpCommand">Command</system:String>
+    <system:String x:Key="Settings_McpArguments">Arguments</system:String>
+    <system:String x:Key="Settings_McpWorkingDir">Working Dir</system:String>
+    <system:String x:Key="Settings_FallbackOrderTooltip">Comma-separated keys, e.g. enter,linefeed,crlf</system:String>
+
+    <!-- Settings - About section -->
+    <system:String x:Key="Settings_AboutTitle">cmux for Windows</system:String>
+    <system:String x:Key="Settings_AboutVersion">v1.0.6</system:String>
+    <system:String x:Key="Settings_AboutDesc">A modern terminal multiplexer designed for AI coding agents and power users. Built with WPF.</system:String>
+    <system:String x:Key="Settings_AboutRuntime">Runtime: .NET 10</system:String>
+    <system:String x:Key="Settings_AboutFramework">Framework: WPF + CommunityToolkit.Mvvm</system:String>
+    <system:String x:Key="Settings_AboutConfig">Config: %LOCALAPPDATA%\cmux\settings.json</system:String>
+
+    <!-- Settings validation messages -->
+    <system:String x:Key="Settings_DialogTitle">Settings</system:String>
+    <system:String x:Key="Msg_ToolNameRequired">Custom tool name is required.</system:String>
+    <system:String x:Key="Msg_ToolCommandRequired">Custom tool command template is required.</system:String>
+    <system:String x:Key="Msg_McpNameRequired">MCP server name is required.</system:String>
+    <system:String x:Key="Msg_McpCommandRequired">MCP server command is required.</system:String>
+    <system:String x:Key="Msg_ToolsJsonArray">Custom tools JSON must be an array.</system:String>
+    <system:String x:Key="Msg_McpJsonArray">MCP servers JSON must be an array.</system:String>
+    <system:String x:Key="Msg_ProfilesJsonArray">Submit profiles JSON must be an array.</system:String>
+    <system:String x:Key="Msg_ToolMissingName">Custom tool at index {0} is missing 'name'.</system:String>
+    <system:String x:Key="Msg_McpMissingName">MCP server at index {0} is missing 'name'.</system:String>
+    <system:String x:Key="Msg_ToolDuplicateName">Duplicate custom tool name: '{0}'.</system:String>
+    <system:String x:Key="Msg_ToolMissingCommand">Custom tool '{0}' is missing 'commandTemplate'.</system:String>
+    <system:String x:Key="Msg_McpDuplicateName">Duplicate MCP server name: '{0}'.</system:String>
+    <system:String x:Key="Msg_McpMissingCommand">MCP server '{0}' is missing 'command'.</system:String>
+    <system:String x:Key="Msg_ProfileMissingName">Submit profile at index {0} is missing 'name'.</system:String>
+    <system:String x:Key="Msg_ProfileDuplicateName">Duplicate submit profile name: '{0}'.</system:String>
+    <system:String x:Key="Msg_ProfileMissingOrder">Submit profile '{0}' is missing 'submitOrder'.</system:String>
+    <system:String x:Key="Msg_ProfileUnsupportedKey">Submit profile '{0}' has unsupported submit key '{1}'.</system:String>
+    <system:String x:Key="Msg_ToolsJsonInvalid">Invalid custom tools JSON: {0}</system:String>
+    <system:String x:Key="Msg_McpJsonInvalid">Invalid MCP servers JSON: {0}</system:String>
+    <system:String x:Key="Msg_ProfilesJsonInvalid">Invalid submit profiles JSON: {0}</system:String>
+    <system:String x:Key="Settings_SystemThemeLight">Light</system:String>
+    <system:String x:Key="Settings_SystemThemeDark">Dark</system:String>
+
+    <!-- About dialog -->
+    <system:String x:Key="About_Title">About cmux</system:String>
+    <system:String x:Key="About_Body">cmux for Windows
+A terminal multiplexer optimized for modern workflows.</system:String>
+
+    <!-- Default names -->
+    <system:String x:Key="Default_Terminal">Terminal {0}</system:String>
+    <system:String x:Key="Default_Workspace">Workspace {0}</system:String>
+    <system:String x:Key="Default_Terminal1">Terminal 1</system:String>
+    <system:String x:Key="Default_PaneName">Pane {0}</system:String>
+    <system:String x:Key="Default_TerminalFallback">Terminal</system:String>
+
+    <!-- Notification test -->
+    <system:String x:Key="Notify_TestTitle">cmux test</system:String>
+    <system:String x:Key="Notify_TestSubject">Notification check</system:String>
+    <system:String x:Key="Notify_TestBody">If you see this in panel/toast, notifications are working.</system:String>
+
+    <!-- Submit key options -->
+    <system:String x:Key="Submit_Auto">auto</system:String>
+    <system:String x:Key="Submit_Enter">enter</system:String>
+    <system:String x:Key="Submit_Linefeed">linefeed</system:String>
+    <system:String x:Key="Submit_Crlf">crlf</system:String>
+
+    <!-- Provider options -->
+    <system:String x:Key="Provider_OpenAI">openai</system:String>
+    <system:String x:Key="Provider_Anthropic">anthropic</system:String>
+
+    <!-- Agent defaults -->
+    <system:String x:Key="AgentDefault_Name">assistant</system:String>
+    <system:String x:Key="AgentDefault_Handler">/agent</system:String>
+    <system:String x:Key="AgentDefault_SystemPrompt">You are a pragmatic engineering assistant running inside cmux. Keep responses concise and action-oriented.</system:String>
+
+</ResourceDictionary>

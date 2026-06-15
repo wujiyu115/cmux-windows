@@ -190,10 +190,10 @@ public partial class MainWindow : Window
         DaemonStatusDot.Fill = connected
             ? new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(0x34, 0xD3, 0x99)) // green
             : new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(0x6B, 0x72, 0x80)); // gray
-        DaemonStatusText.Text = connected ? "Daemon" : "Local";
+        DaemonStatusText.Text = connected ? LanguageService.Lang("Status_Daemon") : LanguageService.Lang("Status_Local");
         DaemonStatusBorder.ToolTip = connected
-            ? "Connected to cmux-daemon — sessions persist across restarts"
-            : "Running locally — sessions will not persist";
+            ? LanguageService.Lang("Status_DaemonConnected")
+            : LanguageService.Lang("Status_DaemonLocal");
     }
 
     private void UpdateWindowChrome()
@@ -204,7 +204,7 @@ public partial class MainWindow : Window
         WindowBorder.BorderThickness = maximized ? new Thickness(0) : new Thickness(1);
         // Update maximize/restore icon
         MaxRestoreIcon.Text = maximized ? "\uE923" : "\uE922";
-        MaxRestoreButton.ToolTip = maximized ? "Restore" : "Maximize";
+        MaxRestoreButton.ToolTip = maximized ? LanguageService.Lang("Window_Restore") : LanguageService.Lang("Window_Maximize");
         UpdateWindowClip();
     }
 
@@ -275,38 +275,38 @@ public partial class MainWindow : Window
 
                 case AgentRuntimeUpdateType.UserMessage:
                     AppendAgentMessage("user", update.Message, update.CreatedAtUtc, "-", update.ThreadId);
-                    AgentStatusText.Text = "User message sent";
+                    AgentStatusText.Text = LanguageService.Lang("Agent_UserSent");
                     break;
 
                 case AgentRuntimeUpdateType.AssistantDelta:
                     AppendAssistantDelta(update.ThreadId, update.Message);
-                    AgentStatusText.Text = "Streaming response...";
+                    AgentStatusText.Text = LanguageService.Lang("Agent_StreamingResponse");
                     break;
 
                 case AgentRuntimeUpdateType.AssistantCompleted:
                     FinalizeAssistantMessage(update.ThreadId, update.Message, update.CreatedAtUtc,
-                        $"usage in:{update.InputTokens} out:{update.OutputTokens} total:{update.TotalTokens} · {update.Provider}/{update.Model}");
-                    AgentUsageText.Text = $"Usage: in {update.InputTokens} · out {update.OutputTokens} · total {update.TotalTokens}";
+                        LanguageService.Lang("Agent_MetaFormat", update.InputTokens, update.OutputTokens, update.TotalTokens, update.Provider, update.Model));
+                    AgentUsageText.Text = LanguageService.Lang("Agent_UsageFormat", update.InputTokens, update.OutputTokens, update.TotalTokens);
                     AgentContextText.Text = update.ContextBudgetTokens > 0
-                        ? $"Context: {update.EstimatedContextTokens}/{update.ContextBudgetTokens} tokens{(update.ContextNeedsCompaction ? " (near limit)" : "")}"
-                        : "Context: -";
-                    AgentStatusText.Text = "Response completed";
+                        ? LanguageService.Lang("Agent_ContextFormat", update.EstimatedContextTokens, update.ContextBudgetTokens) + (update.ContextNeedsCompaction ? LanguageService.Lang("Agent_ContextNearLimit") : "")
+                        : LanguageService.Lang("Agent_ContextNone");
+                    AgentStatusText.Text = LanguageService.Lang("Agent_ResponseCompleted");
                     RefreshAgentThreads();
                     break;
 
                 case AgentRuntimeUpdateType.ContextMetrics:
                     AgentContextText.Text = update.ContextBudgetTokens > 0
-                        ? $"Context: {update.EstimatedContextTokens}/{update.ContextBudgetTokens} tokens{(update.ContextNeedsCompaction ? " (near limit)" : "")}{(update.CompactionApplied ? " · compacted" : "")}"
-                        : "Context: -";
+                        ? LanguageService.Lang("Agent_ContextFormat", update.EstimatedContextTokens, update.ContextBudgetTokens) + (update.ContextNeedsCompaction ? LanguageService.Lang("Agent_ContextNearLimit") : "") + (update.CompactionApplied ? LanguageService.Lang("Agent_ContextCompacted") : "")
+                        : LanguageService.Lang("Agent_ContextNone");
                     break;
 
                 case AgentRuntimeUpdateType.Error:
                     AppendAgentMessage("error", update.Message, update.CreatedAtUtc, "error", update.ThreadId);
-                    AgentStatusText.Text = $"Error: {update.Message}";
+                    AgentStatusText.Text = LanguageService.Lang("Agent_ErrorFormat", update.Message);
                     break;
 
                 case AgentRuntimeUpdateType.Status:
-                    AgentStatusText.Text = string.IsNullOrWhiteSpace(update.Message) ? "Idle" : update.Message;
+                    AgentStatusText.Text = string.IsNullOrWhiteSpace(update.Message) ? LanguageService.Lang("Agent_Idle") : update.Message;
                     break;
             }
         });
@@ -638,8 +638,8 @@ public partial class MainWindow : Window
     private void MenuAbout_Click(object sender, RoutedEventArgs e)
     {
         MessageBox.Show(
-            "cmux for Windows\nA terminal multiplexer optimized for modern workflows.",
-            "About cmux",
+            LanguageService.Lang("About_Body"),
+            LanguageService.Lang("About_Title"),
             MessageBoxButton.OK,
             MessageBoxImage.Information);
     }
@@ -1003,7 +1003,7 @@ public partial class MainWindow : Window
                 Role = "assistant",
                 Header = $"assistant · {DateTime.Now:yyyy-MM-dd HH:mm:ss}",
                 Content = "",
-                Meta = "streaming...",
+                Meta = LanguageService.Lang("Agent_Streaming"),
                 CreatedAtUtc = DateTime.UtcNow,
             };
             _streamingAssistantByThread[threadId] = message;
@@ -1088,32 +1088,32 @@ public partial class MainWindow : Window
     {
         return
         [
-            new() { Id = "new-workspace", Label = "New Workspace", Icon = "\uE710", Shortcut = "Ctrl+N", Category = "Workspace", Execute = () => ViewModel.CreateNewWorkspace() },
-            new() { Id = "new-surface", Label = "New Surface", Icon = "\uE710", Shortcut = "Ctrl+T", Category = "Surface", Execute = () => ViewModel.SelectedWorkspace?.CreateNewSurface() },
-            new() { Id = "close-surface", Label = "Close Surface", Icon = "\uE711", Shortcut = "Ctrl+W", Category = "Surface", Execute = () => { var s = ViewModel.SelectedWorkspace?.SelectedSurface; if (s != null) ViewModel.SelectedWorkspace?.CloseSurface(s); } },
-            new() { Id = "close-workspace", Label = "Close Workspace", Icon = "\uE711", Shortcut = "Ctrl+Shift+W", Category = "Workspace", Execute = () => ViewModel.CloseWorkspace(ViewModel.SelectedWorkspace) },
-            new() { Id = "split-right", Label = "Split Right", Icon = "\uE26B", Shortcut = "Ctrl+D", Category = "Pane", Execute = () => ViewModel.SelectedWorkspace?.SelectedSurface?.SplitRight() },
-            new() { Id = "split-down", Label = "Split Down", Icon = "\uE74B", Shortcut = "Ctrl+Shift+D", Category = "Pane", Execute = () => ViewModel.SelectedWorkspace?.SelectedSurface?.SplitDown() },
-            new() { Id = "toggle-sidebar", Label = "Toggle Sidebar", Icon = "\uE700", Shortcut = "Ctrl+B", Category = "View", Execute = () => ViewModel.ToggleSidebar() },
-            new() { Id = "notifications", Label = "Notifications", Icon = "\uEA8F", Shortcut = "Ctrl+I", Category = "View", Execute = () => ViewModel.ToggleNotificationPanel() },
-            new() { Id = "test-notification", Label = "Test Notification", Icon = "\uE7F4", Category = "View", Execute = ShowTestNotification },
-            new() { Id = "open-logs", Label = "Open Command Logs", Icon = "\uE7BA", Shortcut = "Ctrl+Shift+L", Category = "Logs", Execute = OpenLogsWindow },
-            new() { Id = "open-session-vault", Label = "Open Session Vault", Icon = "\uE8D1", Shortcut = "Ctrl+Shift+V", Category = "Logs", Execute = OpenSessionVault },
-            new() { Id = "open-command-history", Label = "Open Command History", Icon = "\uE81C", Shortcut = "Ctrl+Alt+H", Category = "History", Execute = OpenCommandHistoryPicker },
-            new() { Id = "insert-last-command", Label = "Insert Last Command", Icon = "\uE8A7", Shortcut = "Ctrl+Shift+H", Category = "History", Execute = InsertLastCommandFromHistory },
-            new() { Id = "search", Label = "Search", Icon = "\uE721", Shortcut = "Ctrl+Shift+F", Category = "View", Execute = () => ToggleSearch() },
-            new() { Id = "toggle-agent-chat", Label = "Toggle Agent Chat", Icon = "\uE11B", Shortcut = "Ctrl+Shift+A", Category = "View", Execute = ToggleAgentChat },
-            new() { Id = "zoom-pane", Label = "Zoom Pane", Icon = "\uE740", Shortcut = "Ctrl+Shift+Z", Category = "Pane", Execute = () => ViewModel.SelectedWorkspace?.SelectedSurface?.ToggleZoom() },
-            new() { Id = "focus-next", Label = "Focus Next Pane", Icon = "\uE76C", Shortcut = "Ctrl+Alt+Right", Category = "Pane", Execute = () => ViewModel.SelectedWorkspace?.SelectedSurface?.FocusNextPane() },
-            new() { Id = "focus-prev", Label = "Focus Previous Pane", Icon = "\uE76B", Shortcut = "Ctrl+Alt+Left", Category = "Pane", Execute = () => ViewModel.SelectedWorkspace?.SelectedSurface?.FocusPreviousPane() },
-            new() { Id = "next-surface", Label = "Next Surface", Icon = "\uE76C", Shortcut = "Ctrl+Tab", Category = "Surface", Execute = () => ViewModel.SelectedWorkspace?.NextSurface() },
-            new() { Id = "prev-surface", Label = "Previous Surface", Icon = "\uE76B", Shortcut = "Ctrl+Shift+Tab", Category = "Surface", Execute = () => ViewModel.SelectedWorkspace?.PreviousSurface() },
-            new() { Id = "settings", Label = "Settings", Icon = "\uE713", Shortcut = "Ctrl+,", Category = "App", Execute = () => OpenSettings() },
-            new() { Id = "equalize", Label = "Equalize Panes", Icon = "\uE9D5", Category = "Pane", Execute = () => ViewModel.SelectedWorkspace?.SelectedSurface?.EqualizePanes() },
-            new() { Id = "layout-2col", Label = "Layout: 2 Columns", Icon = "\uE745", Category = "Layout", Execute = () => ApplyLayout(2, 1) },
-            new() { Id = "layout-3col", Label = "Layout: 3 Columns", Icon = "\uE745", Category = "Layout", Execute = () => ApplyLayout(3, 1) },
-            new() { Id = "layout-grid", Label = "Layout: Grid 2x2", Icon = "\uF0E2", Category = "Layout", Execute = () => ApplyLayout(2, 2) },
-            new() { Id = "layout-main-stack", Label = "Layout: Main + Stack", Icon = "\uE745", Category = "Layout", Execute = () => ApplyMainStackLayout() },
+            new() { Id = "new-workspace", Label = LanguageService.Lang("Palette_NewWorkspace"), Icon = "\uE710", Shortcut = "Ctrl+N", Category = "Workspace", Execute = () => ViewModel.CreateNewWorkspace() },
+            new() { Id = "new-surface", Label = LanguageService.Lang("Palette_NewSurface"), Icon = "\uE710", Shortcut = "Ctrl+T", Category = "Surface", Execute = () => ViewModel.SelectedWorkspace?.CreateNewSurface() },
+            new() { Id = "close-surface", Label = LanguageService.Lang("Palette_CloseSurface"), Icon = "\uE711", Shortcut = "Ctrl+W", Category = "Surface", Execute = () => { var s = ViewModel.SelectedWorkspace?.SelectedSurface; if (s != null) ViewModel.SelectedWorkspace?.CloseSurface(s); } },
+            new() { Id = "close-workspace", Label = LanguageService.Lang("Palette_CloseWorkspace"), Icon = "\uE711", Shortcut = "Ctrl+Shift+W", Category = "Workspace", Execute = () => ViewModel.CloseWorkspace(ViewModel.SelectedWorkspace) },
+            new() { Id = "split-right", Label = LanguageService.Lang("Palette_SplitRight"), Icon = "\uE26B", Shortcut = "Ctrl+D", Category = "Pane", Execute = () => ViewModel.SelectedWorkspace?.SelectedSurface?.SplitRight() },
+            new() { Id = "split-down", Label = LanguageService.Lang("Palette_SplitDown"), Icon = "\uE74B", Shortcut = "Ctrl+Shift+D", Category = "Pane", Execute = () => ViewModel.SelectedWorkspace?.SelectedSurface?.SplitDown() },
+            new() { Id = "toggle-sidebar", Label = LanguageService.Lang("Palette_ToggleSidebar"), Icon = "\uE700", Shortcut = "Ctrl+B", Category = "View", Execute = () => ViewModel.ToggleSidebar() },
+            new() { Id = "notifications", Label = LanguageService.Lang("Palette_Notifications"), Icon = "\uEA8F", Shortcut = "Ctrl+I", Category = "View", Execute = () => ViewModel.ToggleNotificationPanel() },
+            new() { Id = "test-notification", Label = LanguageService.Lang("Palette_TestNotification"), Icon = "\uE7F4", Category = "View", Execute = ShowTestNotification },
+            new() { Id = "open-logs", Label = LanguageService.Lang("Palette_OpenCommandLogs"), Icon = "\uE7BA", Shortcut = "Ctrl+Shift+L", Category = "Logs", Execute = OpenLogsWindow },
+            new() { Id = "open-session-vault", Label = LanguageService.Lang("Palette_OpenSessionVault"), Icon = "\uE8D1", Shortcut = "Ctrl+Shift+V", Category = "Logs", Execute = OpenSessionVault },
+            new() { Id = "open-command-history", Label = LanguageService.Lang("Palette_OpenCommandHistory"), Icon = "\uE81C", Shortcut = "Ctrl+Alt+H", Category = "History", Execute = OpenCommandHistoryPicker },
+            new() { Id = "insert-last-command", Label = LanguageService.Lang("Palette_InsertLastCommand"), Icon = "\uE8A7", Shortcut = "Ctrl+Shift+H", Category = "History", Execute = InsertLastCommandFromHistory },
+            new() { Id = "search", Label = LanguageService.Lang("Palette_Search"), Icon = "\uE721", Shortcut = "Ctrl+Shift+F", Category = "View", Execute = () => ToggleSearch() },
+            new() { Id = "toggle-agent-chat", Label = LanguageService.Lang("Palette_ToggleAgentChat"), Icon = "\uE11B", Shortcut = "Ctrl+Shift+A", Category = "View", Execute = ToggleAgentChat },
+            new() { Id = "zoom-pane", Label = LanguageService.Lang("Palette_ZoomPane"), Icon = "\uE740", Shortcut = "Ctrl+Shift+Z", Category = "Pane", Execute = () => ViewModel.SelectedWorkspace?.SelectedSurface?.ToggleZoom() },
+            new() { Id = "focus-next", Label = LanguageService.Lang("Palette_FocusNextPane"), Icon = "\uE76C", Shortcut = "Ctrl+Alt+Right", Category = "Pane", Execute = () => ViewModel.SelectedWorkspace?.SelectedSurface?.FocusNextPane() },
+            new() { Id = "focus-prev", Label = LanguageService.Lang("Palette_FocusPrevPane"), Icon = "\uE76B", Shortcut = "Ctrl+Alt+Left", Category = "Pane", Execute = () => ViewModel.SelectedWorkspace?.SelectedSurface?.FocusPreviousPane() },
+            new() { Id = "next-surface", Label = LanguageService.Lang("Palette_NextSurface"), Icon = "\uE76C", Shortcut = "Ctrl+Tab", Category = "Surface", Execute = () => ViewModel.SelectedWorkspace?.NextSurface() },
+            new() { Id = "prev-surface", Label = LanguageService.Lang("Palette_PrevSurface"), Icon = "\uE76B", Shortcut = "Ctrl+Shift+Tab", Category = "Surface", Execute = () => ViewModel.SelectedWorkspace?.PreviousSurface() },
+            new() { Id = "settings", Label = LanguageService.Lang("Palette_Settings"), Icon = "\uE713", Shortcut = "Ctrl+,", Category = "App", Execute = () => OpenSettings() },
+            new() { Id = "equalize", Label = LanguageService.Lang("Palette_EqualizePanes"), Icon = "\uE9D5", Category = "Pane", Execute = () => ViewModel.SelectedWorkspace?.SelectedSurface?.EqualizePanes() },
+            new() { Id = "layout-2col", Label = LanguageService.Lang("Palette_Layout2Col"), Icon = "\uE745", Category = "Layout", Execute = () => ApplyLayout(2, 1) },
+            new() { Id = "layout-3col", Label = LanguageService.Lang("Palette_Layout3Col"), Icon = "\uE745", Category = "Layout", Execute = () => ApplyLayout(3, 1) },
+            new() { Id = "layout-grid", Label = LanguageService.Lang("Palette_LayoutGrid"), Icon = "\uF0E2", Category = "Layout", Execute = () => ApplyLayout(2, 2) },
+            new() { Id = "layout-main-stack", Label = LanguageService.Lang("Palette_LayoutMainStack"), Icon = "\uE745", Category = "Layout", Execute = () => ApplyMainStackLayout() },
         ];
     }
 
@@ -1203,21 +1203,21 @@ public partial class MainWindow : Window
         var surface = ViewModel.SelectedWorkspace?.SelectedSurface;
         if (surface == null)
         {
-            PaneCountText.Text = "0 panes";
+            PaneCountText.Text = LanguageService.Lang("Status_NoPanes");
             ToolbarZoomIcon.Text = "\uE740";
-            ToolbarZoomButton.ToolTip = "Zoom Pane (Ctrl+Shift+Z)";
+            ToolbarZoomButton.ToolTip = LanguageService.Lang("Toolbar_ZoomPane");
             return;
         }
 
         var paneCount = surface.RootNode.GetLeaves().Count();
         PaneCountText.Text = surface.IsZoomed
-            ? $"{paneCount} panes (1 zoomed)"
-            : paneCount == 1 ? "1 pane" : $"{paneCount} panes";
+            ? LanguageService.Lang("Status_PanesZoomed", paneCount)
+            : paneCount == 1 ? LanguageService.Lang("Status_PanesSingular") : LanguageService.Lang("Status_PanesPlural", paneCount);
 
         ToolbarZoomIcon.Text = surface.IsZoomed ? "\uE73F" : "\uE740";
         ToolbarZoomButton.ToolTip = surface.IsZoomed
-            ? "Unzoom Pane (Ctrl+Shift+Z)"
-            : "Zoom Pane (Ctrl+Shift+Z)";
+            ? LanguageService.Lang("Toolbar_UnzoomPane")
+            : LanguageService.Lang("Toolbar_ZoomPane");
     }
 
     // --- Search handling ---
@@ -1353,9 +1353,9 @@ public partial class MainWindow : Window
             workspaceId,
             surfaceId,
             paneId,
-            "cmux test",
-            "Notification check",
-            "If you see this in panel/toast, notifications are working.",
+            LanguageService.Lang("Notify_TestTitle"),
+            LanguageService.Lang("Notify_TestSubject"),
+            LanguageService.Lang("Notify_TestBody"),
             Cmux.Core.Models.NotificationSource.Cli);
     }
 
@@ -1380,7 +1380,7 @@ public partial class MainWindow : Window
         var history = surface.GetCommandHistory(paneId);
         if (history.Count == 0)
         {
-            MessageBox.Show("No command history found yet for this pane.", "History", MessageBoxButton.OK, MessageBoxImage.Information);
+            MessageBox.Show(LanguageService.Lang("History_NoHistory"), LanguageService.Lang("History_DialogTitle"), MessageBoxButton.OK, MessageBoxImage.Information);
             return;
         }
 
@@ -1395,7 +1395,7 @@ public partial class MainWindow : Window
             })
         {
             Owner = this,
-            Title = $"Command History · Pane {paneLabel}",
+            Title = LanguageService.Lang("History_PaneTitle", paneLabel),
         };
 
         window.ShowDialog();
@@ -1410,7 +1410,7 @@ public partial class MainWindow : Window
         var history = surface.GetCommandHistory(paneId);
         if (history.Count == 0)
         {
-            MessageBox.Show("No command history found yet for this pane.", "History", MessageBoxButton.OK, MessageBoxImage.Information);
+            MessageBox.Show(LanguageService.Lang("History_NoHistory"), LanguageService.Lang("History_DialogTitle"), MessageBoxButton.OK, MessageBoxImage.Information);
             return;
         }
 
@@ -1445,7 +1445,7 @@ public partial class MainWindow : Window
         _selectedAgentThreadId = thread.Id;
         RefreshAgentThreads();
         SelectAgentThreadInList(thread.Id);
-        AgentStatusText.Text = "New thread created";
+        AgentStatusText.Text = LanguageService.Lang("Agent_NewThreadCreated");
     }
 
     private void AgentThreadsList_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
@@ -1505,7 +1505,7 @@ public partial class MainWindow : Window
         var context = GetCurrentPaneContext();
         if (context == null)
         {
-            AgentStatusText.Text = "No active pane selected";
+            AgentStatusText.Text = LanguageService.Lang("Agent_NoPaneSelected");
             return;
         }
 
@@ -1543,12 +1543,12 @@ public partial class MainWindow : Window
 
         if (!accepted)
         {
-            AgentStatusText.Text = "Agent did not accept the prompt";
+            AgentStatusText.Text = LanguageService.Lang("Agent_NotAccepted");
             return;
         }
 
         AgentPromptBox.Text = "";
-        AgentStatusText.Text = "Prompt sent";
+        AgentStatusText.Text = LanguageService.Lang("Agent_PromptSent");
         RefreshAgentThreads();
         if (!string.IsNullOrWhiteSpace(threadId))
             SelectAgentThreadInList(threadId);

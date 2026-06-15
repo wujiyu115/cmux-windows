@@ -27,11 +27,11 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
-                    <TextBlock Grid.Column="0" Text="Notifications" FontSize="14"
+                    <TextBlock Grid.Column="0" Text="{DynamicResource Notify_Title}" FontSize="14"
                                FontWeight="SemiBold" Foreground="{StaticResource ForegroundBrush}"
                                VerticalAlignment="Center" />
 
-                    <Button Grid.Column="1" Content="Mark all read"
+                    <Button Grid.Column="1" Content="{DynamicResource Notify_MarkAllRead}"
                             Style="{StaticResource CmuxButton}"
                             FontSize="11" Margin="0,0,4,0" Padding="8,4"
                             Foreground="{StaticResource ForegroundDimBrush}"
@@ -112,7 +112,7 @@
                 <TextBlock Text="&#xEA8F;" FontFamily="Segoe MDL2 Assets"
                            FontSize="32" Foreground="{StaticResource ForegroundDimBrush}"
                            HorizontalAlignment="Center" Opacity="0.3" Margin="0,0,0,8" />
-                <TextBlock Text="No notifications yet"
+                <TextBlock Text="{DynamicResource Notify_Empty}"
                            Foreground="{StaticResource ForegroundDimBrush}"
                            HorizontalAlignment="Center" FontSize="13" Opacity="0.5" />
                 <StackPanel.Style>

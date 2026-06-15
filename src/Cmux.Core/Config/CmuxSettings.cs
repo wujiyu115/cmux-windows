@@ -6,6 +6,10 @@ namespace Cmux.Core.Config;
 /// </summary>
 public class CmuxSettings
 {
+    // ── General ──────────────────────────────────────────────────
+
+    public string Language { get; set; } = "en";
+
     // ── Appearance ──────────────────────────────────────────────
 
     public string FontFamily { get; set; } = "Cascadia Code";
@@ -39,6 +43,7 @@ public class CmuxSettings
     public bool ConfirmOnClose { get; set; } = true;
     public bool AutoCopyOnSelect { get; set; } = false;
     public bool CtrlClickOpensUrls { get; set; } = true;
+    public bool AgentChatDefaultOpen { get; set; } = true;
     public int AutoSaveIntervalSeconds { get; set; } = 30;
     public bool CaptureTranscriptsOnClose { get; set; } = true;
     public bool CaptureTranscriptsOnClear { get; set; } = true;

@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Cmux.Core.Models;
 using Cmux.Core.Services;
+using Cmux.Services;
 
 namespace Cmux.ViewModels;
 
@@ -85,7 +86,7 @@ public partial class WorkspaceViewModel : ObservableObject, IDisposable
     [RelayCommand]
     public void CreateNewSurface()
     {
-        var surface = new Surface { Name = $"Terminal {Surfaces.Count + 1}" };
+        var surface = new Surface { Name = LanguageService.Lang("Default_Terminal", Surfaces.Count + 1) };
         Workspace.Surfaces.Add(surface);
 
         var surfaceVm = new SurfaceViewModel(surface, Workspace.Id, _notificationService);
@@ -96,7 +97,7 @@ public partial class WorkspaceViewModel : ObservableObject, IDisposable
 
     public void CreateNewSurfaceWithShell(string shellPath)
     {
-        var surface = new Surface { Name = $"Terminal {Surfaces.Count + 1}" };
+        var surface = new Surface { Name = LanguageService.Lang("Default_Terminal", Surfaces.Count + 1) };
         Workspace.Surfaces.Add(surface);
 
         var surfaceVm = new SurfaceViewModel(surface, Workspace.Id, _notificationService, shellPath);

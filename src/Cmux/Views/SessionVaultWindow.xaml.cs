@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Controls;
 using Cmux.Core.Models;
 using Cmux.Core.Services;
+using Cmux.Services;
 using Cmux.ViewModels;
 
 namespace Cmux.Views;
@@ -127,7 +128,7 @@ public partial class SessionVaultWindow : Window
             .ToList();
 
         EntriesList.ItemsSource = views;
-        SummaryText.Text = views.Count == 1 ? "1 capture" : $"{views.Count} captures";
+        SummaryText.Text = views.Count == 1 ? LanguageService.Lang("Vault_CountSingular") : LanguageService.Lang("Vault_CountPlural", views.Count);
 
         if (views.Count > 0)
             EntriesList.SelectedIndex = 0;
@@ -137,7 +138,7 @@ public partial class SessionVaultWindow : Window
 
     private void ShowNoSelection()
     {
-        MetaTitleText.Text = "Select a capture";
+        MetaTitleText.Text = LanguageService.Lang("Vault_SelectCapture");
         MetaInfoText.Text = "";
         TranscriptText.Text = "";
     }
@@ -178,7 +179,7 @@ public partial class SessionVaultWindow : Window
         }
         catch
         {
-            MessageBox.Show($"Session vault folder: {dir}", "Session Vault", MessageBoxButton.OK, MessageBoxImage.Information);
+            MessageBox.Show($"Session vault folder: {dir}", LanguageService.Lang("Vault_Title"), MessageBoxButton.OK, MessageBoxImage.Information);
         }
     }
 
@@ -217,7 +218,7 @@ public partial class SessionVaultWindow : Window
         }
         catch
         {
-            MessageBox.Show(selected.Entry.FilePath, "Session Vault", MessageBoxButton.OK, MessageBoxImage.Information);
+            MessageBox.Show(selected.Entry.FilePath, LanguageService.Lang("Vault_Title"), MessageBoxButton.OK, MessageBoxImage.Information);
         }
     }
 

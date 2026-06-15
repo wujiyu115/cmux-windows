@@ -29,14 +29,14 @@
                         </Border.Background>
                         <Border.ContextMenu>
                             <ContextMenu Tag="{Binding}">
-                                <MenuItem Header="Rename" Click="RenameTab_Click" />
-                                <MenuItem Header="Duplicate" Click="DuplicateTab_Click" />
+                                <MenuItem Header="{DynamicResource Tab_Rename}" Click="RenameTab_Click" />
+                                <MenuItem Header="{DynamicResource Tab_Duplicate}" Click="DuplicateTab_Click" />
                                 <Separator />
-                                <MenuItem Header="Split Right" InputGestureText="Ctrl+D" Click="SplitRight_Click" />
-                                <MenuItem Header="Split Down" InputGestureText="Ctrl+Shift+D" Click="SplitDown_Click" />
+                                <MenuItem Header="{DynamicResource Tab_SplitRight}" InputGestureText="Ctrl+D" Click="SplitRight_Click" />
+                                <MenuItem Header="{DynamicResource Tab_SplitDown}" InputGestureText="Ctrl+Shift+D" Click="SplitDown_Click" />
                                 <Separator />
-                                <MenuItem Header="Close" InputGestureText="Ctrl+W" Click="CloseThisTab_Click" />
-                                <MenuItem Header="Close Others" Click="CloseOtherTabs_Click" />
+                                <MenuItem Header="{DynamicResource Tab_Close}" InputGestureText="Ctrl+W" Click="CloseThisTab_Click" />
+                                <MenuItem Header="{DynamicResource Tab_CloseOthers}" Click="CloseOtherTabs_Click" />
                             </ContextMenu>
                         </Border.ContextMenu>
                         <Grid>
@@ -145,10 +145,10 @@
                 <StackPanel Grid.Column="3" Orientation="Horizontal" Margin="0,0,2,0">
                     <Button Content="&#xE010;" FontFamily="Segoe MDL2 Assets"
                             FontSize="9" Style="{StaticResource IconButton}"
-                            Width="20" Height="20" Click="PrevMatch_Click" ToolTip="Previous (Shift+Enter)" />
+                            Width="20" Height="20" Click="PrevMatch_Click" ToolTip="{DynamicResource Tab_PrevMatch}" />
                     <Button Content="&#xE011;" FontFamily="Segoe MDL2 Assets"
                             FontSize="9" Style="{StaticResource IconButton}"
-                            Width="20" Height="20" Click="NextMatch_Click" ToolTip="Next (Enter)" />
+                            Width="20" Height="20" Click="NextMatch_Click" ToolTip="{DynamicResource Tab_NextMatch}" />
                 </StackPanel>
             </Grid>
         </Border>
@@ -164,7 +164,7 @@
                 Style="{StaticResource CmuxButton}"
                 Click="AddTabDropdown_Click"
                 Padding="4,0" Margin="0,2,4,2" Opacity="0.6"
-                ToolTip="New terminal with specific shell" />
+                ToolTip="{DynamicResource Tab_NewShellTooltip}" />
 
         <!-- Inline rename overlay -->
         <TextBox x:Name="TabRenameBox" Visibility="Collapsed"

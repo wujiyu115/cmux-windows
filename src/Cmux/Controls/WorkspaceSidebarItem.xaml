@@ -6,86 +6,86 @@
     <Grid>
         <Grid.ContextMenu>
             <ContextMenu>
-                <MenuItem Header="Rename" InputGestureText="F2" Click="Rename_Click">
+                <MenuItem Header="{DynamicResource Workspace_Rename}" InputGestureText="F2" Click="Rename_Click">
                     <MenuItem.Icon>
                         <TextBlock Text="&#xE8AC;" FontFamily="Segoe MDL2 Assets" FontSize="12" />
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Header="Duplicate" Click="Duplicate_Click">
+                <MenuItem Header="{DynamicResource Workspace_Duplicate}" Click="Duplicate_Click">
                     <MenuItem.Icon>
                         <TextBlock Text="&#xE8C8;" FontFamily="Segoe MDL2 Assets" FontSize="12" />
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Header="Set Workspace Icon" Click="SetIcon_Click">
+                <MenuItem Header="{DynamicResource Workspace_SetIcon}" Click="SetIcon_Click">
                     <MenuItem.Icon>
                         <TextBlock Text="&#xE8A5;" FontFamily="Segoe MDL2 Assets" FontSize="12" />
                     </MenuItem.Icon>
                 </MenuItem>
                 <Separator />
-                <MenuItem Header="Accent: Indigo" Click="SetColor_Click" Tag="#FF818CF8">
+                <MenuItem Header="{DynamicResource Workspace_AccentIndigo}" Click="SetColor_Click" Tag="#FF818CF8">
                     <MenuItem.Icon>
                         <TextBlock Text="●" Foreground="#FF818CF8" />
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Header="Accent: Green" Click="SetColor_Click" Tag="#FF10B981">
+                <MenuItem Header="{DynamicResource Workspace_AccentGreen}" Click="SetColor_Click" Tag="#FF10B981">
                     <MenuItem.Icon>
                         <TextBlock Text="●" Foreground="#FF10B981" />
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Header="Accent: Amber" Click="SetColor_Click" Tag="#FFF59E0B">
+                <MenuItem Header="{DynamicResource Workspace_AccentAmber}" Click="SetColor_Click" Tag="#FFF59E0B">
                     <MenuItem.Icon>
                         <TextBlock Text="●" Foreground="#FFF59E0B" />
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Header="Accent: Red" Click="SetColor_Click" Tag="#FFEF4444">
+                <MenuItem Header="{DynamicResource Workspace_AccentRed}" Click="SetColor_Click" Tag="#FFEF4444">
                     <MenuItem.Icon>
                         <TextBlock Text="●" Foreground="#FFEF4444" />
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Header="Accent: Cyan" Click="SetColor_Click" Tag="#FF06B6D4">
+                <MenuItem Header="{DynamicResource Workspace_AccentCyan}" Click="SetColor_Click" Tag="#FF06B6D4">
                     <MenuItem.Icon>
                         <TextBlock Text="●" Foreground="#FF06B6D4" />
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Header="Accent: Purple" Click="SetColor_Click" Tag="#FFA855F7">
+                <MenuItem Header="{DynamicResource Workspace_AccentPurple}" Click="SetColor_Click" Tag="#FFA855F7">
                     <MenuItem.Icon>
                         <TextBlock Text="●" Foreground="#FFA855F7" />
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Header="Accent: Slate" Click="SetColor_Click" Tag="#FF64748B">
+                <MenuItem Header="{DynamicResource Workspace_AccentSlate}" Click="SetColor_Click" Tag="#FF64748B">
                     <MenuItem.Icon>
                         <TextBlock Text="●" Foreground="#FF64748B" />
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Header="Accent: Pink" Click="SetColor_Click" Tag="#FFEC4899">
+                <MenuItem Header="{DynamicResource Workspace_AccentPink}" Click="SetColor_Click" Tag="#FFEC4899">
                     <MenuItem.Icon>
                         <TextBlock Text="●" Foreground="#FFEC4899" />
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Header="Accent: Custom..." Click="SetCustomColor_Click">
+                <MenuItem Header="{DynamicResource Workspace_AccentCustom}" Click="SetCustomColor_Click">
                     <MenuItem.Icon>
                         <TextBlock Text="＋" Foreground="{StaticResource ForegroundBrush}" FontSize="12" FontWeight="Bold" />
                     </MenuItem.Icon>
                 </MenuItem>
                 <Separator />
-                <MenuItem Header="New Surface" InputGestureText="Ctrl+T" Click="NewSurface_Click">
+                <MenuItem Header="{DynamicResource Workspace_NewSurface}" InputGestureText="Ctrl+T" Click="NewSurface_Click">
                     <MenuItem.Icon>
                         <TextBlock Text="&#xE710;" FontFamily="Segoe MDL2 Assets" FontSize="12" />
                     </MenuItem.Icon>
                 </MenuItem>
                 <Separator />
-                <MenuItem Header="Move Up" Click="MoveUp_Click">
+                <MenuItem Header="{DynamicResource Workspace_MoveUp}" Click="MoveUp_Click">
                     <MenuItem.Icon>
                         <TextBlock Text="&#xE74A;" FontFamily="Segoe MDL2 Assets" FontSize="12" />
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Header="Move Down" Click="MoveDown_Click">
+                <MenuItem Header="{DynamicResource Workspace_MoveDown}" Click="MoveDown_Click">
                     <MenuItem.Icon>
                         <TextBlock Text="&#xE74B;" FontFamily="Segoe MDL2 Assets" FontSize="12" />
                     </MenuItem.Icon>
                 </MenuItem>
                 <Separator />
-                <MenuItem Header="Close Workspace" InputGestureText="Ctrl+Shift+W" Click="Close_Click"
+                <MenuItem Header="{DynamicResource Workspace_CloseWorkspace}" InputGestureText="Ctrl+Shift+W" Click="Close_Click"
                           Foreground="#FFEF4444">
                     <MenuItem.Icon>
                         <TextBlock Text="&#xE711;" FontFamily="Segoe MDL2 Assets" FontSize="12"

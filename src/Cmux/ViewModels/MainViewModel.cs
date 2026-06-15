@@ -3,9 +3,11 @@ using System.Text.Json;
 using System.Windows;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Cmux.Core.Config;
 using Cmux.Core.IPC;
 using Cmux.Core.Models;
 using Cmux.Core.Services;
+using Cmux.Services;
 
 namespace Cmux.ViewModels;
 
@@ -37,7 +39,7 @@ public partial class MainViewModel : ObservableObject
     private int _totalUnreadCount;
 
     [ObservableProperty]
-    private bool _agentPanelVisible = true;
+    private bool _agentPanelVisible = SettingsService.Current.AgentChatDefaultOpen;
 
     [ObservableProperty]
     private double _agentPanelWidth = 380;
@@ -76,8 +78,8 @@ public partial class MainViewModel : ObservableObject
     [RelayCommand]
     public void CreateNewWorkspace()
     {
-        var workspace = new Workspace { Name = $"Workspace {Workspaces.Count + 1}" };
-        var surface = new Surface { Name = "Terminal 1" };
+        var workspace = new Workspace { Name = LanguageService.Lang("Default_Workspace", Workspaces.Count + 1) };
+        var surface = new Surface { Name = LanguageService.Lang("Default_Terminal1") };
         workspace.Surfaces.Add(surface);
         workspace.SelectedSurface = surface;
 
@@ -90,7 +92,7 @@ public partial class MainViewModel : ObservableObject
     {
         var clone = new Workspace
         {
-            Name = source.Name + " (copy)",
+            Name = source.Name + LanguageService.Lang("Tab_Copy"),
             IconGlyph = source.IconGlyph,
             AccentColor = source.AccentColor,
             WorkingDirectory = source.WorkingDirectory,
@@ -154,7 +156,7 @@ public partial class MainViewModel : ObservableObject
 
         if (clone.Surfaces.Count == 0)
         {
-            var fallbackSurface = new Surface { Name = "Terminal 1" };
+            var fallbackSurface = new Surface { Name = LanguageService.Lang("Default_Terminal1") };
             clone.Surfaces.Add(fallbackSurface);
             clone.SelectedSurface = fallbackSurface;
         }
