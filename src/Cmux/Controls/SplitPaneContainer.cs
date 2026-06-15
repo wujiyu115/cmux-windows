@@ -68,6 +68,14 @@ public class SplitPaneContainer : ContentControl
         {
             Dispatcher.BeginInvoke(UpdateFocusState);
         }
+        else if (e.PropertyName is nameof(SurfaceViewModel.AttentionVersion))
+        {
+            Dispatcher.BeginInvoke(ApplyAttentionPulse);
+        }
+        else if (e.PropertyName is nameof(SurfaceViewModel.NotificationVersion))
+        {
+            Dispatcher.BeginInvoke(UpdateNotificationState);
+        }
     }
 
     /// <summary>
@@ -365,6 +373,21 @@ public class SplitPaneContainer : ContentControl
         }
 
         return grid;
+    }
+
+    private void ApplyAttentionPulse()
+    {
+        if (_surface == null) return;
+        var paneId = _surface.AttentionPaneId;
+        if (paneId != null && _terminalCache.TryGetValue(paneId, out var terminal))
+            terminal.FlashAttention();
+    }
+
+    private void UpdateNotificationState()
+    {
+        if (_surface == null) return;
+        foreach (var (paneId, terminal) in _terminalCache)
+            terminal.HasNotification = _surface.HasUnreadNotification(paneId);
     }
 
     /// <summary>

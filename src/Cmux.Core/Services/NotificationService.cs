@@ -119,6 +119,27 @@ public class NotificationService
         }
     }
 
+    public int GetUnreadCount(string workspaceId, string surfaceId)
+    {
+        lock (_lock)
+        {
+            return _notifications.Count(n => n.WorkspaceId == workspaceId
+                                             && n.SurfaceId == surfaceId
+                                             && !n.IsRead);
+        }
+    }
+
+    public int GetUnreadCount(string workspaceId, string surfaceId, string paneId)
+    {
+        lock (_lock)
+        {
+            return _notifications.Count(n => n.WorkspaceId == workspaceId
+                                             && n.SurfaceId == surfaceId
+                                             && n.PaneId == paneId
+                                             && !n.IsRead);
+        }
+    }
+
     /// <summary>
     /// Gets the latest notification text for a workspace (for sidebar display).
     /// </summary>

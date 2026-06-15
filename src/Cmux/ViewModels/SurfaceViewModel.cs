@@ -36,6 +36,26 @@ public partial class SurfaceViewModel : ObservableObject, IDisposable
     [ObservableProperty]
     private bool _isZoomed;
 
+    [ObservableProperty]
+    private string? _attentionPaneId;
+
+    [ObservableProperty]
+    private int _attentionVersion;
+
+    [ObservableProperty]
+    private DateTime _attentionRequestedAtUtc;
+
+    [ObservableProperty]
+    private int _unreadNotificationCount;
+
+    [ObservableProperty]
+    private bool _hasNotification;
+
+    [ObservableProperty]
+    private int _notificationVersion;
+
+    private readonly Dictionary<string, int> _paneUnreadCounts = [];
+
     public event Action<string>? WorkingDirectoryChanged;
 
     /// <summary>Gets the shell process PID from the focused pane session.</summary>
@@ -612,6 +632,42 @@ public partial class SurfaceViewModel : ObservableObject, IDisposable
     {
         FocusedPaneId = paneId;
         Surface.FocusedPaneId = paneId;
+    }
+
+    public void FlashPaneAttention(string paneId)
+    {
+        if (RootNode.FindNode(paneId) == null)
+            return;
+
+        AttentionPaneId = paneId;
+        AttentionRequestedAtUtc = DateTime.UtcNow;
+        AttentionVersion++;
+    }
+
+    partial void OnUnreadNotificationCountChanged(int value)
+    {
+        HasNotification = value > 0;
+    }
+
+    public bool HasUnreadNotification(string paneId)
+    {
+        return _paneUnreadCounts.TryGetValue(paneId, out var count) && count > 0;
+    }
+
+    public void RefreshNotificationState()
+    {
+        foreach (var leaf in RootNode.GetLeaves())
+        {
+            if (string.IsNullOrWhiteSpace(leaf.PaneId))
+                continue;
+
+            _paneUnreadCounts[leaf.PaneId] = _notificationService.GetUnreadCount(
+                _workspaceId,
+                Surface.Id,
+                leaf.PaneId);
+        }
+
+        NotificationVersion++;
     }
 
     [RelayCommand]

@@ -49,6 +49,9 @@ public class TerminalControl : FrameworkElement
     private DateTime _bellFlashUntil;
     private System.Windows.Threading.DispatcherTimer? _bellTimer;
 
+    // TSF/IME input proxy
+    private TextBox? _imeProxy;
+
     // URL detection
     private (int row, int startCol, int endCol, string url)? _hoveredUrl;
     private int _lastUrlRow = -1;
@@ -143,6 +146,20 @@ public class TerminalControl : FrameworkElement
 
         _selection.SelectionChanged += () => RequestRender(System.Windows.Threading.DispatcherPriority.Render);
 
+        _imeProxy = new TextBox
+        {
+            Width = 1, Height = 1, Opacity = 0,
+            IsHitTestVisible = false, Background = Brushes.Transparent,
+            BorderThickness = new Thickness(0),
+            Focusable = false, AcceptsReturn = false, AcceptsTab = false,
+        };
+        _imeProxy.TextChanged += OnImeProxyTextChanged;
+        _imeProxy.PreviewTextInput += OnImeProxyPreviewTextInput;
+        AddVisualChild(_imeProxy);
+        AddLogicalChild(_imeProxy);
+
+        Loaded += OnTerminalLoaded;
+
         // Cursor blink
         _cursorTimer = new System.Windows.Threading.DispatcherTimer
         {
@@ -207,6 +224,7 @@ public class TerminalControl : FrameworkElement
 
         _lastScrollbackCount = currentScrollback;
         RequestRender();
+        InvalidateArrange();
     }
 
     private void OnBell()
@@ -229,6 +247,32 @@ public class TerminalControl : FrameworkElement
     {
         _bellTimer?.Stop();
         RequestRender();
+    }
+
+    // --- Attention flash (notification jump) ---
+
+    private DateTime _attentionFlashUntil;
+    private System.Windows.Threading.DispatcherTimer? _attentionTimer;
+
+    public void FlashAttention()
+    {
+        _attentionFlashUntil = DateTime.UtcNow.AddMilliseconds(420);
+        RequestRender(System.Windows.Threading.DispatcherPriority.Render);
+
+        _attentionTimer ??= new System.Windows.Threading.DispatcherTimer
+        {
+            Interval = TimeSpan.FromMilliseconds(440),
+        };
+        _attentionTimer.Stop();
+        _attentionTimer.Tick -= OnAttentionTimerTick;
+        _attentionTimer.Tick += OnAttentionTimerTick;
+        _attentionTimer.Start();
+    }
+
+    private void OnAttentionTimerTick(object? sender, EventArgs e)
+    {
+        _attentionTimer?.Stop();
+        RequestRender(System.Windows.Threading.DispatcherPriority.Render);
     }
 
     // --- Search support ---
@@ -376,6 +420,16 @@ public class TerminalControl : FrameworkElement
             {
                 dc.DrawRectangle(GetCachedBrush(Color.FromArgb(25, 255, 255, 255)), null,
                     new Rect(0, 0, ActualWidth, ActualHeight));
+            }
+
+            // Attention flash (notification jump)
+            if (DateTime.UtcNow < _attentionFlashUntil)
+            {
+                dc.DrawRectangle(GetCachedBrush(Color.FromArgb(38, 0x1F, 0xA0, 0xFF)), null,
+                    new Rect(0, 0, ActualWidth, ActualHeight));
+                var attentionPen = new Pen(GetCachedBrush(Color.FromArgb(230, 0x1F, 0xA0, 0xFF)), 3);
+                attentionPen.Freeze();
+                dc.DrawRoundedRectangle(null, attentionPen, new Rect(2, 2, ActualWidth - 4, ActualHeight - 4), 6, 6);
             }
 
             // Notification ring
@@ -936,6 +990,109 @@ public class TerminalControl : FrameworkElement
         TrackInputText(e.Text);
         _session.Write(e.Text);
         _selection.ClearSelection();
+    }
+
+    // --- TSF/IME support ---
+
+    private void OnTerminalLoaded(object sender, RoutedEventArgs e)
+    {
+        if (_imeProxy == null || _session == null) return;
+
+        RemoveVisualChild(_imeProxy);
+        RemoveLogicalChild(_imeProxy);
+
+        _imeProxy = new TextBox
+        {
+            Width = 1, Height = 1, Opacity = 0,
+            IsHitTestVisible = false, Background = Brushes.Transparent,
+            BorderThickness = new Thickness(0),
+            Focusable = true, AcceptsReturn = true, AcceptsTab = true,
+            IsEnabled = true, IsReadOnly = false,
+        };
+        InputMethod.SetIsInputMethodEnabled(_imeProxy, true);
+        _imeProxy.PreviewKeyDown += OnImeProxyPreviewKeyDown;
+        _imeProxy.TextChanged += OnImeProxyTextChanged;
+        _imeProxy.PreviewTextInput += OnImeProxyPreviewTextInput;
+
+        AddVisualChild(_imeProxy);
+        AddLogicalChild(_imeProxy);
+        InvalidateArrange();
+    }
+
+    protected override void OnGotKeyboardFocus(KeyboardFocusChangedEventArgs e)
+    {
+        base.OnGotKeyboardFocus(e);
+        if (_imeProxy != null && !_imeProxy.IsFocused)
+        {
+            e.Handled = true;
+            _imeProxy.Focus();
+        }
+    }
+
+    private void OnImeProxyPreviewKeyDown(object sender, KeyEventArgs e)
+    {
+        if (!ShouldForwardImeProxyKeyDown(e))
+            return;
+        e.Handled = true;
+        var args = new KeyEventArgs(e.KeyboardDevice, e.InputSource, e.Timestamp, e.Key)
+        {
+            RoutedEvent = Keyboard.KeyDownEvent,
+        };
+        RaiseEvent(args);
+    }
+
+    private static bool ShouldForwardImeProxyKeyDown(KeyEventArgs e)
+    {
+        var key = e.Key == Key.System ? e.SystemKey : e.Key;
+        var modifiers = Keyboard.Modifiers;
+
+        if (modifiers.HasFlag(ModifierKeys.Control) || modifiers.HasFlag(ModifierKeys.Alt))
+            return true;
+        if (key is Key.Back or Key.Enter or Key.Tab or Key.Escape or Key.Insert or Key.Delete)
+            return true;
+        if (key >= Key.Left && key <= Key.Down)
+            return true;
+        if (key >= Key.Home && key <= Key.PageDown)
+            return true;
+        if (key >= Key.F1 && key <= Key.F24)
+            return true;
+        return false;
+    }
+
+    private void OnImeProxyPreviewTextInput(object sender, TextCompositionEventArgs e)
+    {
+        e.Handled = true;
+        if (_session != null && !string.IsNullOrEmpty(e.Text))
+        {
+            EnsureLiveView();
+            _session.Write(e.Text);
+            TrackInputText(e.Text);
+        }
+    }
+
+    private void OnImeProxyTextChanged(object sender, TextChangedEventArgs e)
+    {
+        if (_imeProxy == null || _session == null) return;
+        var text = _imeProxy.Text;
+        if (!string.IsNullOrEmpty(text))
+        {
+            EnsureLiveView();
+            _session.Write(text);
+            TrackInputText(text);
+            _imeProxy.Clear();
+        }
+    }
+
+    protected override Size ArrangeOverride(Size finalSize)
+    {
+        if (_imeProxy != null && _session != null)
+        {
+            var buffer = _session.Buffer;
+            double x = buffer.CursorCol * _cellWidth;
+            double y = buffer.CursorRow * _cellHeight;
+            _imeProxy.Arrange(new Rect(x, y, Math.Max(1, _cellWidth), Math.Max(1, _cellHeight)));
+        }
+        return base.ArrangeOverride(finalSize);
     }
 
     private void PasteFromClipboard()
@@ -1515,8 +1672,8 @@ public class TerminalControl : FrameworkElement
 
     // --- Visual tree ---
 
-    protected override int VisualChildrenCount => 1;
-    protected override Visual GetVisualChild(int index) => _visual;
+    protected override int VisualChildrenCount => _imeProxy != null ? 2 : 1;
+    protected override Visual GetVisualChild(int index) => index == 0 ? _visual : _imeProxy!;
 
     private static bool TryGetCtrlLetterSequence(Key key, out string sequence)
     {

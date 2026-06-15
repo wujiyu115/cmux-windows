@@ -11,4 +11,8 @@
     <ProjectReference Include="..\Cmux.Core\Cmux.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <EmbeddedResource Include="..\..\scripts\completions\cmux.ps1" LogicalName="Cmux.Cli.Completions.cmux.ps1" />
+  </ItemGroup>
+
 </Project>

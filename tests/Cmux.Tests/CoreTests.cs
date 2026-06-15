@@ -1,6 +1,7 @@
 using System.Reflection;
 using System.Text;
 using System.Text.Json;
+using Cmux.Core.IPC;
 using Cmux.Core.Models;
 using Cmux.Core.Services;
 using Cmux.Core.Terminal;
@@ -85,6 +86,30 @@ public class VtParserTests
     }
 
     [Fact]
+    public void Feed_OscStringTerminatedByEscBackslash_RaisesOnOscDispatch()
+    {
+        var parser = new VtParser();
+        string? receivedOsc = null;
+        parser.OnOscDispatch = osc => receivedOsc = osc;
+
+        parser.Feed("\x1b]0;Esc Title\x1b\\");
+
+        receivedOsc.Should().Be("0;Esc Title");
+    }
+
+    [Fact]
+    public void Feed_OscStringTerminatedByEightBitSt_RaisesOnOscDispatch()
+    {
+        var parser = new VtParser();
+        string? receivedOsc = null;
+        parser.OnOscDispatch = osc => receivedOsc = osc;
+
+        parser.Feed(new byte[] { 0x1B, (byte)']', (byte)'0', (byte)';', (byte)'T', (byte)'i', (byte)'t', (byte)'l', (byte)'e', 0x9C });
+
+        receivedOsc.Should().Be("0;Title");
+    }
+
+    [Fact]
     public void Feed_Osc9Notification_Detected()
     {
         var parser = new VtParser();
@@ -138,6 +163,47 @@ public class VtParserTests
 
         receivedParams.Should().Equal(25);
         receivedQualifier.Should().Contain("?");
+    }
+
+    [Fact]
+    public void Feed_Utf8AcrossChunks_PrintsSingleCharacter()
+    {
+        var parser = new VtParser();
+        var printed = new List<char>();
+        parser.OnPrint = c => printed.Add(c);
+        var bytes = Encoding.UTF8.GetBytes("中");
+
+        parser.Feed(bytes.AsSpan(0, 1));
+        parser.Feed(bytes.AsSpan(1));
+
+        printed.Should().Equal('中');
+    }
+
+    [Fact]
+    public void Feed_InvalidUtf8Continuation_RecoversAndPrintsFollowingAscii()
+    {
+        var parser = new VtParser();
+        var printed = new List<char>();
+        parser.OnPrint = c => printed.Add(c);
+
+        parser.Feed(new byte[] { 0xE4, (byte)'A' });
+
+        printed.Should().Equal('A');
+    }
+
+    [Fact]
+    public void Feed_CanCancelsIncompleteCsiAndReturnsToGround()
+    {
+        var parser = new VtParser();
+        var printed = new List<char>();
+        var dispatched = false;
+        parser.OnPrint = c => printed.Add(c);
+        parser.OnCsiDispatch = (_, _, _) => dispatched = true;
+
+        parser.Feed("\x1b[31\u0018A");
+
+        dispatched.Should().BeFalse();
+        printed.Should().Equal('A');
     }
 }
 
@@ -758,5 +824,146 @@ public class AgentConversationStoreMessageParsingTests
             if (File.Exists(path))
                 File.Delete(path);
         }
+    }
+}
+
+public class CommandLogSanitizationTests
+{
+    [Theory]
+    [InlineData("OPENAI_API_KEY=sk-test dotnet test", "OPENAI_API_KEY=[REDACTED] dotnet test")]
+    [InlineData("export GITHUB_TOKEN=ghp_123456", "export GITHUB_TOKEN=[REDACTED]")]
+    [InlineData("PASSWORD='hunter2' npm run deploy", "PASSWORD=[REDACTED] npm run deploy")]
+    [InlineData("curl --api-key secret-value https://example.com", "curl --api-key [REDACTED] https://example.com")]
+    [InlineData("tool --token=abc123 --name demo", "tool --token=[REDACTED] --name demo")]
+    [InlineData("git clone https://user:pass@example.com/repo.git", "git clone https://user:[REDACTED]@example.com/repo.git")]
+    public void SanitizeCommandForStorage_RedactsKnownSecretPatterns(string command, string expected)
+    {
+        var service = new CommandLogService();
+
+        var sanitized = service.SanitizeCommandForStorage(command);
+
+        sanitized.Should().Be(expected);
+    }
+
+    [Theory]
+    [InlineData("dotnet test tests/Cmux.Tests/Cmux.Tests.csproj")]
+    [InlineData("git status -sb")]
+    [InlineData("npm run build -- --mode production")]
+    [InlineData("curl https://example.com/api?format=json")]
+    public void SanitizeCommandForStorage_PreservesNonSecretCommands(string command)
+    {
+        var service = new CommandLogService();
+
+        var sanitized = service.SanitizeCommandForStorage(command);
+
+        sanitized.Should().Be(command);
+    }
+
+    [Theory]
+    [InlineData("password123!")]
+    [InlineData("my-token-value")]
+    [InlineData("SECRET_VALUE")]
+    public void SanitizeCommandForStorage_DropsLikelyStandaloneSecretInput(string command)
+    {
+        var service = new CommandLogService();
+
+        var sanitized = service.SanitizeCommandForStorage(command);
+
+        sanitized.Should().BeNull();
+    }
+}
+
+public class DaemonMessageRoundTripTests
+{
+    [Fact]
+    public void DaemonRequest_RoundTripsAllPublicFields()
+    {
+        var request = new DaemonRequest
+        {
+            Type = DaemonMessageTypes.SessionCreate,
+            PaneId = "pane-1",
+            Cols = 120,
+            Rows = 40,
+            WorkingDirectory = @"C:\repo",
+            Command = "pwsh",
+            Data = "hello",
+        };
+
+        var roundTripped = RoundTrip(request);
+
+        roundTripped.Type.Should().Be(DaemonMessageTypes.SessionCreate);
+        roundTripped.PaneId.Should().Be("pane-1");
+        roundTripped.Cols.Should().Be(120);
+        roundTripped.Rows.Should().Be(40);
+        roundTripped.WorkingDirectory.Should().Be(@"C:\repo");
+        roundTripped.Command.Should().Be("pwsh");
+        roundTripped.Data.Should().Be("hello");
+    }
+
+    [Fact]
+    public void DaemonResponse_RoundTripsSuccessErrorAndData()
+    {
+        var response = new DaemonResponse
+        {
+            Success = false,
+            Error = "boom",
+            Data = "{\"ok\":false}",
+        };
+
+        var roundTripped = RoundTrip(response);
+
+        roundTripped.Success.Should().BeFalse();
+        roundTripped.Error.Should().Be("boom");
+        roundTripped.Data.Should().Be("{\"ok\":false}");
+    }
+
+    [Fact]
+    public void DaemonSessionInfo_RoundTripsAttachMetadata()
+    {
+        var session = new DaemonSessionInfo
+        {
+            PaneId = "pane-2",
+            Cols = 100,
+            Rows = 30,
+            WorkingDirectory = @"D:\work",
+            Title = "agent",
+            IsRunning = true,
+            IsExisting = true,
+        };
+
+        var roundTripped = RoundTrip(session);
+
+        roundTripped.PaneId.Should().Be("pane-2");
+        roundTripped.Cols.Should().Be(100);
+        roundTripped.Rows.Should().Be(30);
+        roundTripped.WorkingDirectory.Should().Be(@"D:\work");
+        roundTripped.Title.Should().Be("agent");
+        roundTripped.IsRunning.Should().BeTrue();
+        roundTripped.IsExisting.Should().BeTrue();
+    }
+
+    [Fact]
+    public void DaemonEvent_RoundTripsEventPayload()
+    {
+        var evt = new DaemonEvent
+        {
+            Type = DaemonMessageTypes.EventOutput,
+            PaneId = "pane-3",
+            Data = "output text",
+        };
+
+        var roundTripped = RoundTrip(evt);
+
+        roundTripped.Type.Should().Be(DaemonMessageTypes.EventOutput);
+        roundTripped.PaneId.Should().Be("pane-3");
+        roundTripped.Data.Should().Be("output text");
+    }
+
+    private static T RoundTrip<T>(T value)
+    {
+        var json = JsonSerializer.Serialize(value);
+        var roundTripped = JsonSerializer.Deserialize<T>(json);
+        roundTripped.Should().NotBeNull();
+        return roundTripped!;
     }
 }

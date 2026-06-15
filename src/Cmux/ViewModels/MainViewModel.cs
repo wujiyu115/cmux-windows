@@ -256,6 +256,7 @@ public partial class MainViewModel : ObservableObject
                 if (latest.PaneId != null)
                 {
                     surface.FocusPane(latest.PaneId);
+                    surface.FlashPaneAttention(latest.PaneId);
                 }
             }
             _notificationService.MarkAsRead(latest.Id);
@@ -274,6 +275,9 @@ public partial class MainViewModel : ObservableObject
         {
             ws.UnreadNotificationCount = _notificationService.GetUnreadCount(ws.Workspace.Id);
             ws.LatestNotificationText = _notificationService.GetLatestText(ws.Workspace.Id);
+
+            foreach (var surface in ws.Surfaces)
+                surface.RefreshNotificationState();
         }
     }
 

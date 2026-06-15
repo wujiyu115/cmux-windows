@@ -110,6 +110,10 @@ public class VtParser
         switch (b)
         {
             case 0x1B: // ESC
+                if (_state == State.OscString)
+                {
+                    OnOscDispatch?.Invoke(_oscString.ToString());
+                }
                 _state = State.Escape;
                 _intermediates.Clear();
                 _params.Clear();
@@ -358,15 +362,6 @@ public class VtParser
         {
             OnOscDispatch?.Invoke(_oscString.ToString());
             _state = State.Ground;
-            return;
-        }
-
-        if (b == 0x1B) // Possible ST (ESC \)
-        {
-            // Will be handled on next byte — peek ahead not needed,
-            // the ESC handler will fire. But we need to dispatch first.
-            OnOscDispatch?.Invoke(_oscString.ToString());
-            _state = State.Escape;
             return;
         }
 
