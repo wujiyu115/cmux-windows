@@ -635,8 +635,6 @@ public class TerminalControl : FrameworkElement
             Debug.WriteLine($"[TerminalControl] Render failed: {ex}");
         }
 
-        if (IsKeyboardFocusWithin)
-            UpdateImePosition();
     }
 
     /// <summary>
@@ -991,6 +989,9 @@ public class TerminalControl : FrameworkElement
     private static extern bool ImmSetCompositionWindow(IntPtr hIMC, ref COMPOSITIONFORM lpCompForm);
 
     [DllImport("imm32.dll")]
+    private static extern bool ImmSetCandidateWindow(IntPtr hIMC, ref CANDIDATEFORM lpCandidate);
+
+    [DllImport("imm32.dll")]
     private static extern bool ImmReleaseContext(IntPtr hWnd, IntPtr hIMC);
 
     [StructLayout(LayoutKind.Sequential)]
@@ -1005,31 +1006,70 @@ public class TerminalControl : FrameworkElement
         public int rcBottom;
     }
 
+    [StructLayout(LayoutKind.Sequential)]
+    private struct CANDIDATEFORM
+    {
+        public uint dwIndex;
+        public uint dwStyle;
+        public int ptX;
+        public int ptY;
+        public int rcLeft;
+        public int rcTop;
+        public int rcRight;
+        public int rcBottom;
+    }
+
     private const uint CFS_POINT = 0x0002;
+    private const uint CFS_CANDIDATEPOS = 0x0040;
+    private const int WM_IME_STARTCOMPOSITION = 0x010D;
+    private const int WM_IME_COMPOSITION = 0x010F;
+
+    private HwndSource? _hwndSource;
 
     protected override void OnGotKeyboardFocus(KeyboardFocusChangedEventArgs e)
     {
         base.OnGotKeyboardFocus(e);
         InputMethod.SetIsInputMethodEnabled(this, true);
-        UpdateImePosition();
+
+        if (_hwndSource == null)
+        {
+            _hwndSource = PresentationSource.FromVisual(this) as HwndSource;
+            _hwndSource?.AddHook(ImeMessageHook);
+        }
+    }
+
+    protected override void OnLostKeyboardFocus(KeyboardFocusChangedEventArgs e)
+    {
+        base.OnLostKeyboardFocus(e);
+        if (_hwndSource != null)
+        {
+            _hwndSource.RemoveHook(ImeMessageHook);
+            _hwndSource = null;
+        }
+    }
+
+    private IntPtr ImeMessageHook(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
+    {
+        if (msg is WM_IME_STARTCOMPOSITION or WM_IME_COMPOSITION)
+            UpdateImePosition();
+        return IntPtr.Zero;
     }
 
     private void UpdateImePosition()
     {
-        if (_session == null) return;
-        var source = PresentationSource.FromVisual(this) as HwndSource;
-        if (source == null) return;
+        if (_session == null || _hwndSource == null) return;
 
         var buffer = _session.Buffer;
         double x = buffer.CursorCol * _cellWidth;
         double y = buffer.CursorRow * _cellHeight;
 
         var point = TranslatePoint(new Point(x, y), null);
-        var transform = source.CompositionTarget.TransformToDevice;
+        var transform = _hwndSource.CompositionTarget.TransformToDevice;
         var devicePoint = transform.Transform(point);
+        int px = (int)devicePoint.X;
+        int py = (int)devicePoint.Y;
 
-        var hWnd = source.Handle;
-        var hIMC = ImmGetContext(hWnd);
+        var hIMC = ImmGetContext(_hwndSource.Handle);
         if (hIMC == IntPtr.Zero) return;
 
         try
@@ -1037,14 +1077,26 @@ public class TerminalControl : FrameworkElement
             var cf = new COMPOSITIONFORM
             {
                 dwStyle = CFS_POINT,
-                ptX = (int)devicePoint.X,
-                ptY = (int)devicePoint.Y,
+                ptX = px,
+                ptY = py,
             };
             ImmSetCompositionWindow(hIMC, ref cf);
+
+            for (uint i = 0; i < 4; i++)
+            {
+                var cand = new CANDIDATEFORM
+                {
+                    dwIndex = i,
+                    dwStyle = CFS_CANDIDATEPOS,
+                    ptX = px,
+                    ptY = py + (int)(_cellHeight * transform.M22),
+                };
+                ImmSetCandidateWindow(hIMC, ref cand);
+            }
         }
         finally
         {
-            ImmReleaseContext(hWnd, hIMC);
+            ImmReleaseContext(_hwndSource.Handle, hIMC);
         }
     }
 
