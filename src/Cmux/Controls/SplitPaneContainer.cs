@@ -1,5 +1,6 @@
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 using Cmux.Core.Models;
 using Cmux.Core.Config;
@@ -95,7 +96,10 @@ public class SplitPaneContainer : ContentControl
 
         foreach (var (paneId, terminal) in _terminalCache)
         {
-            terminal.IsPaneFocused = paneId == _surface.FocusedPaneId;
+            bool focused = paneId == _surface.FocusedPaneId;
+            terminal.IsPaneFocused = focused;
+            if (focused)
+                Keyboard.Focus(terminal);
         }
     }
 
