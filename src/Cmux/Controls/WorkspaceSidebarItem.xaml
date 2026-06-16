@@ -81,6 +81,15 @@
                         </MenuItem.Icon>
                     </MenuItem>
                 </MenuItem>
+                <MenuItem Header="{DynamicResource Workspace_MoveToGroup}" x:Name="MoveToGroupMenu"
+                          SubmenuOpened="MoveToGroupMenu_SubmenuOpened">
+                    <MenuItem.Icon>
+                        <TextBlock Text="&#xE8B7;" FontFamily="Segoe MDL2 Assets" FontSize="12" />
+                    </MenuItem.Icon>
+                    <MenuItem Header="{DynamicResource Workspace_RemoveFromGroup}" Click="RemoveFromGroup_Click"/>
+                    <Separator/>
+                    <MenuItem Header="{DynamicResource Workspace_NewGroup}" Click="NewGroup_Click"/>
+                </MenuItem>
                 <Separator />
                 <MenuItem Header="{DynamicResource Workspace_NewSurface}" InputGestureText="Ctrl+T" Click="NewSurface_Click">
                     <MenuItem.Icon>

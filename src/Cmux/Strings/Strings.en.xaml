@@ -135,6 +135,11 @@
     <system:String x:Key="Workspace_SetWorkingDirectory">Set Working Directory...</system:String>
     <system:String x:Key="Workspace_WorkingDirectoryMessage">Enter the working directory path (WSL paths like /home/user/project are supported). Leave empty to clear.</system:String>
     <system:String x:Key="Workspace_EnvVars">Environment Variables...</system:String>
+    <system:String x:Key="Workspace_MoveToGroup">Move to Group</system:String>
+    <system:String x:Key="Workspace_NewGroup">New Group...</system:String>
+    <system:String x:Key="Workspace_RemoveFromGroup">Remove from Group</system:String>
+    <system:String x:Key="Group_Rename">Rename Group</system:String>
+    <system:String x:Key="Group_Delete">Delete Group</system:String>
     <system:String x:Key="Workspace_EnvVarsMessage">Enter environment variables, one per line, in KEY=VALUE format. These will be injected into new terminal sessions.</system:String>
 
     <!-- Terminal Context Menu -->

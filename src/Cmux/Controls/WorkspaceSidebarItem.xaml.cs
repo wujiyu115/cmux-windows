@@ -2,6 +2,7 @@ using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using Cmux.Core.Models;
 using Cmux.Services;
 using Cmux.ViewModels;
 using Cmux.Views;
@@ -208,6 +209,55 @@ public partial class WorkspaceSidebarItem : UserControl
 
         glyph = char.ConvertFromUtf32((int)codePoint);
         return true;
+    }
+
+    private void MoveToGroupMenu_SubmenuOpened(object sender, RoutedEventArgs e)
+    {
+        var menu = sender as MenuItem;
+        var vm = FindMainViewModel();
+        if (menu == null || vm == null) return;
+
+        // Remove dynamic group items (keep the static ones: Remove, Separator, New)
+        while (menu.Items.Count > 3)
+            menu.Items.RemoveAt(3);
+
+        foreach (var group in vm.WorkspaceGroups)
+        {
+            var item = new MenuItem { Header = group.Name, Tag = group.Id };
+            item.Click += (s, _) =>
+            {
+                if (DataContext is WorkspaceViewModel ws && s is MenuItem mi)
+                    vm.MoveWorkspaceToGroup(ws, mi.Tag as string);
+            };
+            menu.Items.Add(item);
+        }
+    }
+
+    private void RemoveFromGroup_Click(object sender, RoutedEventArgs e)
+    {
+        if (DataContext is WorkspaceViewModel ws)
+            FindMainViewModel()?.MoveWorkspaceToGroup(ws, null);
+    }
+
+    private void NewGroup_Click(object sender, RoutedEventArgs e)
+    {
+        var vm = FindMainViewModel();
+        if (vm == null || DataContext is not WorkspaceViewModel ws) return;
+
+        var dialog = new TextPromptWindow(
+            LanguageService.Lang("Workspace_NewGroup"),
+            LanguageService.Lang("Workspace_NewGroup"))
+        {
+            Owner = Window.GetWindow(this),
+        };
+
+        if (dialog.ShowDialog() == true && !string.IsNullOrWhiteSpace(dialog.ResponseText))
+        {
+            vm.CreateGroup(dialog.ResponseText.Trim());
+            var newGroup = vm.WorkspaceGroups.LastOrDefault();
+            if (newGroup != null)
+                vm.MoveWorkspaceToGroup(ws, newGroup.Id);
+        }
     }
 
     private MainViewModel? FindMainViewModel()

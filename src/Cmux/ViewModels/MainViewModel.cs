@@ -20,6 +20,9 @@ public partial class MainViewModel : ObservableObject
     private WorkspaceViewModel? _selectedWorkspace;
 
     [ObservableProperty]
+    private ObservableCollection<WorkspaceGroup> _workspaceGroups = new();
+
+    [ObservableProperty]
     private bool _sidebarVisible = true;
 
     [ObservableProperty]
@@ -43,6 +46,85 @@ public partial class MainViewModel : ObservableObject
 
     [ObservableProperty]
     private double _agentPanelWidth = 380;
+
+    private string? _workspaceFilter;
+
+    public List<object> SidebarItems
+    {
+        get
+        {
+            var items = new List<object>();
+            var query = _workspaceFilter?.Trim();
+            bool hasFilter = !string.IsNullOrWhiteSpace(query);
+
+            bool MatchesFilter(WorkspaceViewModel ws) =>
+                !hasFilter
+                || (ws.Name?.Contains(query!, StringComparison.OrdinalIgnoreCase) ?? false)
+                || (ws.WorkingDirectory?.Contains(query!, StringComparison.OrdinalIgnoreCase) ?? false)
+                || (ws.GitBranch?.Contains(query!, StringComparison.OrdinalIgnoreCase) ?? false)
+                || (ws.AgentLabel?.Contains(query!, StringComparison.OrdinalIgnoreCase) ?? false);
+
+            // Ungrouped workspaces first
+            foreach (var ws in Workspaces.Where(w => w.Workspace.GroupId == null && MatchesFilter(w)))
+                items.Add(ws);
+            // Grouped workspaces
+            foreach (var group in WorkspaceGroups)
+            {
+                var groupWorkspaces = Workspaces.Where(w => w.Workspace.GroupId == group.Id && MatchesFilter(w)).ToList();
+                if (!hasFilter || groupWorkspaces.Count > 0)
+                {
+                    items.Add(group);
+                    if (!group.IsCollapsed)
+                    {
+                        foreach (var ws in groupWorkspaces)
+                            items.Add(ws);
+                    }
+                }
+            }
+            return items;
+        }
+    }
+
+    public void SetWorkspaceFilter(string? filter)
+    {
+        _workspaceFilter = filter;
+        OnPropertyChanged(nameof(SidebarItems));
+    }
+
+    public void CreateGroup(string name)
+    {
+        var group = new WorkspaceGroup { Name = name };
+        WorkspaceGroups.Add(group);
+        OnPropertyChanged(nameof(SidebarItems));
+    }
+
+    public void DeleteGroup(string groupId)
+    {
+        var group = WorkspaceGroups.FirstOrDefault(g => g.Id == groupId);
+        if (group == null) return;
+        foreach (var ws in Workspaces.Where(w => w.Workspace.GroupId == groupId))
+            ws.Workspace.GroupId = null;
+        WorkspaceGroups.Remove(group);
+        OnPropertyChanged(nameof(SidebarItems));
+    }
+
+    public void ToggleGroupCollapsed(string groupId)
+    {
+        var group = WorkspaceGroups.FirstOrDefault(g => g.Id == groupId);
+        if (group != null)
+        {
+            group.IsCollapsed = !group.IsCollapsed;
+            OnPropertyChanged(nameof(SidebarItems));
+        }
+    }
+
+    public void MoveWorkspaceToGroup(WorkspaceViewModel ws, string? groupId)
+    {
+        ws.Workspace.GroupId = groupId;
+        OnPropertyChanged(nameof(SidebarItems));
+    }
+
+    public void RefreshSidebarItems() => OnPropertyChanged(nameof(SidebarItems));
 
     private readonly NotificationService _notificationService;
 
@@ -93,6 +175,7 @@ public partial class MainViewModel : ObservableObject
         var vm = new WorkspaceViewModel(workspace, _notificationService);
         Workspaces.Add(vm);
         SelectedWorkspace = vm;
+        OnPropertyChanged(nameof(SidebarItems));
         EventBus.Publish("workspace.created", new { id = workspace.Id, name = workspace.Name });
     }
 
@@ -174,6 +257,7 @@ public partial class MainViewModel : ObservableObject
         var vm = new WorkspaceViewModel(clone, _notificationService);
         Workspaces.Add(vm);
         SelectedWorkspace = vm;
+        OnPropertyChanged(nameof(SidebarItems));
     }
 
     [RelayCommand]
@@ -188,6 +272,7 @@ public partial class MainViewModel : ObservableObject
         workspace.CaptureAllSurfaceTranscripts("workspace-close");
         workspace.Dispose();
         Workspaces.Remove(workspace);
+        OnPropertyChanged(nameof(SidebarItems));
         EventBus.Publish("workspace.closed", new { id = closedId, name = closedName });
 
         if (SelectedWorkspace == workspace)
@@ -327,6 +412,10 @@ public partial class MainViewModel : ObservableObject
             state.Workspaces[i].AgentSessionAgent = Workspaces[i].AgentSessionAgent;
         }
 
+        // Persist workspace groups
+        if (WorkspaceGroups.Count > 0)
+            state.WorkspaceGroups = WorkspaceGroups.ToList();
+
         SessionPersistenceService.Save(state);
     }
 
@@ -343,6 +432,7 @@ public partial class MainViewModel : ObservableObject
                 WorkingDirectory = wsState.WorkingDirectory,
                 StartDirectory = wsState.StartDirectory,
                 EnvironmentVariables = wsState.EnvironmentVariables ?? new(),
+                GroupId = wsState.GroupId,
             };
 
             foreach (var surfState in wsState.Surfaces)
@@ -398,6 +488,13 @@ public partial class MainViewModel : ObservableObject
             vm.AgentSessionId = wsState.AgentSessionId;
             vm.AgentSessionAgent = wsState.AgentSessionAgent;
             Workspaces.Add(vm);
+        }
+
+        // Restore workspace groups
+        if (session.WorkspaceGroups != null)
+        {
+            foreach (var group in session.WorkspaceGroups)
+                WorkspaceGroups.Add(group);
         }
 
         // Resume agent sessions after a delay

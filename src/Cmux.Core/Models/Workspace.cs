@@ -19,5 +19,6 @@ public class Workspace
     public List<int> ListeningPorts { get; set; } = [];
     public string? LatestNotificationText { get; set; }
     public int UnreadNotificationCount { get; set; }
+    public string? GroupId { get; set; }
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 }

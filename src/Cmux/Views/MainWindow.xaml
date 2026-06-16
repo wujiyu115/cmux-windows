@@ -262,60 +262,71 @@
                         </Border>
 
                         <!-- Workspace list -->
-                        <ListBox Grid.Row="1" ItemsSource="{Binding Workspaces}"
-                                 SelectedItem="{Binding SelectedWorkspace}"
+                        <ItemsControl Grid.Row="1" ItemsSource="{Binding SidebarItems}"
                                  Background="Transparent" BorderThickness="0"
-                                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                                 AllowDrop="True" Padding="4,4,4,0"
+                                 Padding="4,4,4,0"
                                  x:Name="WorkspaceList">
-                            <ListBox.ItemTemplate>
-                                <DataTemplate DataType="{x:Type vm:WorkspaceViewModel}">
-                                    <controls:WorkspaceSidebarItem />
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.Resources>
+                                <DataTemplate x:Key="WorkspaceTemplate">
+                                    <Grid x:Name="wsRoot" Margin="0,1" AllowDrop="True" Background="Transparent"
+                                          PreviewMouseLeftButtonDown="WorkspaceItem_PreviewMouseDown"
+                                          PreviewMouseMove="WorkspaceItem_PreviewMouseMove"
+                                          Drop="WorkspaceItem_Drop"
+                                          MouseLeftButtonUp="WorkspaceItem_Click">
+                                        <!-- Active indicator bar (left edge) -->
+                                        <Rectangle x:Name="activeBar" Width="3" HorizontalAlignment="Left"
+                                                   RadiusX="1.5" RadiusY="1.5" Opacity="0"
+                                                   Margin="0,4">
+                                            <Rectangle.Fill>
+                                                <SolidColorBrush Color="{DynamicResource AccentColor}" />
+                                            </Rectangle.Fill>
+                                        </Rectangle>
+                                        <Border x:Name="border" Background="Transparent"
+                                                CornerRadius="8" Padding="10,8" Margin="6,0,2,0">
+                                            <controls:WorkspaceSidebarItem />
+                                        </Border>
+                                    </Grid>
+                                    <DataTemplate.Triggers>
+                                        <Trigger SourceName="wsRoot" Property="IsMouseOver" Value="True">
+                                            <Setter TargetName="border" Property="Background"
+                                                    Value="{DynamicResource SidebarItemHoverBrush}" />
+                                        </Trigger>
+                                        <DataTrigger Value="True">
+                                            <DataTrigger.Binding>
+                                                <MultiBinding Converter="{StaticResource EqualityConverter}">
+                                                    <Binding />
+                                                    <Binding RelativeSource="{RelativeSource AncestorType=Window}" Path="DataContext.SelectedWorkspace" />
+                                                </MultiBinding>
+                                            </DataTrigger.Binding>
+                                            <Setter TargetName="border" Property="Background"
+                                                    Value="{DynamicResource SidebarItemSelectedBrush}" />
+                                            <Setter TargetName="activeBar" Property="Opacity" Value="1" />
+                                        </DataTrigger>
+                                    </DataTemplate.Triggers>
                                 </DataTemplate>
-                            </ListBox.ItemTemplate>
-                            <ListBox.ItemContainerStyle>
-                                <Style TargetType="ListBoxItem">
-                                    <Setter Property="Background" Value="Transparent" />
-                                    <Setter Property="Padding" Value="0" />
-                                    <Setter Property="Margin" Value="0,1" />
-                                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-                                    <Setter Property="Template">
-                                        <Setter.Value>
-                                            <ControlTemplate TargetType="ListBoxItem">
-                                                <Grid>
-                                                    <!-- Active indicator bar (left edge) -->
-                                                    <Rectangle x:Name="activeBar" Width="3" HorizontalAlignment="Left"
-                                                               RadiusX="1.5" RadiusY="1.5" Opacity="0"
-                                                               Margin="0,4">
-                                                        <Rectangle.Fill>
-                                                            <SolidColorBrush Color="{DynamicResource AccentColor}" />
-                                                        </Rectangle.Fill>
-                                                    </Rectangle>
-                                                    <Border x:Name="border" Background="{TemplateBinding Background}"
-                                                            CornerRadius="8" Padding="10,8" Margin="6,0,2,0">
-                                                        <ContentPresenter />
-                                                    </Border>
-                                                </Grid>
-                                                <ControlTemplate.Triggers>
-                                                    <Trigger Property="IsMouseOver" Value="True">
-                                                        <Setter TargetName="border" Property="Background"
-                                                                Value="{DynamicResource SidebarItemHoverBrush}" />
-                                                    </Trigger>
-                                                    <Trigger Property="IsSelected" Value="True">
-                                                        <Setter TargetName="border" Property="Background"
-                                                                Value="{DynamicResource SidebarItemSelectedBrush}" />
-                                                        <Setter TargetName="activeBar" Property="Opacity" Value="1" />
-                                                    </Trigger>
-                                                </ControlTemplate.Triggers>
-                                            </ControlTemplate>
-                                        </Setter.Value>
-                                    </Setter>
-                                    <EventSetter Event="PreviewMouseLeftButtonDown" Handler="WorkspaceItem_PreviewMouseDown" />
-                                    <EventSetter Event="PreviewMouseMove" Handler="WorkspaceItem_PreviewMouseMove" />
-                                    <EventSetter Event="Drop" Handler="WorkspaceItem_Drop" />
-                                </Style>
-                            </ListBox.ItemContainerStyle>
-                        </ListBox>
+                                <DataTemplate x:Key="GroupTemplate">
+                                    <controls:WorkspaceGroupHeader Margin="0,4,0,0" />
+                                </DataTemplate>
+                            </ItemsControl.Resources>
+                            <ItemsControl.ItemTemplateSelector>
+                                <controls:SidebarTemplateSelector
+                                    WorkspaceTemplate="{StaticResource WorkspaceTemplate}"
+                                    GroupTemplate="{StaticResource GroupTemplate}" />
+                            </ItemsControl.ItemTemplateSelector>
+                            <ItemsControl.Template>
+                                <ControlTemplate TargetType="ItemsControl">
+                                    <ScrollViewer VerticalScrollBarVisibility="Auto"
+                                                  HorizontalScrollBarVisibility="Disabled">
+                                        <ItemsPresenter />
+                                    </ScrollViewer>
+                                </ControlTemplate>
+                            </ItemsControl.Template>
+                        </ItemsControl>
 
                         <!-- Sidebar footer -->
                         <Border Grid.Row="2" BorderBrush="{DynamicResource BorderBrush}"

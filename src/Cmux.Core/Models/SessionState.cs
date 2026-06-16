@@ -13,6 +13,9 @@ public class SessionState
     [JsonPropertyName("selectedWorkspaceIndex")]
     public int? SelectedWorkspaceIndex { get; set; }
 
+    [JsonPropertyName("workspaceGroups")]
+    public List<WorkspaceGroup>? WorkspaceGroups { get; set; }
+
     [JsonPropertyName("window")]
     public WindowState? Window { get; set; }
 }
@@ -45,6 +48,9 @@ public class WorkspaceState
 
     [JsonPropertyName("selectedSurfaceIndex")]
     public int? SelectedSurfaceIndex { get; set; }
+
+    [JsonPropertyName("groupId")]
+    public string? GroupId { get; set; }
 
     [JsonPropertyName("agentSessionId")]
     public string? AgentSessionId { get; set; }

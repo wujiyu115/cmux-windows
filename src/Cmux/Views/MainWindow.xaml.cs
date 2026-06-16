@@ -3,7 +3,6 @@ using System;
 using System.Linq;
 using System.ComponentModel;
 using System.Collections.ObjectModel;
-using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Threading;
 using System.Windows.Controls;
@@ -23,7 +22,6 @@ public partial class MainWindow : Window
     private MainViewModel ViewModel => (MainViewModel)DataContext;
     private ChordKeyHandler _chordHandler = null!;
     private readonly DispatcherTimer _uiRefreshTimer = new() { Interval = TimeSpan.FromMilliseconds(300) };
-    private ICollectionView? _workspaceView;
     private readonly Dictionary<string, AgentChatMessageView> _streamingAssistantByThread = new(StringComparer.Ordinal);
     private List<AgentThreadView> _agentThreadViews = [];
     private List<AgentChatMessageView> _allThreadMessages = [];
@@ -35,7 +33,6 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
         WindowAppearance.Apply(this);
-        SetupWorkspaceFilter();
 
         CommandPaletteControl.PaletteClosed += () => FocusTerminal();
         CommandPaletteControl.ItemExecuted += item => FocusTerminal();
@@ -142,34 +139,9 @@ public partial class MainWindow : Window
         AgentMessageSearchBox.FontSize = fontSize;
     }
 
-    private void SetupWorkspaceFilter()
-    {
-        _workspaceView = CollectionViewSource.GetDefaultView(ViewModel.Workspaces);
-        if (_workspaceView != null)
-        {
-            _workspaceView.Filter = WorkspaceFilterPredicate;
-            WorkspaceList.ItemsSource = _workspaceView;
-        }
-    }
-
-    private bool WorkspaceFilterPredicate(object obj)
-    {
-        if (obj is not WorkspaceViewModel ws)
-            return false;
-
-        var query = WorkspaceFilterBox?.Text?.Trim();
-        if (string.IsNullOrWhiteSpace(query))
-            return true;
-
-        return (ws.Name?.Contains(query, StringComparison.OrdinalIgnoreCase) ?? false)
-            || (ws.WorkingDirectory?.Contains(query, StringComparison.OrdinalIgnoreCase) ?? false)
-            || (ws.GitBranch?.Contains(query, StringComparison.OrdinalIgnoreCase) ?? false)
-            || (ws.AgentLabel?.Contains(query, StringComparison.OrdinalIgnoreCase) ?? false);
-    }
-
     private void WorkspaceFilterBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
     {
-        _workspaceView?.Refresh();
+        ViewModel.SetWorkspaceFilter(WorkspaceFilterBox.Text);
     }
 
     private void OnLoaded(object sender, RoutedEventArgs e)
@@ -606,10 +578,12 @@ public partial class MainWindow : Window
     // --- Workspace drag-and-drop reordering ---
 
     private Point _dragStartPoint;
+    private bool _isDragging;
 
     private void WorkspaceItem_PreviewMouseDown(object sender, MouseButtonEventArgs e)
     {
         _dragStartPoint = e.GetPosition(null);
+        _isDragging = false;
     }
 
     private void WorkspaceItem_PreviewMouseMove(object sender, MouseEventArgs e)
@@ -621,17 +595,18 @@ public partial class MainWindow : Window
             Math.Abs(diff.Y) < SystemParameters.MinimumVerticalDragDistance)
             return;
 
-        if (sender is System.Windows.Controls.ListBoxItem item &&
-            item.DataContext is ViewModels.WorkspaceViewModel workspace)
+        if (sender is FrameworkElement element &&
+            element.DataContext is ViewModels.WorkspaceViewModel workspace)
         {
-            DragDrop.DoDragDrop(item, workspace, DragDropEffects.Move);
+            _isDragging = true;
+            DragDrop.DoDragDrop(element, workspace, DragDropEffects.Move);
         }
     }
 
     private void WorkspaceItem_Drop(object sender, DragEventArgs e)
     {
-        if (sender is not System.Windows.Controls.ListBoxItem targetItem) return;
-        if (targetItem.DataContext is not ViewModels.WorkspaceViewModel targetWorkspace) return;
+        if (sender is not FrameworkElement targetElement) return;
+        if (targetElement.DataContext is not ViewModels.WorkspaceViewModel targetWorkspace) return;
 
         var sourceWorkspace = e.Data.GetData(typeof(ViewModels.WorkspaceViewModel)) as ViewModels.WorkspaceViewModel;
         if (sourceWorkspace == null || sourceWorkspace == targetWorkspace) return;
@@ -642,6 +617,22 @@ public partial class MainWindow : Window
         if (sourceIndex >= 0 && targetIndex >= 0)
         {
             ViewModel.Workspaces.Move(sourceIndex, targetIndex);
+            ViewModel.RefreshSidebarItems();
+        }
+    }
+
+    private void WorkspaceItem_Click(object sender, MouseButtonEventArgs e)
+    {
+        if (_isDragging)
+        {
+            _isDragging = false;
+            return;
+        }
+
+        if (sender is FrameworkElement element &&
+            element.DataContext is ViewModels.WorkspaceViewModel workspace)
+        {
+            ViewModel.SelectedWorkspace = workspace;
         }
     }
 
