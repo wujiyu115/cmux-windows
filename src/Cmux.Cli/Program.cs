@@ -42,6 +42,7 @@ public static class Program
                 "surface" => await HandleSurface(args[1..]),
                 "split" => await HandleSplit(args[1..]),
                 "status" => await HandleStatusCommand(args[1..]),
+                "hooks" => await HandleHooks(args[1..]),
                 "events" => await HandleEvents(args[1..]),
                 "completion" => HandleCompletion(args[1..]),
                 "help" or "--help" or "-h" => PrintHelp(),
@@ -179,6 +180,40 @@ public static class Program
         using var reader = new StreamReader(stream);
         Console.Write(reader.ReadToEnd());
         return 0;
+    }
+
+    private static async Task<int> HandleHooks(string[] args)
+    {
+        string? payload = null;
+
+        if (Console.IsInputRedirected)
+            payload = await Console.In.ReadToEndAsync();
+
+        var cmdArgs = new Dictionary<string, string>();
+
+        if (payload != null)
+        {
+            cmdArgs["payload"] = payload;
+        }
+        else if (args.Length >= 2)
+        {
+            cmdArgs["payload"] = JsonSerializer.Serialize(new { agent = args[0], @event = args[1] });
+        }
+        else
+        {
+            Console.Error.WriteLine("Usage: cmux hooks <agent> <event> | echo '{json}' | cmux hooks");
+            return 1;
+        }
+
+        // Pass through any additional key=value args
+        for (int i = 2; i < args.Length; i++)
+        {
+            var eq = args[i].IndexOf('=');
+            if (eq > 0)
+                cmdArgs[args[i][..eq]] = args[i][(eq + 1)..];
+        }
+
+        return await SendAndPrint("HOOKS", cmdArgs);
     }
 
     private static async Task<int> HandleEvents(string[] args)
@@ -320,6 +355,10 @@ public static class Program
                   --priority <n>    Sort priority (default: 0)
                 clear               Clear sidebar status entries
                   --key <text>      Clear specific key (omit to clear all)
+
+              hooks                 Send agent hook events
+                <agent> <event>     Send a hook event (e.g. cmux hooks claude-code stop)
+                (stdin)             Pipe JSON payload (e.g. echo '{"agent":"claude-code","event":"stop"}' | cmux hooks)
 
               events                Stream real-time events (JSON lines)
                 --tag <name>        Connect to tagged cmux instance

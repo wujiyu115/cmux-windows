@@ -457,6 +457,7 @@ public partial class MainViewModel : ObservableObject
                 "STATUS" => HandleStatus(),
                 "STATUS.SET" => HandleStatusSet(args),
                 "STATUS.CLEAR" => HandleStatusClear(args),
+                "HOOKS" => HandleHookEvent(args),
                 "EVENTS.STREAM" => "<<STREAM>>",
                 _ => JsonSerializer.Serialize(new { error = $"Unknown command: {command}" }),
             };
@@ -795,6 +796,53 @@ public partial class MainViewModel : ObservableObject
         if (!TryResolveWorkspace(args, out var ws, out var err)) return JsonSerializer.Serialize(new { error = err });
         ws.ClearStatus(args.GetValueOrDefault("key"));
         return JsonSerializer.Serialize(new { ok = true });
+    }
+
+    private string HandleHookEvent(Dictionary<string, string> args)
+    {
+        var json = args.GetValueOrDefault("payload", "{}");
+        var evt = AgentHookService.ParseEvent(json);
+        if (evt == null)
+            return JsonSerializer.Serialize(new { error = "invalid hook payload" });
+
+        var action = AgentHookService.ClassifyEvent(evt);
+
+        var workspaceId = evt.WorkspaceId ?? SelectedWorkspace?.Workspace.Id ?? "";
+        var surfaceId = evt.SurfaceId ?? SelectedWorkspace?.SelectedSurface?.Surface.Id ?? "";
+
+        switch (action)
+        {
+            case HookAction.Notify:
+            case HookAction.Approval:
+                var title = action == HookAction.Approval
+                    ? $"{evt.Agent} needs approval"
+                    : evt.Title ?? $"{evt.Agent} — {evt.Event}";
+                var body = action == HookAction.Approval
+                    ? evt.Command ?? evt.Body ?? "Permission requested"
+                    : evt.Body ?? "";
+                _notificationService.AddNotification(
+                    workspaceId, surfaceId, evt.PaneId,
+                    title, evt.Tool, body,
+                    NotificationSource.Cli);
+                break;
+
+            case HookAction.SessionStart:
+                if (evt.SessionId != null)
+                {
+                    var ws = Workspaces.FirstOrDefault(w => w.Workspace.Id == workspaceId)
+                        ?? SelectedWorkspace;
+                    if (ws != null)
+                    {
+                        ws.AgentSessionId = evt.SessionId;
+                        ws.AgentSessionAgent = evt.Agent;
+                    }
+                }
+                break;
+        }
+
+        EventBus.Publish("agent.hook", new { agent = evt.Agent, @event = evt.Event, action = action.ToString() });
+
+        return JsonSerializer.Serialize(new { ok = true, action = action.ToString() });
     }
 
     private bool TryResolveWorkspace(Dictionary<string, string> args, out WorkspaceViewModel workspace, out string error)

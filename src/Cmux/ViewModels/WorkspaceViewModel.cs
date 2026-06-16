@@ -53,6 +53,12 @@ public partial class WorkspaceViewModel : ObservableObject, IDisposable
     [ObservableProperty]
     private AgentType _detectedAgent;
 
+    [ObservableProperty]
+    private string? _agentSessionId;
+
+    [ObservableProperty]
+    private string? _agentSessionAgent;
+
     private string? _lastConfigPath;
 
     private readonly Dictionary<string, SidebarStatusEntry> _statusEntries = new();
