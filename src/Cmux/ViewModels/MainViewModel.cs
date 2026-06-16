@@ -319,6 +319,14 @@ public partial class MainViewModel : ObservableObject
             SelectedWorkspace != null ? Workspaces.IndexOf(SelectedWorkspace) : null,
             windowX, windowY, windowWidth, windowHeight,
             isMaximized, SidebarWidth, SidebarVisible, CompactSidebar);
+
+        // Persist agent session IDs (stored on ViewModels, not models)
+        for (int i = 0; i < Workspaces.Count && i < state.Workspaces.Count; i++)
+        {
+            state.Workspaces[i].AgentSessionId = Workspaces[i].AgentSessionId;
+            state.Workspaces[i].AgentSessionAgent = Workspaces[i].AgentSessionAgent;
+        }
+
         SessionPersistenceService.Save(state);
     }
 
@@ -387,7 +395,16 @@ public partial class MainViewModel : ObservableObject
             }
 
             var vm = new WorkspaceViewModel(workspace, _notificationService);
+            vm.AgentSessionId = wsState.AgentSessionId;
+            vm.AgentSessionAgent = wsState.AgentSessionAgent;
             Workspaces.Add(vm);
+        }
+
+        // Resume agent sessions after a delay
+        foreach (var ws in Workspaces)
+        {
+            if (ws.AgentSessionId != null)
+                ws.TryResumeAgentSession();
         }
 
         if (session.SelectedWorkspaceIndex.HasValue &&

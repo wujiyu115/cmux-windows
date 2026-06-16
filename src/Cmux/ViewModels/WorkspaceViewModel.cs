@@ -227,6 +227,16 @@ public partial class WorkspaceViewModel : ObservableObject, IDisposable
                     OnPropertyChanged(nameof(AgentLabel));
                     OnPropertyChanged(nameof(AgentIcon));
                 }
+
+                if (agent != AgentType.None)
+                {
+                    var sessionId = AgentDetector.GetSessionId(agent, pid);
+                    if (sessionId != null)
+                    {
+                        AgentSessionId = sessionId;
+                        AgentSessionAgent = agent.ToString();
+                    }
+                }
             }
 
             // Port scanning
@@ -317,6 +327,32 @@ public partial class WorkspaceViewModel : ObservableObject, IDisposable
         StatusDisplay.Clear();
         foreach (var entry in _statusEntries.Values.OrderByDescending(e => e.Priority))
             StatusDisplay.Add(entry);
+    }
+
+    public void TryResumeAgentSession()
+    {
+        if (AgentSessionId == null || AgentSessionAgent == null) return;
+
+        var resumeCmd = AgentSessionAgent.ToLowerInvariant() switch
+        {
+            "claudecode" => $"claude --resume {AgentSessionId}",
+            "codex" => $"codex resume {AgentSessionId}",
+            _ => null,
+        };
+
+        if (resumeCmd == null) return;
+
+        // Write resume command to the focused pane after a delay for shell readiness
+        Task.Run(async () =>
+        {
+            await Task.Delay(2000);
+            var paneId = SelectedSurface?.FocusedPaneId;
+            if (paneId != null)
+            {
+                var session = SelectedSurface?.GetSession(paneId);
+                session?.Write(resumeCmd + "\r");
+            }
+        });
     }
 
     public void Dispose()

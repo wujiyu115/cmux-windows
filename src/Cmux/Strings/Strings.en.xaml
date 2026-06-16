@@ -489,6 +489,10 @@ A terminal multiplexer optimized for modern workflows.</system:String>
     <system:String x:Key="Provider_OpenAI">openai</system:String>
     <system:String x:Key="Provider_Anthropic">anthropic</system:String>
 
+    <!-- Agent Resume -->
+    <system:String x:Key="Agent_Resume">Resume Agent Session</system:String>
+    <system:String x:Key="Agent_Resume_Desc">Resume the last AI agent session in this workspace</system:String>
+
     <!-- Agent defaults -->
     <system:String x:Key="AgentDefault_Name">assistant</system:String>
     <system:String x:Key="AgentDefault_Handler">/agent</system:String>

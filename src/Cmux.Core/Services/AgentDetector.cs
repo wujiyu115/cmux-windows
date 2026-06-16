@@ -56,6 +56,49 @@ public static class AgentDetector
         _ => "",
     };
 
+    public static string? GetSessionId(AgentType agent, int pid)
+    {
+        try
+        {
+            return agent switch
+            {
+                AgentType.ClaudeCode => ExtractSessionIdFromCommandLine(pid, "--resume"),
+                AgentType.Codex => ExtractSessionIdFromCommandLine(pid, "resume"),
+                _ => null,
+            };
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    private static string? ExtractSessionIdFromCommandLine(int pid, string marker)
+    {
+        var cmdLine = GetCommandLine(pid);
+        if (cmdLine == null) return null;
+
+        var idx = cmdLine.IndexOf(marker, StringComparison.OrdinalIgnoreCase);
+        if (idx < 0) return null;
+
+        var after = cmdLine[(idx + marker.Length)..].TrimStart();
+        var spaceIdx = after.IndexOf(' ');
+        return spaceIdx > 0 ? after[..spaceIdx].Trim() : after.Trim();
+    }
+
+    private static string? GetCommandLine(int pid)
+    {
+        try
+        {
+            using var searcher = new System.Management.ManagementObjectSearcher(
+                $"SELECT CommandLine FROM Win32_Process WHERE ProcessId = {pid}");
+            foreach (var obj in searcher.Get())
+                return obj["CommandLine"]?.ToString();
+        }
+        catch { }
+        return null;
+    }
+
     private static List<string> GetChildProcessNames(int parentPid)
     {
         var names = new List<string>();

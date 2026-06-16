@@ -1146,6 +1146,7 @@ public partial class MainWindow : Window
             new() { Id = "layout-3col", Label = LanguageService.Lang("Palette_Layout3Col"), Icon = "\uE745", Category = "Layout", Execute = () => ApplyLayout(3, 1) },
             new() { Id = "layout-grid", Label = LanguageService.Lang("Palette_LayoutGrid"), Icon = "\uF0E2", Category = "Layout", Execute = () => ApplyLayout(2, 2) },
             new() { Id = "layout-main-stack", Label = LanguageService.Lang("Palette_LayoutMainStack"), Icon = "\uE745", Category = "Layout", Execute = () => ApplyMainStackLayout() },
+            new() { Id = "agent_resume", Label = LanguageService.Lang("Agent_Resume"), Description = LanguageService.Lang("Agent_Resume_Desc"), Icon = "\uE72C", Category = "Agent", Execute = () => ViewModel?.SelectedWorkspace?.TryResumeAgentSession() },
         ];
     }
 

@@ -45,6 +45,12 @@ public class WorkspaceState
 
     [JsonPropertyName("selectedSurfaceIndex")]
     public int? SelectedSurfaceIndex { get; set; }
+
+    [JsonPropertyName("agentSessionId")]
+    public string? AgentSessionId { get; set; }
+
+    [JsonPropertyName("agentSessionAgent")]
+    public string? AgentSessionAgent { get; set; }
 }
 
 public class SurfaceState

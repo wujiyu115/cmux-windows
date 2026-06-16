@@ -489,6 +489,10 @@
     <system:String x:Key="Provider_OpenAI">openai</system:String>
     <system:String x:Key="Provider_Anthropic">anthropic</system:String>
 
+    <!-- Agent Resume -->
+    <system:String x:Key="Agent_Resume">恢复 Agent 会话</system:String>
+    <system:String x:Key="Agent_Resume_Desc">恢复此工作区最后的 AI Agent 会话</system:String>
+
     <!-- Agent defaults -->
     <system:String x:Key="AgentDefault_Name">assistant</system:String>
     <system:String x:Key="AgentDefault_Handler">/agent</system:String>
