@@ -2,37 +2,7 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:system="clr-namespace:System;assembly=mscorlib">
 
-    <!-- cmux Dark Theme — deep blacks, indigo/purple accents, premium feel -->
-
-    <!-- ═══════════════════════════════════════════════════════════════════
-         Base Colors (existing keys preserved)
-         ═══════════════════════════════════════════════════════════════════ -->
-    <Color x:Key="BackgroundColor">#FF0F0F0F</Color>
-    <Color x:Key="SidebarBackgroundColor">#FF0A0A0A</Color>
-    <Color x:Key="SidebarItemHoverColor">#FF1A1A2E</Color>
-    <Color x:Key="SidebarItemSelectedColor">#FF252547</Color>
-    <Color x:Key="ForegroundColor">#FFE2E2E9</Color>
-    <Color x:Key="ForegroundDimColor">#FF6B6B80</Color>
-    <Color x:Key="AccentColor">#FF818CF8</Color>
-    <Color x:Key="NotificationColor">#FF6366F1</Color>
-    <Color x:Key="BorderColor">#FF2A2A3C</Color>
-    <Color x:Key="SurfaceTabBackgroundColor">#FF161622</Color>
-    <Color x:Key="SurfaceTabSelectedColor">#FF1E1E32</Color>
-    <Color x:Key="DividerColor">#FF2E2E42</Color>
-    <Color x:Key="ErrorColor">#FFEF4444</Color>
-    <Color x:Key="SuccessColor">#FF34D399</Color>
-    <Color x:Key="WarningColor">#FFFBBF24</Color>
-
-    <!-- New accent colors -->
-    <Color x:Key="AccentGlowColor">#80818CF8</Color>
-    <Color x:Key="SurfaceColor">#FF141420</Color>
-    <Color x:Key="SurfaceHighColor">#FF1C1C30</Color>
-    <Color x:Key="PurpleAccent">#FFA78BFA</Color>
-    <Color x:Key="TealAccent">#FF2DD4BF</Color>
-    <Color x:Key="PinkAccent">#FFF472B6</Color>
-    <Color x:Key="OrangeAccent">#FFFB923C</Color>
-    <Color x:Key="InputBackgroundColor">#FF1A1A1A</Color>
-    <Color x:Key="CloseButtonHoverColor">#FFE81123</Color>
+    <!-- cmux Dark Theme — structural styles only; colors come from AppThemeService -->
 
     <!-- ═══════════════════════════════════════════════════════════════════
          Layout Tokens
@@ -41,48 +11,7 @@
     <CornerRadius x:Key="WindowCornerRadius">10</CornerRadius>
 
     <!-- ═══════════════════════════════════════════════════════════════════
-         Brushes (existing keys preserved)
-         ═══════════════════════════════════════════════════════════════════ -->
-    <SolidColorBrush x:Key="BackgroundBrush" Color="{StaticResource BackgroundColor}" />
-    <SolidColorBrush x:Key="SidebarBackgroundBrush" Color="{StaticResource SidebarBackgroundColor}" />
-    <SolidColorBrush x:Key="SidebarItemHoverBrush" Color="{StaticResource SidebarItemHoverColor}" />
-    <SolidColorBrush x:Key="SidebarItemSelectedBrush" Color="{StaticResource SidebarItemSelectedColor}" />
-    <SolidColorBrush x:Key="ForegroundBrush" Color="{StaticResource ForegroundColor}" />
-    <SolidColorBrush x:Key="ForegroundDimBrush" Color="{StaticResource ForegroundDimColor}" />
-    <SolidColorBrush x:Key="AccentBrush" Color="{StaticResource AccentColor}" />
-    <SolidColorBrush x:Key="NotificationBrush" Color="{StaticResource NotificationColor}" />
-    <SolidColorBrush x:Key="BorderBrush" Color="{StaticResource BorderColor}" />
-    <SolidColorBrush x:Key="SurfaceTabBackgroundBrush" Color="{StaticResource SurfaceTabBackgroundColor}" />
-    <SolidColorBrush x:Key="SurfaceTabSelectedBrush" Color="{StaticResource SurfaceTabSelectedColor}" />
-    <SolidColorBrush x:Key="DividerBrush" Color="{StaticResource DividerColor}" />
-    <SolidColorBrush x:Key="ErrorBrush" Color="{StaticResource ErrorColor}" />
-    <SolidColorBrush x:Key="SuccessBrush" Color="{StaticResource SuccessColor}" />
-    <SolidColorBrush x:Key="WarningBrush" Color="{StaticResource WarningColor}" />
-
-    <!-- New brushes -->
-    <SolidColorBrush x:Key="SurfaceBrush" Color="{StaticResource SurfaceColor}" />
-    <SolidColorBrush x:Key="SurfaceHighBrush" Color="{StaticResource SurfaceHighColor}" />
-    <SolidColorBrush x:Key="InputBackgroundBrush" Color="{StaticResource InputBackgroundColor}" />
-    <SolidColorBrush x:Key="OverlayBackgroundBrush" Color="#F2141414" />
-
-    <LinearGradientBrush x:Key="AccentGradientBrush" StartPoint="0,0" EndPoint="1,1">
-        <GradientStop Color="#FF6366F1" Offset="0.0" />
-        <GradientStop Color="#FF818CF8" Offset="0.5" />
-        <GradientStop Color="#FFA78BFA" Offset="1.0" />
-    </LinearGradientBrush>
-
-    <LinearGradientBrush x:Key="SidebarGradientBrush" StartPoint="0,0" EndPoint="0,1">
-        <GradientStop Color="#FF0A0A0A" Offset="0.0" />
-        <GradientStop Color="#FF0F0F1A" Offset="1.0" />
-    </LinearGradientBrush>
-
-    <RadialGradientBrush x:Key="SelectedTabGlow" GradientOrigin="0.5,0.5" Center="0.5,0.5" RadiusX="0.8" RadiusY="0.8">
-        <GradientStop Color="#30818CF8" Offset="0.0" />
-        <GradientStop Color="#00818CF8" Offset="1.0" />
-    </RadialGradientBrush>
-
-    <!-- ═══════════════════════════════════════════════════════════════════
-         Effects
+         Effects (non-accent)
          ═══════════════════════════════════════════════════════════════════ -->
     <DropShadowEffect x:Key="FloatingShadow" BlurRadius="20" ShadowDepth="4"
                       Direction="270" Color="#CC000000" Opacity="0.6" />
@@ -90,11 +19,8 @@
     <DropShadowEffect x:Key="SubtleShadow" BlurRadius="8" ShadowDepth="2"
                       Direction="270" Color="#99000000" Opacity="0.4" />
 
-    <DropShadowEffect x:Key="GlowEffect" BlurRadius="16" ShadowDepth="0"
-                      Direction="0" Color="{StaticResource AccentColor}" Opacity="0.5" />
-
     <!-- ═══════════════════════════════════════════════════════════════════
-         Font Sizes (existing keys preserved + new)
+         Font Sizes
          ═══════════════════════════════════════════════════════════════════ -->
     <system:Double x:Key="FontSizeSmall">11</system:Double>
     <system:Double x:Key="FontSizeNormal">13</system:Double>
@@ -109,7 +35,7 @@
     <Duration x:Key="SlowAnimation">0:0:0.4</Duration>
 
     <!-- ═══════════════════════════════════════════════════════════════════
-         Scrollbar Thumb (existing key preserved, enhanced with hover animation)
+         Scrollbar Thumb
          ═══════════════════════════════════════════════════════════════════ -->
     <Style x:Key="DarkScrollBarThumb" TargetType="Thumb">
         <Setter Property="OverridesDefaultStyle" Value="True" />
@@ -118,7 +44,7 @@
                 <ControlTemplate TargetType="Thumb">
                     <Border x:Name="thumbBorder" CornerRadius="4" Margin="1">
                         <Border.Background>
-                            <SolidColorBrush x:Name="thumbBrush" Color="#FF3A3A50" />
+                            <SolidColorBrush x:Name="thumbBrush" Color="#30FFFFFF" />
                         </Border.Background>
                     </Border>
                     <ControlTemplate.Triggers>
@@ -127,7 +53,7 @@
                                 <Storyboard>
                                     <ColorAnimation Storyboard.TargetName="thumbBrush"
                                                     Storyboard.TargetProperty="Color"
-                                                    To="#FF818CF8" Duration="0:0:0.15" />
+                                                    To="#60FFFFFF" Duration="0:0:0.15" />
                                 </Storyboard>
                             </BeginStoryboard>
                         </EventTrigger>
@@ -136,7 +62,7 @@
                                 <Storyboard>
                                     <ColorAnimation Storyboard.TargetName="thumbBrush"
                                                     Storyboard.TargetProperty="Color"
-                                                    To="#FF3A3A50" Duration="0:0:0.25" />
+                                                    To="#30FFFFFF" Duration="0:0:0.25" />
                                 </Storyboard>
                             </BeginStoryboard>
                         </EventTrigger>
@@ -147,11 +73,11 @@
     </Style>
 
     <!-- ═══════════════════════════════════════════════════════════════════
-         CmuxButton (existing key preserved — ghost button, CornerRadius 6)
+         CmuxButton — ghost button, CornerRadius 6
          ═══════════════════════════════════════════════════════════════════ -->
     <Style x:Key="CmuxButton" TargetType="Button">
         <Setter Property="Background" Value="Transparent" />
-        <Setter Property="Foreground" Value="{StaticResource ForegroundBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" />
         <Setter Property="BorderThickness" Value="0" />
         <Setter Property="Padding" Value="12,6" />
         <Setter Property="Cursor" Value="Hand" />
@@ -173,7 +99,7 @@
                                 <Storyboard>
                                     <ColorAnimation Storyboard.TargetName="borderBrush"
                                                     Storyboard.TargetProperty="Color"
-                                                    To="#FF1A1A2E" Duration="0:0:0.15" />
+                                                    To="#15FFFFFF" Duration="0:0:0.15" />
                                 </Storyboard>
                             </BeginStoryboard>
                         </EventTrigger>
@@ -187,7 +113,7 @@
                             </BeginStoryboard>
                         </EventTrigger>
                         <Trigger Property="IsPressed" Value="True">
-                            <Setter TargetName="border" Property="Background" Value="{StaticResource SidebarItemSelectedBrush}" />
+                            <Setter TargetName="border" Property="Background" Value="{DynamicResource SidebarItemSelectedBrush}" />
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="False">
                             <Setter Property="Opacity" Value="0.4" />
@@ -214,12 +140,12 @@
                 <ControlTemplate TargetType="Button">
                     <Border x:Name="border" CornerRadius="6"
                             Padding="{TemplateBinding Padding}"
-                            Background="{StaticResource AccentGradientBrush}">
+                            Background="{DynamicResource AccentGradientBrush}">
                         <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter Property="Effect" Value="{StaticResource GlowEffect}" />
+                            <Setter Property="Effect" Value="{DynamicResource GlowEffect}" />
                         </Trigger>
                         <Trigger Property="IsPressed" Value="True">
                             <Setter TargetName="border" Property="Opacity" Value="0.85" />
@@ -240,7 +166,7 @@
         <Setter Property="Width" Value="28" />
         <Setter Property="Height" Value="28" />
         <Setter Property="Background" Value="Transparent" />
-        <Setter Property="Foreground" Value="{StaticResource ForegroundDimBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource ForegroundDimBrush}" />
         <Setter Property="BorderThickness" Value="0" />
         <Setter Property="Padding" Value="4" />
         <Setter Property="Cursor" Value="Hand" />
@@ -263,7 +189,7 @@
                                 <Storyboard>
                                     <ColorAnimation Storyboard.TargetName="iconBtnBg"
                                                     Storyboard.TargetProperty="Color"
-                                                    To="#FF1A1A2E" Duration="0:0:0.15" />
+                                                    To="#15FFFFFF" Duration="0:0:0.15" />
                                 </Storyboard>
                             </BeginStoryboard>
                         </EventTrigger>
@@ -277,10 +203,10 @@
                             </BeginStoryboard>
                         </EventTrigger>
                         <Trigger Property="IsPressed" Value="True">
-                            <Setter TargetName="border" Property="Background" Value="{StaticResource SidebarItemSelectedBrush}" />
+                            <Setter TargetName="border" Property="Background" Value="{DynamicResource SidebarItemSelectedBrush}" />
                         </Trigger>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter Property="Foreground" Value="{StaticResource ForegroundBrush}" />
+                            <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" />
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="False">
                             <Setter Property="Opacity" Value="0.3" />
@@ -295,34 +221,32 @@
          CmuxTextBox — dark input with focus ring
          ═══════════════════════════════════════════════════════════════════ -->
     <Style x:Key="CmuxTextBox" TargetType="TextBox">
-        <Setter Property="Background" Value="{StaticResource SurfaceBrush}" />
-        <Setter Property="Foreground" Value="{StaticResource ForegroundBrush}" />
-        <Setter Property="CaretBrush" Value="{StaticResource AccentBrush}" />
-        <Setter Property="BorderBrush" Value="{StaticResource BorderBrush}" />
+        <Setter Property="Background" Value="{DynamicResource SurfaceBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" />
+        <Setter Property="CaretBrush" Value="{DynamicResource AccentBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}" />
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="Padding" Value="8,6" />
         <Setter Property="FontSize" Value="{StaticResource FontSizeNormal}" />
-        <Setter Property="SelectionBrush" Value="{StaticResource AccentBrush}" />
+        <Setter Property="SelectionBrush" Value="{DynamicResource AccentBrush}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="TextBox">
                     <Border x:Name="border" CornerRadius="6"
                             Background="{TemplateBinding Background}"
                             BorderThickness="{TemplateBinding BorderThickness}"
-                            Padding="{TemplateBinding Padding}">
-                        <Border.BorderBrush>
-                            <SolidColorBrush x:Name="borderStroke" Color="{StaticResource BorderColor}" />
-                        </Border.BorderBrush>
+                            Padding="{TemplateBinding Padding}"
+                            BorderBrush="{DynamicResource BorderBrush}">
                         <ScrollViewer x:Name="PART_ContentHost" Focusable="False"
                                       HorizontalScrollBarVisibility="Hidden"
                                       VerticalScrollBarVisibility="Hidden" />
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter TargetName="border" Property="BorderBrush" Value="{StaticResource ForegroundDimBrush}" />
+                            <Setter TargetName="border" Property="BorderBrush" Value="{DynamicResource ForegroundDimBrush}" />
                         </Trigger>
                         <Trigger Property="IsKeyboardFocusWithin" Value="True">
-                            <Setter TargetName="border" Property="BorderBrush" Value="{StaticResource AccentBrush}" />
+                            <Setter TargetName="border" Property="BorderBrush" Value="{DynamicResource AccentBrush}" />
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="False">
                             <Setter Property="Opacity" Value="0.4" />
@@ -335,8 +259,8 @@
 
     <!-- Dark Context Menu -->
     <Style TargetType="ContextMenu">
-        <Setter Property="Background" Value="{StaticResource SurfaceBrush}" />
-        <Setter Property="BorderBrush" Value="{StaticResource BorderBrush}" />
+        <Setter Property="Background" Value="{DynamicResource SurfaceBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}" />
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="Padding" Value="2" />
         <Setter Property="HasDropShadow" Value="True" />
@@ -358,7 +282,7 @@
     </Style>
 
     <Style TargetType="MenuItem">
-        <Setter Property="Foreground" Value="{StaticResource ForegroundBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" />
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="Padding" Value="10,6" />
         <Setter Property="FontSize" Value="12" />
@@ -375,16 +299,16 @@
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
                                 <TextBlock Grid.Column="0" Text="{TemplateBinding Icon}" FontFamily="Segoe MDL2 Assets"
-                                           FontSize="12" Foreground="{StaticResource ForegroundDimBrush}"
+                                           FontSize="12" Foreground="{DynamicResource ForegroundDimBrush}"
                                            VerticalAlignment="Center" />
                                 <ContentPresenter Grid.Column="1" ContentSource="Header" VerticalAlignment="Center"
                                                   RecognizesAccessKey="True" />
                                 <TextBlock x:Name="gestureText" Grid.Column="2" Text="{TemplateBinding InputGestureText}"
-                                           Foreground="{StaticResource ForegroundDimBrush}" FontSize="11"
+                                           Foreground="{DynamicResource ForegroundDimBrush}" FontSize="11"
                                            VerticalAlignment="Center" Margin="16,0,0,0" />
                                 <TextBlock x:Name="submenuArrow" Grid.Column="2" Text="&#xE76C;"
                                            FontFamily="Segoe MDL2 Assets" FontSize="10"
-                                           Foreground="{StaticResource ForegroundDimBrush}"
+                                           Foreground="{DynamicResource ForegroundDimBrush}"
                                            VerticalAlignment="Center" Margin="16,0,0,0"
                                            Visibility="Collapsed" />
                             </Grid>
@@ -392,8 +316,8 @@
                         <Popup x:Name="PART_Popup" IsOpen="{Binding IsSubmenuOpen, RelativeSource={RelativeSource TemplatedParent}}"
                                Placement="Right" AllowsTransparency="True" Focusable="False"
                                PopupAnimation="Fade" HorizontalOffset="-2">
-                            <Border Background="{StaticResource SurfaceBrush}"
-                                    BorderBrush="{StaticResource BorderBrush}" BorderThickness="1"
+                            <Border Background="{DynamicResource SurfaceBrush}"
+                                    BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1"
                                     CornerRadius="8" Padding="2">
                                 <Border.Effect>
                                     <DropShadowEffect BlurRadius="20" ShadowDepth="4" Color="#000000" Opacity="0.5" Direction="270" />
@@ -404,7 +328,7 @@
                     </Grid>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsHighlighted" Value="True">
-                            <Setter TargetName="border" Property="Background" Value="#FF1A1A2E" />
+                            <Setter TargetName="border" Property="Background" Value="{DynamicResource SidebarItemHoverBrush}" />
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="False">
                             <Setter Property="Opacity" Value="0.4" />
@@ -423,7 +347,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Separator">
-                    <Border Height="1" Background="{StaticResource BorderBrush}" Margin="6,3" />
+                    <Border Height="1" Background="{DynamicResource BorderBrush}" Margin="6,3" />
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
@@ -436,7 +360,7 @@
         <Setter Property="Width" Value="46" />
         <Setter Property="Height" Value="32" />
         <Setter Property="Background" Value="Transparent" />
-        <Setter Property="Foreground" Value="{StaticResource ForegroundDimBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource ForegroundDimBrush}" />
         <Setter Property="BorderThickness" Value="0" />
         <Setter Property="Padding" Value="0" />
         <Setter Property="Cursor" Value="Hand" />
@@ -451,7 +375,7 @@
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
                             <Setter TargetName="border" Property="Background" Value="#20FFFFFF" />
-                            <Setter Property="Foreground" Value="{StaticResource ForegroundBrush}" />
+                            <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" />
                         </Trigger>
                         <Trigger Property="IsPressed" Value="True">
                             <Setter TargetName="border" Property="Background" Value="#30FFFFFF" />
@@ -487,7 +411,7 @@
     </Style>
 
     <!-- ═══════════════════════════════════════════════════════════════════
-         Overlay shadow (softer than FloatingShadow for modal overlays)
+         Overlay shadow
          ═══════════════════════════════════════════════════════════════════ -->
     <DropShadowEffect x:Key="OverlayShadow" BlurRadius="20" ShadowDepth="4"
                       Direction="270" Color="#000000" Opacity="0.4" />

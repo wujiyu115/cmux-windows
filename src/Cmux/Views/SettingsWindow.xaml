@@ -19,7 +19,7 @@
         <!-- Nav button style -->
         <Style x:Key="NavButton" TargetType="Button">
             <Setter Property="Background" Value="Transparent" />
-            <Setter Property="Foreground" Value="{StaticResource ForegroundDimBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource ForegroundDimBrush}" />
             <Setter Property="BorderThickness" Value="0" />
             <Setter Property="HorizontalContentAlignment" Value="Left" />
             <Setter Property="Padding" Value="14,10" />
@@ -38,7 +38,7 @@
                                 <Setter TargetName="Bd" Property="Background" Value="#20FFFFFF" />
                             </Trigger>
                             <Trigger Property="Tag" Value="active">
-                                <Setter Property="Foreground" Value="{StaticResource ForegroundBrush}" />
+                                <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" />
                                 <Setter TargetName="Bd" Property="Background" Value="#30FFFFFF" />
                             </Trigger>
                         </ControlTemplate.Triggers>
@@ -50,36 +50,36 @@
         <!-- Settings text input style -->
         <Style x:Key="SettingsTextBox" TargetType="TextBox">
             <Setter Property="Background" Value="#FF1A1A1A" />
-            <Setter Property="Foreground" Value="{StaticResource ForegroundBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" />
             <Setter Property="BorderThickness" Value="1" />
-            <Setter Property="BorderBrush" Value="{StaticResource BorderBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}" />
             <Setter Property="Padding" Value="8,6" />
             <Setter Property="FontSize" Value="13" />
-            <Setter Property="CaretBrush" Value="{StaticResource ForegroundBrush}" />
+            <Setter Property="CaretBrush" Value="{DynamicResource ForegroundBrush}" />
         </Style>
 
         <Style x:Key="SettingsPasswordBox" TargetType="PasswordBox">
             <Setter Property="Background" Value="#FF1A1A1A" />
-            <Setter Property="Foreground" Value="{StaticResource ForegroundBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" />
             <Setter Property="BorderThickness" Value="1" />
-            <Setter Property="BorderBrush" Value="{StaticResource BorderBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}" />
             <Setter Property="Padding" Value="8,6" />
             <Setter Property="FontSize" Value="13" />
-            <Setter Property="CaretBrush" Value="{StaticResource ForegroundBrush}" />
+            <Setter Property="CaretBrush" Value="{DynamicResource ForegroundBrush}" />
         </Style>
 
         <Style x:Key="SettingsComboItem" TargetType="ComboBoxItem">
             <Setter Property="Background" Value="#FF1A1A1A" />
-            <Setter Property="Foreground" Value="{StaticResource ForegroundBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" />
             <Setter Property="Padding" Value="6,4" />
             <Style.Triggers>
                 <Trigger Property="IsHighlighted" Value="True">
                     <Setter Property="Background" Value="#FF252547" />
-                    <Setter Property="Foreground" Value="{StaticResource ForegroundBrush}" />
+                    <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" />
                 </Trigger>
                 <Trigger Property="IsSelected" Value="True">
                     <Setter Property="Background" Value="#FF1E1E32" />
-                    <Setter Property="Foreground" Value="{StaticResource ForegroundBrush}" />
+                    <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" />
                 </Trigger>
             </Style.Triggers>
         </Style>
@@ -95,9 +95,9 @@
                 <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="#FFE2E2E9" />
             </Style.Resources>
             <Setter Property="Background" Value="#FF1A1A1A" />
-            <Setter Property="Foreground" Value="{StaticResource ForegroundBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" />
             <Setter Property="BorderThickness" Value="1" />
-            <Setter Property="BorderBrush" Value="{StaticResource BorderBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}" />
             <Setter Property="Padding" Value="8,6" />
             <Setter Property="FontSize" Value="13" />
             <Setter Property="HorizontalContentAlignment" Value="Left" />
@@ -186,7 +186,7 @@
                                 <Setter TargetName="DropDownBorder" Property="MinHeight" Value="40" />
                             </Trigger>
                             <Trigger Property="IsKeyboardFocusWithin" Value="True">
-                                <Setter TargetName="Bd" Property="BorderBrush" Value="{StaticResource AccentBrush}" />
+                                <Setter TargetName="Bd" Property="BorderBrush" Value="{DynamicResource AccentBrush}" />
                             </Trigger>
                             <Trigger Property="IsEnabled" Value="False">
                                 <Setter Property="Opacity" Value="0.5" />
@@ -203,28 +203,28 @@
 
         <!-- Settings checkbox style -->
         <Style x:Key="SettingsCheck" TargetType="CheckBox">
-            <Setter Property="Foreground" Value="{StaticResource ForegroundBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" />
             <Setter Property="FontSize" Value="13" />
             <Setter Property="VerticalContentAlignment" Value="Center" />
         </Style>
 
         <!-- Section label -->
         <Style x:Key="SectionLabel" TargetType="TextBlock">
-            <Setter Property="Foreground" Value="{StaticResource ForegroundDimBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource ForegroundDimBrush}" />
             <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="FontSize" Value="13" />
         </Style>
 
         <Style x:Key="SettingsListBox" TargetType="ListBox">
             <Setter Property="Background" Value="#FF1A1A1A" />
-            <Setter Property="Foreground" Value="{StaticResource ForegroundBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" />
             <Setter Property="BorderThickness" Value="1" />
-            <Setter Property="BorderBrush" Value="{StaticResource BorderBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}" />
             <Setter Property="Padding" Value="2" />
         </Style>
 
         <Style x:Key="SettingsListBoxItem" TargetType="ListBoxItem">
-            <Setter Property="Foreground" Value="{StaticResource ForegroundBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" />
             <Setter Property="Background" Value="Transparent" />
             <Setter Property="Padding" Value="6,4" />
             <Style.Triggers>
@@ -238,8 +238,8 @@
         </Style>
     </Window.Resources>
 
-    <Border Background="{StaticResource BackgroundBrush}" CornerRadius="10" BorderThickness="1"
-            BorderBrush="{StaticResource BorderBrush}">
+    <Border Background="{DynamicResource BackgroundBrush}" CornerRadius="10" BorderThickness="1"
+            BorderBrush="{DynamicResource BorderBrush}">
         <Border.Effect>
             <DropShadowEffect BlurRadius="24" ShadowDepth="4" Opacity="0.6" Color="Black" />
         </Border.Effect>
@@ -255,7 +255,7 @@
             <Border Grid.Row="0" Background="Transparent" MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
                 <Grid>
                     <TextBlock Text="{DynamicResource Settings_Title}" FontSize="14" FontWeight="SemiBold"
-                               Foreground="{StaticResource ForegroundBrush}"
+                               Foreground="{DynamicResource ForegroundBrush}"
                                VerticalAlignment="Center" Margin="18,0,0,0" />
                     <Button x:Name="CloseBtn" HorizontalAlignment="Right" VerticalAlignment="Center"
                             Margin="0,0,10,0" Click="CloseButton_Click"
@@ -325,7 +325,7 @@
                 </StackPanel>
 
                 <!-- Divider -->
-                <Border Grid.Column="1" Background="{StaticResource BorderBrush}" />
+                <Border Grid.Column="1" Background="{DynamicResource BorderBrush}" />
 
                 <!-- Content Area -->
                 <ScrollViewer Grid.Column="2" VerticalScrollBarVisibility="Auto" Padding="24,16">
@@ -334,7 +334,7 @@
                     <!-- ═══ Appearance Section ═══ -->
                     <StackPanel x:Name="AppearanceSection">
                         <TextBlock Text="{DynamicResource Settings_Appearance}" FontSize="18" FontWeight="SemiBold"
-                                   Foreground="{StaticResource ForegroundBrush}" Margin="0,0,0,20" />
+                                   Foreground="{DynamicResource ForegroundBrush}" Margin="0,0,0,20" />
 
                         <!-- Language -->
                         <Grid Margin="0,0,0,10">
@@ -345,7 +345,7 @@
                             <TextBlock Text="{DynamicResource Settings_Language}" Style="{StaticResource SectionLabel}" />
                             <ComboBox x:Name="LanguageCombo" Grid.Column="1"
                                       Style="{StaticResource SettingsCombo}"
-                                      Background="#FF1A1A1A" Foreground="{StaticResource ForegroundBrush}"
+                                      Background="#FF1A1A1A" Foreground="{DynamicResource ForegroundBrush}"
                                       Width="200" HorizontalAlignment="Left"
                                       SelectionChanged="LanguageCombo_SelectionChanged" />
                         </Grid>
@@ -359,7 +359,7 @@
                             <TextBlock Text="{DynamicResource Settings_FontFamily}" Style="{StaticResource SectionLabel}" />
                             <ComboBox x:Name="FontFamilyCombo" Grid.Column="1"
                                       Style="{StaticResource SettingsCombo}"
-                                      Background="#FF1A1A1A" Foreground="{StaticResource ForegroundBrush}"
+                                      Background="#FF1A1A1A" Foreground="{DynamicResource ForegroundBrush}"
                                       Width="320" HorizontalAlignment="Left"
                                       IsTextSearchEnabled="True" />
                         </Grid>
@@ -376,7 +376,7 @@
                                         Width="220" VerticalAlignment="Center"
                                         TickFrequency="1" IsSnapToTickEnabled="True"
                                         ValueChanged="FontSizeSlider_ValueChanged" />
-                                <TextBlock x:Name="FontSizeValueText" Foreground="{StaticResource ForegroundDimBrush}"
+                                <TextBlock x:Name="FontSizeValueText" Foreground="{DynamicResource ForegroundDimBrush}"
                                            VerticalAlignment="Center" Margin="10,0,0,0" FontSize="12" />
                             </StackPanel>
                         </Grid>
@@ -390,11 +390,11 @@
                             <TextBlock Text="{DynamicResource Settings_Theme}" Style="{StaticResource SectionLabel}" />
                             <StackPanel Grid.Column="1" Orientation="Horizontal">
                                 <ComboBox x:Name="ThemeCombo" Style="{StaticResource SettingsCombo}"
-                                          Background="#FF1A1A1A" Foreground="{StaticResource ForegroundBrush}"
+                                          Background="#FF1A1A1A" Foreground="{DynamicResource ForegroundBrush}"
                                           Width="200" SelectionChanged="ThemeCombo_SelectionChanged" />
                                 <Border x:Name="ThemePreview" Width="60" Height="30" Margin="12,0,0,0"
                                         CornerRadius="4" BorderThickness="1"
-                                        BorderBrush="{StaticResource BorderBrush}">
+                                        BorderBrush="{DynamicResource BorderBrush}">
                                     <TextBlock x:Name="ThemePreviewText" Text="Aa" FontSize="13"
                                                FontWeight="SemiBold" HorizontalAlignment="Center"
                                                VerticalAlignment="Center" />
@@ -414,7 +414,7 @@
                                         Width="200" VerticalAlignment="Center"
                                         TickFrequency="0.01" IsSnapToTickEnabled="True"
                                         ValueChanged="OpacitySlider_ValueChanged" />
-                                <TextBlock x:Name="OpacityValueText" Foreground="{StaticResource ForegroundDimBrush}"
+                                <TextBlock x:Name="OpacityValueText" Foreground="{DynamicResource ForegroundDimBrush}"
                                            VerticalAlignment="Center" Margin="10,0,0,0" FontSize="12" />
                             </StackPanel>
                         </Grid>
@@ -428,7 +428,7 @@
                             <TextBlock Text="{DynamicResource Settings_CursorStyle}" Style="{StaticResource SectionLabel}" />
                             <ComboBox x:Name="CursorStyleCombo" Grid.Column="1"
                                       Style="{StaticResource SettingsCombo}"
-                                      Background="#FF1A1A1A" Foreground="{StaticResource ForegroundBrush}"
+                                      Background="#FF1A1A1A" Foreground="{DynamicResource ForegroundBrush}"
                                       Width="140" HorizontalAlignment="Left" />
                         </Grid>
 
@@ -452,7 +452,7 @@
                             <TextBlock Text="{DynamicResource Settings_SystemTheme}" Style="{StaticResource SectionLabel}" />
                             <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
                                 <TextBlock x:Name="SystemThemeText" Text="Dark" FontSize="13"
-                                           Foreground="{StaticResource ForegroundBrush}" />
+                                           Foreground="{DynamicResource ForegroundBrush}" />
                                 <TextBlock Text="{DynamicResource Settings_Detected}" FontSize="12" Foreground="#FF6B7280" />
                             </StackPanel>
                         </Grid>
@@ -461,7 +461,7 @@
                     <!-- ═══ Terminal Section ═══ -->
                     <StackPanel x:Name="TerminalSection" Visibility="Collapsed">
                         <TextBlock Text="{DynamicResource Settings_Terminal}" FontSize="18" FontWeight="SemiBold"
-                                   Foreground="{StaticResource ForegroundBrush}" Margin="0,0,0,20" />
+                                   Foreground="{DynamicResource ForegroundBrush}" Margin="0,0,0,20" />
 
                         <!-- Color Preset -->
                         <Grid Margin="0,0,0,10">
@@ -472,7 +472,7 @@
                             <TextBlock Text="{DynamicResource Settings_ColorPreset}" Style="{StaticResource SectionLabel}" />
                             <ComboBox x:Name="TerminalThemePresetCombo" Grid.Column="1"
                                       Style="{StaticResource SettingsCombo}"
-                                      Background="#FF1A1A1A" Foreground="{StaticResource ForegroundBrush}"
+                                      Background="#FF1A1A1A" Foreground="{DynamicResource ForegroundBrush}"
                                       Width="240" HorizontalAlignment="Left"
                                       SelectionChanged="TerminalThemePresetCombo_SelectionChanged" />
                         </Grid>
@@ -500,7 +500,7 @@
                             <TextBlock Text="{DynamicResource Settings_Background}" Style="{StaticResource SectionLabel}" />
                             <StackPanel Grid.Column="1" Orientation="Horizontal" x:Name="TerminalBackgroundColorPanel">
                                 <Border x:Name="TerminalBackgroundPreview" Width="30" Height="20" CornerRadius="3"
-                                        BorderBrush="{StaticResource BorderBrush}" BorderThickness="1" Margin="0,0,8,0" />
+                                        BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Margin="0,0,8,0" />
                                 <TextBox x:Name="TerminalBackgroundHexBox" Style="{StaticResource SettingsTextBox}" Width="110" Margin="0,0,8,0"
                                          TextChanged="TerminalColorHexBox_TextChanged" />
                                 <Button Content="{DynamicResource Settings_Pick}" Style="{StaticResource CmuxButton}" Padding="10,5"
@@ -516,7 +516,7 @@
                             <TextBlock Text="{DynamicResource Settings_Foreground}" Style="{StaticResource SectionLabel}" />
                             <StackPanel Grid.Column="1" Orientation="Horizontal" x:Name="TerminalForegroundColorPanel">
                                 <Border x:Name="TerminalForegroundPreview" Width="30" Height="20" CornerRadius="3"
-                                        BorderBrush="{StaticResource BorderBrush}" BorderThickness="1" Margin="0,0,8,0" />
+                                        BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Margin="0,0,8,0" />
                                 <TextBox x:Name="TerminalForegroundHexBox" Style="{StaticResource SettingsTextBox}" Width="110" Margin="0,0,8,0"
                                          TextChanged="TerminalColorHexBox_TextChanged" />
                                 <Button Content="{DynamicResource Settings_Pick}" Style="{StaticResource CmuxButton}" Padding="10,5"
@@ -532,7 +532,7 @@
                             <TextBlock Text="{DynamicResource Settings_Cursor}" Style="{StaticResource SectionLabel}" />
                             <StackPanel Grid.Column="1" Orientation="Horizontal" x:Name="TerminalCursorColorPanel">
                                 <Border x:Name="TerminalCursorPreview" Width="30" Height="20" CornerRadius="3"
-                                        BorderBrush="{StaticResource BorderBrush}" BorderThickness="1" Margin="0,0,8,0" />
+                                        BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Margin="0,0,8,0" />
                                 <TextBox x:Name="TerminalCursorHexBox" Style="{StaticResource SettingsTextBox}" Width="110" Margin="0,0,8,0"
                                          TextChanged="TerminalColorHexBox_TextChanged" />
                                 <Button Content="{DynamicResource Settings_Pick}" Style="{StaticResource CmuxButton}" Padding="10,5"
@@ -548,7 +548,7 @@
                             <TextBlock Text="{DynamicResource Settings_Selection}" Style="{StaticResource SectionLabel}" />
                             <StackPanel Grid.Column="1" Orientation="Horizontal" x:Name="TerminalSelectionColorPanel">
                                 <Border x:Name="TerminalSelectionPreview" Width="30" Height="20" CornerRadius="3"
-                                        BorderBrush="{StaticResource BorderBrush}" BorderThickness="1" Margin="0,0,8,0" />
+                                        BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Margin="0,0,8,0" />
                                 <TextBox x:Name="TerminalSelectionHexBox" Style="{StaticResource SettingsTextBox}" Width="110" Margin="0,0,8,0"
                                          TextChanged="TerminalColorHexBox_TextChanged" />
                                 <Button Content="{DynamicResource Settings_Pick}" Style="{StaticResource CmuxButton}" Padding="10,5"
@@ -567,7 +567,7 @@
                             <TextBlock Text="{DynamicResource Settings_DefaultShell}" Style="{StaticResource SectionLabel}" />
                             <ComboBox x:Name="ShellCombo" Grid.Column="1"
                                       Style="{StaticResource SettingsCombo}"
-                                      Background="#FF1A1A1A" Foreground="{StaticResource ForegroundBrush}" />
+                                      Background="#FF1A1A1A" Foreground="{DynamicResource ForegroundBrush}" />
                         </Grid>
 
                         <!-- Shell Arguments -->
@@ -619,7 +619,7 @@
                     <!-- ═══ Behavior Section ═══ -->
                     <StackPanel x:Name="BehaviorSection" Visibility="Collapsed">
                         <TextBlock Text="{DynamicResource Settings_Behavior}" FontSize="18" FontWeight="SemiBold"
-                                   Foreground="{StaticResource ForegroundBrush}" Margin="0,0,0,20" />
+                                   Foreground="{DynamicResource ForegroundBrush}" Margin="0,0,0,20" />
 
                         <!-- Restore Session -->
                         <Grid Margin="0,0,0,10">
@@ -745,7 +745,7 @@
                     <!-- ═══ Keyboard Section ═══ -->
                     <StackPanel x:Name="KeyboardSection" Visibility="Collapsed">
                         <TextBlock Text="{DynamicResource Settings_KeyboardShortcuts}" FontSize="18" FontWeight="SemiBold"
-                                   Foreground="{StaticResource ForegroundBrush}" Margin="0,0,0,20" />
+                                   Foreground="{DynamicResource ForegroundBrush}" Margin="0,0,0,20" />
 
                         <Border Background="#FF1A1A1A" CornerRadius="6" Padding="16,12" Margin="0,0,0,6">
                             <Grid>
@@ -779,113 +779,113 @@
 
                                 <!-- Workspaces -->
                                 <TextBlock Grid.Row="0" Grid.Column="0" Text="Ctrl+N" FontWeight="SemiBold"
-                                           Foreground="{StaticResource AccentBrush}" FontSize="13" VerticalAlignment="Center" />
+                                           Foreground="{DynamicResource AccentBrush}" FontSize="13" VerticalAlignment="Center" />
                                 <TextBlock Grid.Row="0" Grid.Column="1" Text="{DynamicResource Shortcut_NewWorkspace}"
-                                           Foreground="{StaticResource ForegroundDimBrush}" FontSize="13" VerticalAlignment="Center" />
+                                           Foreground="{DynamicResource ForegroundDimBrush}" FontSize="13" VerticalAlignment="Center" />
 
                                 <TextBlock Grid.Row="1" Grid.Column="0" Text="Ctrl+1-8" FontWeight="SemiBold"
-                                           Foreground="{StaticResource AccentBrush}" FontSize="13" VerticalAlignment="Center" />
+                                           Foreground="{DynamicResource AccentBrush}" FontSize="13" VerticalAlignment="Center" />
                                 <TextBlock Grid.Row="1" Grid.Column="1" Text="{DynamicResource Shortcut_JumpWorkspace}"
-                                           Foreground="{StaticResource ForegroundDimBrush}" FontSize="13" VerticalAlignment="Center" />
+                                           Foreground="{DynamicResource ForegroundDimBrush}" FontSize="13" VerticalAlignment="Center" />
 
                                 <TextBlock Grid.Row="2" Grid.Column="0" Text="Ctrl+Shift+W" FontWeight="SemiBold"
-                                           Foreground="{StaticResource AccentBrush}" FontSize="13" VerticalAlignment="Center" />
+                                           Foreground="{DynamicResource AccentBrush}" FontSize="13" VerticalAlignment="Center" />
                                 <TextBlock Grid.Row="2" Grid.Column="1" Text="{DynamicResource Shortcut_CloseWorkspace}"
-                                           Foreground="{StaticResource ForegroundDimBrush}" FontSize="13" VerticalAlignment="Center" />
+                                           Foreground="{DynamicResource ForegroundDimBrush}" FontSize="13" VerticalAlignment="Center" />
 
                                 <!-- Surfaces -->
                                 <TextBlock Grid.Row="3" Grid.Column="0" Text="Ctrl+T" FontWeight="SemiBold"
-                                           Foreground="{StaticResource AccentBrush}" FontSize="13" VerticalAlignment="Center" />
+                                           Foreground="{DynamicResource AccentBrush}" FontSize="13" VerticalAlignment="Center" />
                                 <TextBlock Grid.Row="3" Grid.Column="1" Text="{DynamicResource Shortcut_NewSurface}"
-                                           Foreground="{StaticResource ForegroundDimBrush}" FontSize="13" VerticalAlignment="Center" />
+                                           Foreground="{DynamicResource ForegroundDimBrush}" FontSize="13" VerticalAlignment="Center" />
 
                                 <TextBlock Grid.Row="4" Grid.Column="0" Text="Ctrl+W" FontWeight="SemiBold"
-                                           Foreground="{StaticResource AccentBrush}" FontSize="13" VerticalAlignment="Center" />
+                                           Foreground="{DynamicResource AccentBrush}" FontSize="13" VerticalAlignment="Center" />
                                 <TextBlock Grid.Row="4" Grid.Column="1" Text="{DynamicResource Shortcut_CloseSurface}"
-                                           Foreground="{StaticResource ForegroundDimBrush}" FontSize="13" VerticalAlignment="Center" />
+                                           Foreground="{DynamicResource ForegroundDimBrush}" FontSize="13" VerticalAlignment="Center" />
 
                                 <TextBlock Grid.Row="5" Grid.Column="0" Text="Ctrl+Tab" FontWeight="SemiBold"
-                                           Foreground="{StaticResource AccentBrush}" FontSize="13" VerticalAlignment="Center" />
+                                           Foreground="{DynamicResource AccentBrush}" FontSize="13" VerticalAlignment="Center" />
                                 <TextBlock Grid.Row="5" Grid.Column="1" Text="{DynamicResource Shortcut_NextSurface}"
-                                           Foreground="{StaticResource ForegroundDimBrush}" FontSize="13" VerticalAlignment="Center" />
+                                           Foreground="{DynamicResource ForegroundDimBrush}" FontSize="13" VerticalAlignment="Center" />
 
                                 <TextBlock Grid.Row="6" Grid.Column="0" Text="Ctrl+Shift+Tab" FontWeight="SemiBold"
-                                           Foreground="{StaticResource AccentBrush}" FontSize="13" VerticalAlignment="Center" />
+                                           Foreground="{DynamicResource AccentBrush}" FontSize="13" VerticalAlignment="Center" />
                                 <TextBlock Grid.Row="6" Grid.Column="1" Text="{DynamicResource Shortcut_PrevSurface}"
-                                           Foreground="{StaticResource ForegroundDimBrush}" FontSize="13" VerticalAlignment="Center" />
+                                           Foreground="{DynamicResource ForegroundDimBrush}" FontSize="13" VerticalAlignment="Center" />
 
                                 <!-- Panes -->
                                 <TextBlock Grid.Row="7" Grid.Column="0" Text="Ctrl+D" FontWeight="SemiBold"
-                                           Foreground="{StaticResource AccentBrush}" FontSize="13" VerticalAlignment="Center" />
+                                           Foreground="{DynamicResource AccentBrush}" FontSize="13" VerticalAlignment="Center" />
                                 <TextBlock Grid.Row="7" Grid.Column="1" Text="{DynamicResource Shortcut_SplitRight}"
-                                           Foreground="{StaticResource ForegroundDimBrush}" FontSize="13" VerticalAlignment="Center" />
+                                           Foreground="{DynamicResource ForegroundDimBrush}" FontSize="13" VerticalAlignment="Center" />
 
                                 <TextBlock Grid.Row="8" Grid.Column="0" Text="Ctrl+Shift+D" FontWeight="SemiBold"
-                                           Foreground="{StaticResource AccentBrush}" FontSize="13" VerticalAlignment="Center" />
+                                           Foreground="{DynamicResource AccentBrush}" FontSize="13" VerticalAlignment="Center" />
                                 <TextBlock Grid.Row="8" Grid.Column="1" Text="{DynamicResource Shortcut_SplitDown}"
-                                           Foreground="{StaticResource ForegroundDimBrush}" FontSize="13" VerticalAlignment="Center" />
+                                           Foreground="{DynamicResource ForegroundDimBrush}" FontSize="13" VerticalAlignment="Center" />
 
                                 <TextBlock Grid.Row="9" Grid.Column="0" Text="Ctrl+Alt+Arrow" FontWeight="SemiBold"
-                                           Foreground="{StaticResource AccentBrush}" FontSize="13" VerticalAlignment="Center" />
+                                           Foreground="{DynamicResource AccentBrush}" FontSize="13" VerticalAlignment="Center" />
                                 <TextBlock Grid.Row="9" Grid.Column="1" Text="{DynamicResource Shortcut_FocusPane}"
-                                           Foreground="{StaticResource ForegroundDimBrush}" FontSize="13" VerticalAlignment="Center" />
+                                           Foreground="{DynamicResource ForegroundDimBrush}" FontSize="13" VerticalAlignment="Center" />
 
                                 <TextBlock Grid.Row="10" Grid.Column="0" Text="Ctrl+Shift+Z" FontWeight="SemiBold"
-                                           Foreground="{StaticResource AccentBrush}" FontSize="13" VerticalAlignment="Center" />
+                                           Foreground="{DynamicResource AccentBrush}" FontSize="13" VerticalAlignment="Center" />
                                 <TextBlock Grid.Row="10" Grid.Column="1" Text="{DynamicResource Shortcut_ZoomToggle}"
-                                           Foreground="{StaticResource ForegroundDimBrush}" FontSize="13" VerticalAlignment="Center" />
+                                           Foreground="{DynamicResource ForegroundDimBrush}" FontSize="13" VerticalAlignment="Center" />
 
                                 <!-- Terminal -->
                                 <TextBlock Grid.Row="11" Grid.Column="0" Text="Ctrl+Backspace" FontWeight="SemiBold"
-                                           Foreground="{StaticResource AccentBrush}" FontSize="13" VerticalAlignment="Center" />
+                                           Foreground="{DynamicResource AccentBrush}" FontSize="13" VerticalAlignment="Center" />
                                 <TextBlock Grid.Row="11" Grid.Column="1" Text="{DynamicResource Shortcut_DeleteWord}"
-                                           Foreground="{StaticResource ForegroundDimBrush}" FontSize="13" VerticalAlignment="Center" />
+                                           Foreground="{DynamicResource ForegroundDimBrush}" FontSize="13" VerticalAlignment="Center" />
 
                                 <!-- View -->
                                 <TextBlock Grid.Row="12" Grid.Column="0" Text="Ctrl+B" FontWeight="SemiBold"
-                                           Foreground="{StaticResource AccentBrush}" FontSize="13" VerticalAlignment="Center" />
+                                           Foreground="{DynamicResource AccentBrush}" FontSize="13" VerticalAlignment="Center" />
                                 <TextBlock Grid.Row="12" Grid.Column="1" Text="{DynamicResource Shortcut_ToggleSidebar}"
-                                           Foreground="{StaticResource ForegroundDimBrush}" FontSize="13" VerticalAlignment="Center" />
+                                           Foreground="{DynamicResource ForegroundDimBrush}" FontSize="13" VerticalAlignment="Center" />
 
                                 <TextBlock Grid.Row="13" Grid.Column="0" Text="Ctrl+I" FontWeight="SemiBold"
-                                           Foreground="{StaticResource AccentBrush}" FontSize="13" VerticalAlignment="Center" />
+                                           Foreground="{DynamicResource AccentBrush}" FontSize="13" VerticalAlignment="Center" />
                                 <TextBlock Grid.Row="13" Grid.Column="1" Text="{DynamicResource Shortcut_NotificationPanel}"
-                                           Foreground="{StaticResource ForegroundDimBrush}" FontSize="13" VerticalAlignment="Center" />
+                                           Foreground="{DynamicResource ForegroundDimBrush}" FontSize="13" VerticalAlignment="Center" />
 
                                 <TextBlock Grid.Row="14" Grid.Column="0" Text="Ctrl+Shift+U" FontWeight="SemiBold"
-                                           Foreground="{StaticResource AccentBrush}" FontSize="13" VerticalAlignment="Center" />
+                                           Foreground="{DynamicResource AccentBrush}" FontSize="13" VerticalAlignment="Center" />
                                 <TextBlock Grid.Row="14" Grid.Column="1" Text="{DynamicResource Shortcut_JumpUnread}"
-                                           Foreground="{StaticResource ForegroundDimBrush}" FontSize="13" VerticalAlignment="Center" />
+                                           Foreground="{DynamicResource ForegroundDimBrush}" FontSize="13" VerticalAlignment="Center" />
 
                                 <TextBlock Grid.Row="15" Grid.Column="0" Text="Ctrl+Shift+F" FontWeight="SemiBold"
-                                           Foreground="{StaticResource AccentBrush}" FontSize="13" VerticalAlignment="Center" />
+                                           Foreground="{DynamicResource AccentBrush}" FontSize="13" VerticalAlignment="Center" />
                                 <TextBlock Grid.Row="15" Grid.Column="1" Text="{DynamicResource Shortcut_SearchTerminal}"
-                                           Foreground="{StaticResource ForegroundDimBrush}" FontSize="13" VerticalAlignment="Center" />
+                                           Foreground="{DynamicResource ForegroundDimBrush}" FontSize="13" VerticalAlignment="Center" />
 
                                 <TextBlock Grid.Row="16" Grid.Column="0" Text="Ctrl+Shift+P" FontWeight="SemiBold"
-                                           Foreground="{StaticResource AccentBrush}" FontSize="13" VerticalAlignment="Center" />
+                                           Foreground="{DynamicResource AccentBrush}" FontSize="13" VerticalAlignment="Center" />
                                 <TextBlock Grid.Row="16" Grid.Column="1" Text="{DynamicResource Shortcut_CommandPalette}"
-                                           Foreground="{StaticResource ForegroundDimBrush}" FontSize="13" VerticalAlignment="Center" />
+                                           Foreground="{DynamicResource ForegroundDimBrush}" FontSize="13" VerticalAlignment="Center" />
 
                                 <TextBlock Grid.Row="17" Grid.Column="0" Text="Ctrl+Shift+A" FontWeight="SemiBold"
-                                           Foreground="{StaticResource AccentBrush}" FontSize="13" VerticalAlignment="Center" />
+                                           Foreground="{DynamicResource AccentBrush}" FontSize="13" VerticalAlignment="Center" />
                                 <TextBlock Grid.Row="17" Grid.Column="1" Text="{DynamicResource Shortcut_ToggleAgentChat}"
-                                           Foreground="{StaticResource ForegroundDimBrush}" FontSize="13" VerticalAlignment="Center" />
+                                           Foreground="{DynamicResource ForegroundDimBrush}" FontSize="13" VerticalAlignment="Center" />
 
                                 <TextBlock Grid.Row="18" Grid.Column="0" Text="Ctrl+Shift+L" FontWeight="SemiBold"
-                                           Foreground="{StaticResource AccentBrush}" FontSize="13" VerticalAlignment="Center" />
+                                           Foreground="{DynamicResource AccentBrush}" FontSize="13" VerticalAlignment="Center" />
                                 <TextBlock Grid.Row="18" Grid.Column="1" Text="{DynamicResource Shortcut_OpenLogs}"
-                                           Foreground="{StaticResource ForegroundDimBrush}" FontSize="13" VerticalAlignment="Center" />
+                                           Foreground="{DynamicResource ForegroundDimBrush}" FontSize="13" VerticalAlignment="Center" />
 
                                 <TextBlock Grid.Row="19" Grid.Column="0" Text="Ctrl+Alt+H" FontWeight="SemiBold"
-                                           Foreground="{StaticResource AccentBrush}" FontSize="13" VerticalAlignment="Center" />
+                                           Foreground="{DynamicResource AccentBrush}" FontSize="13" VerticalAlignment="Center" />
                                 <TextBlock Grid.Row="19" Grid.Column="1" Text="{DynamicResource Shortcut_OpenHistory}"
-                                           Foreground="{StaticResource ForegroundDimBrush}" FontSize="13" VerticalAlignment="Center" />
+                                           Foreground="{DynamicResource ForegroundDimBrush}" FontSize="13" VerticalAlignment="Center" />
 
                                 <TextBlock Grid.Row="20" Grid.Column="0" Text="Ctrl+Shift+V" FontWeight="SemiBold"
-                                           Foreground="{StaticResource AccentBrush}" FontSize="13" VerticalAlignment="Center" />
+                                           Foreground="{DynamicResource AccentBrush}" FontSize="13" VerticalAlignment="Center" />
                                 <TextBlock Grid.Row="20" Grid.Column="1" Text="{DynamicResource Shortcut_OpenVault}"
-                                           Foreground="{StaticResource ForegroundDimBrush}" FontSize="13" VerticalAlignment="Center" />
+                                           Foreground="{DynamicResource ForegroundDimBrush}" FontSize="13" VerticalAlignment="Center" />
                             </Grid>
                         </Border>
                     </StackPanel>
@@ -893,7 +893,7 @@
                     <!-- ═══ Agent Section ═══ -->
                     <StackPanel x:Name="AgentSection" Visibility="Collapsed">
                         <TextBlock Text="{DynamicResource Settings_Agent}" FontSize="18" FontWeight="SemiBold"
-                                   Foreground="{StaticResource ForegroundBrush}" Margin="0,0,0,20" />
+                                   Foreground="{DynamicResource ForegroundBrush}" Margin="0,0,0,20" />
 
                         <Grid Margin="0,0,0,10">
                             <Grid.ColumnDefinitions>
@@ -952,7 +952,7 @@
 
                         <Border Background="#FF1A1A1A" CornerRadius="6" Padding="14,12" Margin="0,0,0,10">
                             <StackPanel>
-                                <TextBlock Text="{DynamicResource Settings_OpenAI}" FontWeight="SemiBold" Foreground="{StaticResource ForegroundBrush}" Margin="0,0,0,10" />
+                                <TextBlock Text="{DynamicResource Settings_OpenAI}" FontWeight="SemiBold" Foreground="{DynamicResource ForegroundBrush}" Margin="0,0,0,10" />
 
                                 <Grid Margin="0,0,0,8">
                                     <Grid.ColumnDefinitions>
@@ -988,7 +988,7 @@
 
                         <Border Background="#FF1A1A1A" CornerRadius="6" Padding="14,12" Margin="0,0,0,10">
                             <StackPanel>
-                                <TextBlock Text="{DynamicResource Settings_Anthropic}" FontWeight="SemiBold" Foreground="{StaticResource ForegroundBrush}" Margin="0,0,0,10" />
+                                <TextBlock Text="{DynamicResource Settings_Anthropic}" FontWeight="SemiBold" Foreground="{DynamicResource ForegroundBrush}" Margin="0,0,0,10" />
 
                                 <Grid Margin="0,0,0,8">
                                     <Grid.ColumnDefinitions>
@@ -1024,7 +1024,7 @@
 
                         <Border Background="#FF1A1A1A" CornerRadius="6" Padding="14,12" Margin="0,0,0,10">
                             <StackPanel>
-                                <TextBlock Text="{DynamicResource Settings_Tools}" FontWeight="SemiBold" Foreground="{StaticResource ForegroundBrush}" Margin="0,0,0,10" />
+                                <TextBlock Text="{DynamicResource Settings_Tools}" FontWeight="SemiBold" Foreground="{DynamicResource ForegroundBrush}" Margin="0,0,0,10" />
 
                                 <Grid Margin="0,0,0,8">
                                     <Grid.ColumnDefinitions>
@@ -1078,7 +1078,7 @@
 
                         <Border Background="#FF1A1A1A" CornerRadius="6" Padding="14,12" Margin="0,0,0,10">
                             <StackPanel>
-                                <TextBlock Text="{DynamicResource Settings_PaneSubmit}" FontWeight="SemiBold" Foreground="{StaticResource ForegroundBrush}" Margin="0,0,0,10" />
+                                <TextBlock Text="{DynamicResource Settings_PaneSubmit}" FontWeight="SemiBold" Foreground="{DynamicResource ForegroundBrush}" Margin="0,0,0,10" />
 
                                 <Grid Margin="0,0,0,8">
                                     <Grid.ColumnDefinitions>
@@ -1132,7 +1132,7 @@
                                 </Grid>
 
                                 <TextBlock Text="{DynamicResource Settings_SubmitProfilesDesc}"
-                                           Foreground="{StaticResource ForegroundDimBrush}" Margin="0,2,0,6" />
+                                           Foreground="{DynamicResource ForegroundDimBrush}" Margin="0,2,0,6" />
                                 <TextBox x:Name="AgentSubmitProfilesJsonBox" Style="{StaticResource SettingsTextBox}" Height="120"
                                          AcceptsReturn="True" VerticalScrollBarVisibility="Auto"
                                          TextWrapping="NoWrap" FontFamily="Cascadia Code" FontSize="12"
@@ -1142,7 +1142,7 @@
 
                         <Border Background="#FF1A1A1A" CornerRadius="6" Padding="14,12" Margin="0,0,0,10">
                             <StackPanel>
-                                <TextBlock Text="{DynamicResource Settings_AgentFiles}" FontWeight="SemiBold" Foreground="{StaticResource ForegroundBrush}" Margin="0,0,0,10" />
+                                <TextBlock Text="{DynamicResource Settings_AgentFiles}" FontWeight="SemiBold" Foreground="{DynamicResource ForegroundBrush}" Margin="0,0,0,10" />
 
                                 <Grid Margin="0,0,0,8">
                                     <Grid.ColumnDefinitions>
@@ -1177,7 +1177,7 @@
 
                         <Border Background="#FF1A1A1A" CornerRadius="6" Padding="14,12" Margin="0,0,0,10">
                             <StackPanel>
-                                <TextBlock Text="{DynamicResource Settings_ChatPanel}" FontWeight="SemiBold" Foreground="{StaticResource ForegroundBrush}" Margin="0,0,0,10" />
+                                <TextBlock Text="{DynamicResource Settings_ChatPanel}" FontWeight="SemiBold" Foreground="{DynamicResource ForegroundBrush}" Margin="0,0,0,10" />
 
                                 <Grid Margin="0,0,0,8">
                                     <Grid.ColumnDefinitions>
@@ -1202,7 +1202,7 @@
 
                         <Border Background="#FF1A1A1A" CornerRadius="6" Padding="14,12" Margin="0,0,0,10">
                             <StackPanel>
-                                <TextBlock Text="{DynamicResource Settings_ConversationMemory}" FontWeight="SemiBold" Foreground="{StaticResource ForegroundBrush}" Margin="0,0,0,10" />
+                                <TextBlock Text="{DynamicResource Settings_ConversationMemory}" FontWeight="SemiBold" Foreground="{DynamicResource ForegroundBrush}" Margin="0,0,0,10" />
 
                                 <Grid Margin="0,0,0,8">
                                     <Grid.ColumnDefinitions>
@@ -1320,7 +1320,7 @@
 
                         <StackPanel x:Name="CustomToolsJsonPanel" Visibility="Collapsed" Margin="0,0,0,10">
                             <TextBlock Text="Custom Tools JSON (array of { enabled, name, description, commandTemplate })"
-                                       Foreground="{StaticResource ForegroundDimBrush}" Margin="0,2,0,6" />
+                                       Foreground="{DynamicResource ForegroundDimBrush}" Margin="0,2,0,6" />
                             <TextBox x:Name="CustomToolsJsonBox" Style="{StaticResource SettingsTextBox}" Height="120"
                                      AcceptsReturn="True" VerticalScrollBarVisibility="Auto"
                                      TextWrapping="NoWrap" FontFamily="Cascadia Code" FontSize="12" />
@@ -1385,7 +1385,7 @@
 
                         <StackPanel x:Name="McpServersJsonPanel" Visibility="Collapsed">
                             <TextBlock Text="MCP Servers JSON (array of { enabled, name, command, arguments, workingDirectory })"
-                                       Foreground="{StaticResource ForegroundDimBrush}" Margin="0,2,0,6" />
+                                       Foreground="{DynamicResource ForegroundDimBrush}" Margin="0,2,0,6" />
                             <TextBox x:Name="McpServersJsonBox" Style="{StaticResource SettingsTextBox}" Height="120"
                                      AcceptsReturn="True" VerticalScrollBarVisibility="Auto"
                                      TextWrapping="NoWrap" FontFamily="Cascadia Code" FontSize="12" />
@@ -1395,19 +1395,19 @@
                     <!-- ═══ About Section ═══ -->
                     <StackPanel x:Name="AboutSection" Visibility="Collapsed">
                         <TextBlock Text="{DynamicResource Settings_About}" FontSize="18" FontWeight="SemiBold"
-                                   Foreground="{StaticResource ForegroundBrush}" Margin="0,0,0,20" />
+                                   Foreground="{DynamicResource ForegroundBrush}" Margin="0,0,0,20" />
 
                         <Border Background="#FF1A1A1A" CornerRadius="6" Padding="20,16" Margin="0,0,0,12">
                             <StackPanel>
                                 <TextBlock Text="{DynamicResource Settings_AboutTitle}" FontSize="20" FontWeight="Bold"
-                                           Foreground="{StaticResource ForegroundBrush}" Margin="0,0,0,4" />
+                                           Foreground="{DynamicResource ForegroundBrush}" Margin="0,0,0,4" />
                                 <TextBlock Text="{DynamicResource Settings_AboutVersion}" FontSize="13"
-                                           Foreground="{StaticResource AccentBrush}" Margin="0,0,0,12" />
+                                           Foreground="{DynamicResource AccentBrush}" Margin="0,0,0,12" />
                                 <TextBlock Text="{DynamicResource Settings_AboutDesc}"
-                                           Foreground="{StaticResource ForegroundDimBrush}" FontSize="13"
+                                           Foreground="{DynamicResource ForegroundDimBrush}" FontSize="13"
                                            TextWrapping="Wrap" LineHeight="20" Margin="0,0,0,12" />
-                                <Border Height="1" Background="{StaticResource BorderBrush}" Margin="0,4,0,12" />
-                                <TextBlock Foreground="{StaticResource ForegroundDimBrush}" FontSize="12">
+                                <Border Height="1" Background="{DynamicResource BorderBrush}" Margin="0,4,0,12" />
+                                <TextBlock Foreground="{DynamicResource ForegroundDimBrush}" FontSize="12">
                                     <Run Text="{DynamicResource Settings_AboutRuntime}" /><LineBreak />
                                     <Run Text="{DynamicResource Settings_AboutFramework}" /><LineBreak />
                                     <Run Text="{DynamicResource Settings_AboutConfig}" />
@@ -1420,7 +1420,7 @@
             </Grid>
 
             <!-- Bottom Bar -->
-            <Border Grid.Row="2" BorderThickness="0,1,0,0" BorderBrush="{StaticResource BorderBrush}"
+            <Border Grid.Row="2" BorderThickness="0,1,0,0" BorderBrush="{DynamicResource BorderBrush}"
                     Padding="18,12">
                 <Grid>
                     <Button Content="{DynamicResource Settings_ResetDefaults}" Style="{StaticResource CmuxButton}"

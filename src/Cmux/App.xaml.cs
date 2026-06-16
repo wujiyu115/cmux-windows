@@ -25,6 +25,7 @@ public partial class App : Application
         base.OnStartup(e);
 
         Services.LanguageService.SetLanguage(SettingsService.Current.Language);
+        Services.AppThemeService.ApplyTheme(TerminalThemes.GetEffective(SettingsService.Current));
 
         // Add global exception handlers to diagnose crashes
         DispatcherUnhandledException += (s, args) =>

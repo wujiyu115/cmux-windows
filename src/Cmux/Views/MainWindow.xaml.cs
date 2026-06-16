@@ -74,6 +74,7 @@ public partial class MainWindow : Window
         var settings = Cmux.Core.Config.SettingsService.Current;
         var theme = Cmux.Core.Config.TerminalThemes.GetEffective(settings);
 
+        Services.AppThemeService.ApplyTheme(theme);
         Opacity = Math.Clamp(settings.Opacity, 0.5, 1.0);
 
         // Update all visible terminal controls
