@@ -43,6 +43,7 @@ public class CmuxSettings
     public bool ConfirmOnClose { get; set; } = true;
     public bool AutoCopyOnSelect { get; set; } = false;
     public bool CtrlClickOpensUrls { get; set; } = true;
+    public int ChordTimeoutMs { get; set; } = 500;
     public bool AgentChatDefaultOpen { get; set; } = true;
     public int AutoSaveIntervalSeconds { get; set; } = 30;
     public bool CaptureTranscriptsOnClose { get; set; } = true;

@@ -10,7 +10,9 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Media;
 using Cmux.Controls;
+using Cmux.Core.Config;
 using Cmux.Core.Services;
+using Cmux.Input;
 using Cmux.ViewModels;
 using Cmux.Services;
 
@@ -19,6 +21,7 @@ namespace Cmux.Views;
 public partial class MainWindow : Window
 {
     private MainViewModel ViewModel => (MainViewModel)DataContext;
+    private ChordKeyHandler _chordHandler = null!;
     private readonly DispatcherTimer _uiRefreshTimer = new() { Interval = TimeSpan.FromMilliseconds(300) };
     private ICollectionView? _workspaceView;
     private readonly Dictionary<string, AgentChatMessageView> _streamingAssistantByThread = new(StringComparer.Ordinal);
@@ -60,6 +63,20 @@ public partial class MainWindow : Window
         // Subscribe to settings changes
         Cmux.Core.Config.SettingsService.SettingsChanged += OnSettingsChanged;
         OnSettingsChanged();
+
+        // Chord keyboard shortcuts (e.g. Ctrl+K, Ctrl+T)
+        _chordHandler = new ChordKeyHandler(SettingsService.Current.ChordTimeoutMs);
+
+        _chordHandler.Register(ModifierKeys.Control, Key.K, ModifierKeys.Control, Key.T,
+            () => ViewModel?.SelectedWorkspace?.CreateNewSurface());
+
+        _chordHandler.Register(ModifierKeys.Control, Key.K, ModifierKeys.Control, Key.W,
+            () => ViewModel?.CloseWorkspace(ViewModel.SelectedWorkspace));
+
+        _chordHandler.ChordHintChanged += hint =>
+        {
+            Title = string.IsNullOrEmpty(hint) ? "cmux" : $"cmux — {hint}";
+        };
 
         ViewModel.PropertyChanged += ViewModel_PropertyChanged;
         App.AgentRuntime.RuntimeUpdated += OnAgentRuntimeUpdated;
@@ -326,6 +343,12 @@ public partial class MainWindow : Window
 
     private void OnKeyDown(object sender, KeyEventArgs e)
     {
+        if (_chordHandler.HandleKeyDown(Keyboard.Modifiers, e.Key))
+        {
+            e.Handled = true;
+            return;
+        }
+
         bool ctrl = (Keyboard.Modifiers & ModifierKeys.Control) != 0;
         bool shift = (Keyboard.Modifiers & ModifierKeys.Shift) != 0;
         bool alt = (Keyboard.Modifiers & ModifierKeys.Alt) != 0;
