@@ -53,6 +53,8 @@ public partial class WorkspaceViewModel : ObservableObject, IDisposable
     [ObservableProperty]
     private AgentType _detectedAgent;
 
+    private string? _lastConfigPath;
+
     private readonly Dictionary<string, SidebarStatusEntry> _statusEntries = new();
 
     [ObservableProperty]
@@ -165,11 +167,37 @@ public partial class WorkspaceViewModel : ObservableObject, IDisposable
         Workspace.WorkingDirectory = directory;
     }
 
+    private void TryApplyProjectConfig(string? directory)
+    {
+        var configPath = ProjectConfigService.FindConfigPath(directory);
+        if (configPath == _lastConfigPath) return;
+        _lastConfigPath = configPath;
+
+        if (configPath == null) return;
+        var config = ProjectConfigService.LoadForDirectory(directory);
+        if (config == null) return;
+
+        if (config.Name != null && Name == Workspace.Id)
+            Name = config.Name;
+        if (config.Color != null)
+            AccentColor = config.Color;
+        if (config.Icon != null)
+            IconGlyph = config.Icon;
+        if (config.Env.Count > 0)
+        {
+            foreach (var (key, value) in config.Env)
+                Workspace.EnvironmentVariables[key] = value;
+        }
+        if (config.StartDirectory != null)
+            Workspace.StartDirectory = config.StartDirectory;
+    }
+
     private void RefreshInfo()
     {
         try
         {
             var dir = WorkingDirectory ?? Workspace.WorkingDirectory;
+            TryApplyProjectConfig(dir);
             if (!string.IsNullOrEmpty(dir))
             {
                 var branch = GitService.GetBranch(dir);
