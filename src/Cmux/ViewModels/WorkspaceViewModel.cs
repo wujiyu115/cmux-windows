@@ -118,6 +118,7 @@ public partial class WorkspaceViewModel : ObservableObject, IDisposable
 
         int index = Surfaces.IndexOf(surface);
         surface.CaptureAllPaneTranscripts("surface-close");
+        surface.WorkingDirectoryChanged -= OnSurfaceWorkingDirectoryChanged;
         surface.Dispose();
         Surfaces.Remove(surface);
         Workspace.Surfaces.Remove(surface.Surface);
@@ -238,6 +239,9 @@ public partial class WorkspaceViewModel : ObservableObject, IDisposable
     {
         _infoRefreshTimer?.Dispose();
         foreach (var surface in Surfaces)
+        {
+            surface.WorkingDirectoryChanged -= OnSurfaceWorkingDirectoryChanged;
             surface.Dispose();
+        }
     }
 }
