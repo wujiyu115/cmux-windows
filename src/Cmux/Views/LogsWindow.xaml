@@ -13,129 +13,6 @@
     </WindowChrome.WindowChrome>
 
     <Window.Resources>
-        <Style x:Key="SettingsComboItem" TargetType="ComboBoxItem">
-            <Setter Property="Background" Value="{DynamicResource InputBackgroundBrush}" />
-            <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" />
-            <Setter Property="Padding" Value="6,4" />
-            <Style.Triggers>
-                <Trigger Property="IsHighlighted" Value="True">
-                    <Setter Property="Background" Value="{DynamicResource SidebarItemSelectedBrush}" />
-                    <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" />
-                </Trigger>
-                <Trigger Property="IsSelected" Value="True">
-                    <Setter Property="Background" Value="{DynamicResource SurfaceTabSelectedBrush}" />
-                    <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" />
-                </Trigger>
-            </Style.Triggers>
-        </Style>
-
-        <Style x:Key="SettingsCombo" TargetType="ComboBox">
-            <Setter Property="Background" Value="{DynamicResource InputBackgroundBrush}" />
-            <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" />
-            <Setter Property="BorderThickness" Value="1" />
-            <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}" />
-            <Setter Property="Padding" Value="8,6" />
-            <Setter Property="FontSize" Value="13" />
-            <Setter Property="HorizontalContentAlignment" Value="Left" />
-            <Setter Property="VerticalContentAlignment" Value="Center" />
-            <Setter Property="FocusVisualStyle" Value="{x:Null}" />
-            <Setter Property="ItemContainerStyle" Value="{StaticResource SettingsComboItem}" />
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="ComboBox">
-                        <Grid>
-                            <Border x:Name="Bd"
-                                    Background="{TemplateBinding Background}"
-                                    BorderBrush="{TemplateBinding BorderBrush}"
-                                    BorderThickness="{TemplateBinding BorderThickness}"
-                                    CornerRadius="4" />
-
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="28" />
-                                </Grid.ColumnDefinitions>
-
-                                <ContentPresenter x:Name="ContentSite"
-                                                  Grid.Column="0"
-                                                  Margin="8,0,4,0"
-                                                  VerticalAlignment="Center"
-                                                  HorizontalAlignment="Left"
-                                                  Content="{TemplateBinding SelectionBoxItem}"
-                                                  ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
-                                                  ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"
-                                                  IsHitTestVisible="False" />
-
-                                <TextBox x:Name="PART_EditableTextBox"
-                                         Grid.Column="0"
-                                         Margin="8,0,4,0"
-                                         Background="Transparent"
-                                         BorderThickness="0"
-                                         Foreground="{TemplateBinding Foreground}"
-                                         VerticalContentAlignment="Center"
-                                         Visibility="Hidden" />
-
-                                <Border Grid.Column="1" Background="{DynamicResource SidebarItemSelectedBrush}" CornerRadius="0,4,4,0" IsHitTestVisible="False">
-                                    <TextBlock Text="&#xE70D;" FontFamily="Segoe MDL2 Assets"
-                                               Foreground="{TemplateBinding Foreground}"
-                                               HorizontalAlignment="Center" VerticalAlignment="Center"
-                                               FontSize="10" />
-                                </Border>
-
-                                <ToggleButton Grid.ColumnSpan="2"
-                                              Background="Transparent"
-                                              BorderThickness="0"
-                                              Focusable="False"
-                                              ClickMode="Press"
-                                              IsChecked="{Binding IsDropDownOpen, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}">
-                                    <ToggleButton.Template>
-                                        <ControlTemplate TargetType="ToggleButton">
-                                            <Border Background="Transparent" />
-                                        </ControlTemplate>
-                                    </ToggleButton.Template>
-                                </ToggleButton>
-                            </Grid>
-
-                            <Popup x:Name="PART_Popup"
-                                   AllowsTransparency="True"
-                                   IsOpen="{TemplateBinding IsDropDownOpen}"
-                                   Placement="Bottom"
-                                   PlacementTarget="{Binding RelativeSource={RelativeSource TemplatedParent}}"
-                                   StaysOpen="False"
-                                   Focusable="False"
-                                   PopupAnimation="Slide">
-                                <Border x:Name="DropDownBorder"
-                                        Margin="0,2,0,0"
-                                        Background="{DynamicResource InputBackgroundBrush}"
-                                        BorderBrush="{TemplateBinding BorderBrush}"
-                                        BorderThickness="1"
-                                        CornerRadius="6"
-                                        MinWidth="{TemplateBinding ActualWidth}">
-                                    <ScrollViewer Margin="2" SnapsToDevicePixels="True">
-                                        <ItemsPresenter KeyboardNavigation.DirectionalNavigation="Contained" />
-                                    </ScrollViewer>
-                                </Border>
-                            </Popup>
-                        </Grid>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="HasItems" Value="False">
-                                <Setter TargetName="DropDownBorder" Property="MinHeight" Value="40" />
-                            </Trigger>
-                            <Trigger Property="IsKeyboardFocusWithin" Value="True">
-                                <Setter TargetName="Bd" Property="BorderBrush" Value="{DynamicResource AccentBrush}" />
-                            </Trigger>
-                            <Trigger Property="IsEnabled" Value="False">
-                                <Setter Property="Opacity" Value="0.5" />
-                            </Trigger>
-                            <Trigger Property="IsEditable" Value="True">
-                                <Setter TargetName="PART_EditableTextBox" Property="Visibility" Value="Visible" />
-                                <Setter TargetName="ContentSite" Property="Visibility" Value="Hidden" />
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
 
         <Style x:Key="DarkTextBox" TargetType="TextBox">
             <Setter Property="Background" Value="{DynamicResource InputBackgroundBrush}" />
@@ -217,7 +94,7 @@
                     <DockPanel Margin="0,0,0,8">
                         <TextBlock Text="{DynamicResource Logs_Date}" Foreground="{DynamicResource ForegroundDimBrush}"
                                    VerticalAlignment="Center" Margin="0,0,8,0" />
-                        <ComboBox x:Name="DateCombo" Width="160" Style="{StaticResource SettingsCombo}" SelectionChanged="DateCombo_SelectionChanged" />
+                        <ComboBox x:Name="DateCombo" Width="160" SelectionChanged="DateCombo_SelectionChanged" />
                         <Button Content="{DynamicResource Logs_Refresh}" Margin="8,0,0,0" Padding="10,4" Style="{StaticResource CmuxButton}" Click="Refresh_Click" />
                         <Button Content="{DynamicResource Logs_OpenFolder}" Margin="8,0,0,0" Padding="10,4" Style="{StaticResource CmuxButton}" Click="OpenFolder_Click" />
                         <Button Content="{DynamicResource Logs_OpenCaptures}" Margin="8,0,0,0" Padding="10,4" Style="{StaticResource CmuxButton}" Click="OpenTranscriptsFolder_Click" />
@@ -228,16 +105,13 @@
 
                     <WrapPanel>
                         <TextBlock Text="{DynamicResource Logs_Workspace}" Foreground="{DynamicResource ForegroundDimBrush}" VerticalAlignment="Center" Margin="0,0,8,0" />
-                        <ComboBox x:Name="WorkspaceFilterCombo" Width="220" Style="{StaticResource SettingsCombo}"
-                                  SelectionChanged="WorkspaceFilterCombo_SelectionChanged" Margin="0,0,12,0" />
+                        <ComboBox x:Name="WorkspaceFilterCombo" Width="220"                                  SelectionChanged="WorkspaceFilterCombo_SelectionChanged" Margin="0,0,12,0" />
 
                         <TextBlock Text="{DynamicResource Logs_Surface}" Foreground="{DynamicResource ForegroundDimBrush}" VerticalAlignment="Center" Margin="0,0,8,0" />
-                        <ComboBox x:Name="SurfaceFilterCombo" Width="220" Style="{StaticResource SettingsCombo}"
-                                  SelectionChanged="SurfaceFilterCombo_SelectionChanged" Margin="0,0,12,0" />
+                        <ComboBox x:Name="SurfaceFilterCombo" Width="220"                                  SelectionChanged="SurfaceFilterCombo_SelectionChanged" Margin="0,0,12,0" />
 
                         <TextBlock Text="{DynamicResource Logs_Pane}" Foreground="{DynamicResource ForegroundDimBrush}" VerticalAlignment="Center" Margin="0,0,8,0" />
-                        <ComboBox x:Name="PaneFilterCombo" Width="160" Style="{StaticResource SettingsCombo}"
-                                  SelectionChanged="PaneFilterCombo_SelectionChanged" Margin="0,0,12,0" />
+                        <ComboBox x:Name="PaneFilterCombo" Width="160"                                  SelectionChanged="PaneFilterCombo_SelectionChanged" Margin="0,0,12,0" />
 
                         <TextBlock Text="{DynamicResource Logs_Search}" Foreground="{DynamicResource ForegroundDimBrush}" VerticalAlignment="Center" Margin="0,0,8,0" />
                         <TextBox x:Name="SearchBox" Width="220" Style="{StaticResource CmuxTextBox}" TextChanged="SearchBox_TextChanged" Margin="0,0,12,0" />
