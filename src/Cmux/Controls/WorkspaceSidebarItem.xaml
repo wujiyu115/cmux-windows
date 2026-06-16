@@ -26,6 +26,11 @@
                         <TextBlock Text="&#xED25;" FontFamily="Segoe MDL2 Assets" FontSize="12" />
                     </MenuItem.Icon>
                 </MenuItem>
+                <MenuItem Header="{DynamicResource Workspace_EnvVars}" Click="EnvVars_Click">
+                    <MenuItem.Icon>
+                        <TextBlock Text="&#xE7BA;" FontFamily="Segoe MDL2 Assets" FontSize="12" />
+                    </MenuItem.Icon>
+                </MenuItem>
                 <MenuItem Header="{DynamicResource Workspace_AccentColor}">
                     <MenuItem.Icon>
                         <TextBlock Text="&#xE790;" FontFamily="Segoe MDL2 Assets" FontSize="12" />

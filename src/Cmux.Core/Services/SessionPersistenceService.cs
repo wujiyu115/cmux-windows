@@ -84,6 +84,7 @@ public class SessionPersistenceService
                 AccentColor = ws.AccentColor,
                 WorkingDirectory = ws.WorkingDirectory,
                 StartDirectory = ws.StartDirectory,
+                EnvironmentVariables = ws.EnvironmentVariables.Count > 0 ? ws.EnvironmentVariables : null,
                 SelectedSurfaceIndex = ws.Surfaces.IndexOf(ws.SelectedSurface!),
             };
 

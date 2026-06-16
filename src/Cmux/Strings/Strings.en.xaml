@@ -134,6 +134,8 @@
     <system:String x:Key="Workspace_SvgNotSupported">SVG is not supported in workspace icon yet. Use emoji/symbol or MDL2 hex code.</system:String>
     <system:String x:Key="Workspace_SetWorkingDirectory">Set Working Directory...</system:String>
     <system:String x:Key="Workspace_WorkingDirectoryMessage">Enter the working directory path (WSL paths like /home/user/project are supported). Leave empty to clear.</system:String>
+    <system:String x:Key="Workspace_EnvVars">Environment Variables...</system:String>
+    <system:String x:Key="Workspace_EnvVarsMessage">Enter environment variables, one per line, in KEY=VALUE format. These will be injected into new terminal sessions.</system:String>
 
     <!-- Terminal Context Menu -->
     <system:String x:Key="Terminal_Copy">Copy</system:String>

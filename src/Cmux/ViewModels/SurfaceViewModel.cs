@@ -19,6 +19,7 @@ public partial class SurfaceViewModel : ObservableObject, IDisposable
     private readonly Dictionary<string, List<string>> _paneCommandHistory = [];
     private readonly Dictionary<string, string?> _paneShells = [];
     private readonly string? _workspaceStartDirectory;
+    private readonly Dictionary<string, string>? _workspaceEnvVars;
     private readonly HashSet<string> _daemonPanes = [];
     private readonly HashSet<string> _daemonOutputLogged = [];
     private static readonly object _daemonWaitLock = new();
@@ -69,11 +70,12 @@ public partial class SurfaceViewModel : ObservableObject, IDisposable
         }
     }
 
-    public SurfaceViewModel(Surface surface, string workspaceId, NotificationService notificationService, string? initialShell = null, string? workspaceStartDirectory = null)
+    public SurfaceViewModel(Surface surface, string workspaceId, NotificationService notificationService, string? initialShell = null, string? workspaceStartDirectory = null, Dictionary<string, string>? workspaceEnvVars = null)
     {
         Surface = surface;
         _workspaceId = workspaceId;
         _workspaceStartDirectory = workspaceStartDirectory;
+        _workspaceEnvVars = workspaceEnvVars is { Count: > 0 } ? workspaceEnvVars : null;
         _notificationService = notificationService;
         _name = surface.Name;
         _rootNode = surface.RootSplitNode;
@@ -166,7 +168,7 @@ public partial class SurfaceViewModel : ObservableObject, IDisposable
 
             try
             {
-                session.Start(command: _paneShells.GetValueOrDefault(paneId) ?? GetConfiguredShell(), workingDirectory: cwd);
+                session.Start(command: _paneShells.GetValueOrDefault(paneId) ?? GetConfiguredShell(), workingDirectory: cwd, environmentVariables: _workspaceEnvVars);
                 DaemonLog($"[DaemonDisconnected] {paneId} → local session started");
             }
             catch (Exception ex)
@@ -434,7 +436,7 @@ public partial class SurfaceViewModel : ObservableObject, IDisposable
                     _daemonPanes.Remove(paneId);
                     session.DaemonWrite = null;
                     session.DaemonResize = null;
-                    session.Start(command: shell, workingDirectory: effectiveCwd);
+                    session.Start(command: shell, workingDirectory: effectiveCwd, environmentVariables: _workspaceEnvVars);
                     return;
                 }
 
@@ -483,7 +485,7 @@ public partial class SurfaceViewModel : ObservableObject, IDisposable
                 _daemonPanes.Remove(paneId);
                 session.DaemonWrite = null;
                 session.DaemonResize = null;
-                session.Start(command: shell, workingDirectory: effectiveCwd);
+                session.Start(command: shell, workingDirectory: effectiveCwd, environmentVariables: _workspaceEnvVars);
             }
         });
 
@@ -505,7 +507,7 @@ public partial class SurfaceViewModel : ObservableObject, IDisposable
         WireSessionEvents(session, paneId);
 
         _sessions[paneId] = session;
-        session.Start(command: shell, workingDirectory: workingDirectory ?? restoredState?.WorkingDirectory);
+        session.Start(command: shell, workingDirectory: workingDirectory ?? restoredState?.WorkingDirectory, environmentVariables: _workspaceEnvVars);
 
         if (restoredState?.BufferSnapshot != null)
             session.RestoreBufferSnapshot(restoredState.BufferSnapshot);

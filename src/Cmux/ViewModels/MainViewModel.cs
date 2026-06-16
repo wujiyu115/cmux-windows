@@ -97,6 +97,7 @@ public partial class MainViewModel : ObservableObject
             AccentColor = source.AccentColor,
             WorkingDirectory = source.WorkingDirectory,
             StartDirectory = source.StartDirectory,
+            EnvironmentVariables = new Dictionary<string, string>(source.Workspace.EnvironmentVariables),
         };
 
         var surfaceMap = new Dictionary<string, Surface>();
@@ -314,6 +315,7 @@ public partial class MainViewModel : ObservableObject
                 AccentColor = string.IsNullOrWhiteSpace(wsState.AccentColor) ? "#FF818CF8" : wsState.AccentColor,
                 WorkingDirectory = wsState.WorkingDirectory,
                 StartDirectory = wsState.StartDirectory,
+                EnvironmentVariables = wsState.EnvironmentVariables ?? new(),
             };
 
             foreach (var surfState in wsState.Surfaces)

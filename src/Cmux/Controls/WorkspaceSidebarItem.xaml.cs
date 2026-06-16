@@ -102,6 +102,33 @@ public partial class WorkspaceSidebarItem : UserControl
             Vm.StartDirectory = string.IsNullOrWhiteSpace(prompt.ResponseText) ? null : prompt.ResponseText.Trim();
     }
 
+    private void EnvVars_Click(object sender, RoutedEventArgs e)
+    {
+        if (Vm == null) return;
+
+        var current = string.Join("\n", Vm.Workspace.EnvironmentVariables.Select(kv => $"{kv.Key}={kv.Value}"));
+
+        var prompt = new TextPromptWindow(
+            title: LanguageService.Lang("Workspace_EnvVars"),
+            message: LanguageService.Lang("Workspace_EnvVarsMessage"),
+            defaultValue: current,
+            multiLine: true)
+        {
+            Owner = Window.GetWindow(this),
+        };
+
+        if (prompt.ShowDialog() == true)
+        {
+            Vm.Workspace.EnvironmentVariables.Clear();
+            foreach (var line in prompt.ResponseText.Split('\n', StringSplitOptions.RemoveEmptyEntries))
+            {
+                var eq = line.IndexOf('=');
+                if (eq > 0)
+                    Vm.Workspace.EnvironmentVariables[line[..eq].Trim()] = line[(eq + 1)..].Trim();
+            }
+        }
+    }
+
     private void MoveUp_Click(object sender, RoutedEventArgs e)
     {
         if (MainVm is { } main && Vm is { } ws)

@@ -15,6 +15,7 @@ public class Workspace
     public string? StartDirectory { get; set; }
     public string? LinkedPrStatus { get; set; }
     public string? LinkedPrNumber { get; set; }
+    public Dictionary<string, string> EnvironmentVariables { get; set; } = new();
     public List<int> ListeningPorts { get; set; } = [];
     public string? LatestNotificationText { get; set; }
     public int UnreadNotificationCount { get; set; }

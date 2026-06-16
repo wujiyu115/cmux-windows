@@ -37,6 +37,9 @@ public class WorkspaceState
     [JsonPropertyName("startDirectory")]
     public string? StartDirectory { get; set; }
 
+    [JsonPropertyName("environmentVariables")]
+    public Dictionary<string, string>? EnvironmentVariables { get; set; }
+
     [JsonPropertyName("surfaces")]
     public List<SurfaceState> Surfaces { get; set; } = [];
 

@@ -1,5 +1,6 @@
 using System.ComponentModel;
 using System.Runtime.InteropServices;
+using System.Text;
 using static Cmux.Core.Terminal.ConPtyInterop;
 
 namespace Cmux.Core.Terminal;
@@ -21,7 +22,7 @@ public sealed class TerminalProcess : IDisposable
 
     public event Action? Exited;
 
-    public TerminalProcess(PseudoConsole console, string? command = null, string? workingDirectory = null)
+    public TerminalProcess(PseudoConsole console, string? command = null, string? workingDirectory = null, Dictionary<string, string>? environmentVariables = null)
     {
         var shellCommand = command ?? DetectShell();
 
@@ -35,28 +36,41 @@ public sealed class TerminalProcess : IDisposable
         };
         startupInfo.StartupInfo.cb = Marshal.SizeOf<STARTUPINFOEX>();
 
-        bool success = CreateProcess(
-            null,
-            shellCommand,
-            IntPtr.Zero,
-            IntPtr.Zero,
-            false,
-            EXTENDED_STARTUPINFO_PRESENT | CREATE_UNICODE_ENVIRONMENT,
-            IntPtr.Zero,
-            workingDirectory,
-            ref startupInfo,
-            out _processInfo);
-
-        if (!success)
+        // Build environment block if custom env vars are provided
+        IntPtr envBlock = IntPtr.Zero;
+        try
         {
-            // Clean up attribute list before throwing — _processInfo is uninitialized
-            if (_attributeList != IntPtr.Zero)
+            if (environmentVariables is { Count: > 0 })
+                envBlock = BuildEnvironmentBlock(environmentVariables);
+
+            bool success = CreateProcess(
+                null,
+                shellCommand,
+                IntPtr.Zero,
+                IntPtr.Zero,
+                false,
+                EXTENDED_STARTUPINFO_PRESENT | CREATE_UNICODE_ENVIRONMENT,
+                envBlock,
+                workingDirectory,
+                ref startupInfo,
+                out _processInfo);
+
+            if (!success)
             {
-                DeleteProcThreadAttributeList(_attributeList);
-                Marshal.FreeHGlobal(_attributeList);
-                _attributeList = IntPtr.Zero;
+                // Clean up attribute list before throwing — _processInfo is uninitialized
+                if (_attributeList != IntPtr.Zero)
+                {
+                    DeleteProcThreadAttributeList(_attributeList);
+                    Marshal.FreeHGlobal(_attributeList);
+                    _attributeList = IntPtr.Zero;
+                }
+                throw new Win32Exception(Marshal.GetLastWin32Error(), "Failed to create process with ConPTY.");
             }
-            throw new Win32Exception(Marshal.GetLastWin32Error(), "Failed to create process with ConPTY.");
+        }
+        finally
+        {
+            if (envBlock != IntPtr.Zero)
+                Marshal.FreeHGlobal(envBlock);
         }
 
         _processCreated = true;
@@ -71,6 +85,42 @@ public sealed class TerminalProcess : IDisposable
             Name = $"ConPTY-Wait-{_processInfo.dwProcessId}",
         };
         _waitThread.Start();
+    }
+
+    /// <summary>
+    /// Builds a Unicode environment block by merging the current process environment
+    /// with custom environment variables. The block is a contiguous null-terminated
+    /// string list ending with an extra null (required by CreateProcess).
+    /// </summary>
+    private static IntPtr BuildEnvironmentBlock(Dictionary<string, string> extraVars)
+    {
+        // Start with the current process environment
+        var env = new SortedDictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        foreach (System.Collections.DictionaryEntry entry in Environment.GetEnvironmentVariables())
+        {
+            if (entry.Key is string key && entry.Value is string value)
+                env[key] = value;
+        }
+
+        // Overlay custom variables
+        foreach (var kvp in extraVars)
+            env[kvp.Key] = kvp.Value;
+
+        // Build the block: "KEY=VALUE\0KEY=VALUE\0...\0\0"
+        var sb = new StringBuilder();
+        foreach (var kvp in env)
+        {
+            sb.Append(kvp.Key);
+            sb.Append('=');
+            sb.Append(kvp.Value);
+            sb.Append('\0');
+        }
+        sb.Append('\0'); // final double-null terminator
+
+        var blockBytes = Encoding.Unicode.GetBytes(sb.ToString());
+        var ptr = Marshal.AllocHGlobal(blockBytes.Length);
+        Marshal.Copy(blockBytes, 0, ptr, blockBytes.Length);
+        return ptr;
     }
 
     /// <summary>

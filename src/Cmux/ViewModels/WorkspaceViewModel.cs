@@ -72,7 +72,7 @@ public partial class WorkspaceViewModel : ObservableObject, IDisposable
         // Create surface VMs for existing surfaces
         foreach (var surface in workspace.Surfaces)
         {
-            var surfaceVm = new SurfaceViewModel(surface, workspace.Id, notificationService, workspaceStartDirectory: workspace.StartDirectory);
+            var surfaceVm = new SurfaceViewModel(surface, workspace.Id, notificationService, workspaceStartDirectory: workspace.StartDirectory, workspaceEnvVars: workspace.EnvironmentVariables);
             surfaceVm.WorkingDirectoryChanged += OnSurfaceWorkingDirectoryChanged;
             Surfaces.Add(surfaceVm);
         }
@@ -96,7 +96,7 @@ public partial class WorkspaceViewModel : ObservableObject, IDisposable
         var surface = new Surface { Name = LanguageService.Lang("Default_Terminal", Surfaces.Count + 1) };
         Workspace.Surfaces.Add(surface);
 
-        var surfaceVm = new SurfaceViewModel(surface, Workspace.Id, _notificationService, workspaceStartDirectory: Workspace.StartDirectory);
+        var surfaceVm = new SurfaceViewModel(surface, Workspace.Id, _notificationService, workspaceStartDirectory: Workspace.StartDirectory, workspaceEnvVars: Workspace.EnvironmentVariables);
         surfaceVm.WorkingDirectoryChanged += OnSurfaceWorkingDirectoryChanged;
         Surfaces.Add(surfaceVm);
         SelectedSurface = surfaceVm;
@@ -107,7 +107,7 @@ public partial class WorkspaceViewModel : ObservableObject, IDisposable
         var surface = new Surface { Name = LanguageService.Lang("Default_Terminal", Surfaces.Count + 1) };
         Workspace.Surfaces.Add(surface);
 
-        var surfaceVm = new SurfaceViewModel(surface, Workspace.Id, _notificationService, shellPath, workspaceStartDirectory: Workspace.StartDirectory);
+        var surfaceVm = new SurfaceViewModel(surface, Workspace.Id, _notificationService, shellPath, workspaceStartDirectory: Workspace.StartDirectory, workspaceEnvVars: Workspace.EnvironmentVariables);
         surfaceVm.WorkingDirectoryChanged += OnSurfaceWorkingDirectoryChanged;
         Surfaces.Add(surfaceVm);
         SelectedSurface = surfaceVm;
