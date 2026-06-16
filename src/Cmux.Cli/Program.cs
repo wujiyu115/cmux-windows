@@ -41,7 +41,7 @@ public static class Program
                 "workspace" => await HandleWorkspace(args[1..]),
                 "surface" => await HandleSurface(args[1..]),
                 "split" => await HandleSplit(args[1..]),
-                "status" => await HandleStatus(),
+                "status" => await HandleStatusCommand(args[1..]),
                 "events" => await HandleEvents(args[1..]),
                 "completion" => HandleCompletion(args[1..]),
                 "help" or "--help" or "-h" => PrintHelp(),
@@ -142,6 +142,22 @@ public static class Program
     private static async Task<int> HandleStatus()
     {
         return await SendAndPrint("STATUS");
+    }
+
+    private static async Task<int> HandleStatusCommand(string[] args)
+    {
+        if (args.Length == 0)
+            return await HandleStatus();
+
+        var subcommand = args[0].ToLowerInvariant();
+        var parsed = ParseArgs(args[1..]);
+
+        return subcommand switch
+        {
+            "set" => await SendAndPrint("STATUS.SET", parsed),
+            "clear" => await SendAndPrint("STATUS.CLEAR", parsed),
+            _ => Error($"Usage: cmux status [set|clear]"),
+        };
     }
 
     private static int HandleCompletion(string[] args)
@@ -296,6 +312,14 @@ public static class Program
                 down                Split horizontally (top/bottom)
 
               status                Show cmux status
+                set                 Set a sidebar status entry
+                  --key <text>      Status key (required)
+                  --value <text>    Status value (required)
+                  --icon <glyph>    Icon glyph (optional)
+                  --color <hex>     Color hex string (optional)
+                  --priority <n>    Sort priority (default: 0)
+                clear               Clear sidebar status entries
+                  --key <text>      Clear specific key (omit to clear all)
 
               events                Stream real-time events (JSON lines)
                 --tag <name>        Connect to tagged cmux instance

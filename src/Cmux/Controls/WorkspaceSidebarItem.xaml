@@ -115,6 +115,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
 
@@ -216,8 +217,36 @@
                        VerticalAlignment="Center"/>
         </StackPanel>
 
+        <!-- Status entries -->
+        <ItemsControl Grid.Row="5" ItemsSource="{Binding StatusDisplay}"
+                      Margin="0,1,0,0">
+            <ItemsControl.Style>
+                <Style TargetType="ItemsControl">
+                    <Setter Property="Visibility" Value="Visible"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding StatusDisplay.Count}" Value="0">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </ItemsControl.Style>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal" Margin="0,1,0,0">
+                        <TextBlock Text="{Binding Icon}" FontFamily="Segoe MDL2 Assets" FontSize="10"
+                                   Foreground="{DynamicResource ForegroundDimBrush}"
+                                   Margin="0,0,4,0" VerticalAlignment="Center"
+                                   Visibility="{Binding Icon, Converter={StaticResource NullToCollapsed}}"/>
+                        <TextBlock Text="{Binding Value}" FontSize="10"
+                                   Foreground="{DynamicResource ForegroundDimBrush}"
+                                   TextTrimming="CharacterEllipsis" MaxWidth="140"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+
         <!-- Latest notification text -->
-        <TextBlock x:Name="LatestNotificationInfo" Grid.Row="5" Text="{Binding LatestNotificationText}"
+        <TextBlock x:Name="LatestNotificationInfo" Grid.Row="6" Text="{Binding LatestNotificationText}"
                    Foreground="{DynamicResource ForegroundDimBrush}"
                    FontSize="10" Margin="0,2,0,0"
                    TextTrimming="CharacterEllipsis" FontStyle="Italic"

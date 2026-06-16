@@ -455,6 +455,8 @@ public partial class MainViewModel : ObservableObject
                 "PANE.WRITE" => HandlePaneWrite(args),
                 "PANE.READ" => HandlePaneRead(args),
                 "STATUS" => HandleStatus(),
+                "STATUS.SET" => HandleStatusSet(args),
+                "STATUS.CLEAR" => HandleStatusClear(args),
                 "EVENTS.STREAM" => "<<STREAM>>",
                 _ => JsonSerializer.Serialize(new { error = $"Unknown command: {command}" }),
             };
@@ -771,6 +773,28 @@ public partial class MainViewModel : ObservableObject
             selectedWorkspace = SelectedWorkspace?.Workspace.Id,
             unreadNotifications = TotalUnreadCount,
         });
+    }
+
+    private string HandleStatusSet(Dictionary<string, string> args)
+    {
+        if (!TryResolveWorkspace(args, out var ws, out var err)) return JsonSerializer.Serialize(new { error = err });
+        var key = args.GetValueOrDefault("key", "");
+        var value = args.GetValueOrDefault("value", "");
+        if (string.IsNullOrEmpty(key) || string.IsNullOrEmpty(value))
+            return JsonSerializer.Serialize(new { error = "key and value required" });
+
+        ws.SetStatus(key, value,
+            args.GetValueOrDefault("icon"),
+            args.GetValueOrDefault("color"),
+            int.TryParse(args.GetValueOrDefault("priority", "0"), out var p) ? p : 0);
+        return JsonSerializer.Serialize(new { ok = true });
+    }
+
+    private string HandleStatusClear(Dictionary<string, string> args)
+    {
+        if (!TryResolveWorkspace(args, out var ws, out var err)) return JsonSerializer.Serialize(new { error = err });
+        ws.ClearStatus(args.GetValueOrDefault("key"));
+        return JsonSerializer.Serialize(new { ok = true });
     }
 
     private bool TryResolveWorkspace(Dictionary<string, string> args, out WorkspaceViewModel workspace, out string error)

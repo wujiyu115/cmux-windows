@@ -53,6 +53,11 @@ public partial class WorkspaceViewModel : ObservableObject, IDisposable
     [ObservableProperty]
     private AgentType _detectedAgent;
 
+    private readonly Dictionary<string, SidebarStatusEntry> _statusEntries = new();
+
+    [ObservableProperty]
+    private ObservableCollection<SidebarStatusEntry> _statusDisplay = new();
+
     public string AgentLabel => AgentDetector.GetLabel(DetectedAgent);
     public string AgentIcon => AgentDetector.GetIcon(DetectedAgent);
     public string IconFontFamily => IsPrivateUseGlyph(IconGlyph) ? "Segoe MDL2 Assets" : "Segoe UI Emoji";
@@ -256,6 +261,28 @@ public partial class WorkspaceViewModel : ObservableObject, IDisposable
             captured += surface.CaptureAllPaneTranscripts(reason);
 
         return captured;
+    }
+
+    public void SetStatus(string key, string value, string? icon = null, string? color = null, int priority = 0)
+    {
+        _statusEntries[key] = new SidebarStatusEntry { Key = key, Value = value, Icon = icon, Color = color, Priority = priority };
+        RefreshStatusDisplay();
+    }
+
+    public void ClearStatus(string? key = null)
+    {
+        if (key != null)
+            _statusEntries.Remove(key);
+        else
+            _statusEntries.Clear();
+        RefreshStatusDisplay();
+    }
+
+    private void RefreshStatusDisplay()
+    {
+        StatusDisplay.Clear();
+        foreach (var entry in _statusEntries.Values.OrderByDescending(e => e.Priority))
+            StatusDisplay.Add(entry);
     }
 
     public void Dispose()
