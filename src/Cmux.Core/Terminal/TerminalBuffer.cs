@@ -55,6 +55,7 @@ public class TerminalBuffer
 
     public int ScrollbackCount => _scrollback.Count;
     public int TotalLines => Rows + _scrollback.Count;
+    public bool ScreenJustCleared { get; set; }
 
     public event Action? ContentChanged;
 
@@ -312,12 +313,37 @@ public class TerminalBuffer
                 for (int c = 0; c <= CursorCol; c++)
                     _cells[CursorRow, c] = TerminalCell.Empty;
                 break;
-            case 2: // All
+            case 2: // All — save visible content to scrollback first (xterm behavior)
+                int lastContentRow = -1;
+                for (int r = Rows - 1; r >= 0; r--)
+                {
+                    for (int c = 0; c < Cols; c++)
+                    {
+                        if (_cells[r, c].Character != '\0' && _cells[r, c].Character != ' ')
+                        {
+                            lastContentRow = r;
+                            goto foundLast;
+                        }
+                    }
+                }
+                foundLast:
+                if (lastContentRow >= 0)
+                {
+                    for (int r = 0; r <= lastContentRow; r++)
+                    {
+                        var line = new TerminalCell[Cols];
+                        for (int c = 0; c < Cols; c++)
+                            line[c] = _cells[r, c];
+                        _scrollback.Add(line);
+                    }
+                }
                 Clear();
+                ScreenJustCleared = true;
                 break;
             case 3: // All + scrollback
                 Clear();
                 _scrollback.Clear();
+                ScreenJustCleared = true;
                 break;
         }
 

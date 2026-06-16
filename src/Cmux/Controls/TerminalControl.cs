@@ -191,18 +191,23 @@ public class TerminalControl : FrameworkElement
         if (_session == null)
             return;
 
-        var currentScrollback = _session.Buffer.ScrollbackCount;
+        var buffer = _session.Buffer;
+        var currentScrollback = buffer.ScrollbackCount;
         var scrollbackDelta = currentScrollback - _lastScrollbackCount;
 
-        if (_followOutput || _scrollOffset == 0)
+        if (buffer.ScreenJustCleared)
         {
-            // Live mode: always stick to bottom.
+            buffer.ScreenJustCleared = false;
+            _scrollOffset = 0;
+            _followOutput = true;
+        }
+        else if (_followOutput || _scrollOffset == 0)
+        {
             _scrollOffset = 0;
             _followOutput = true;
         }
         else if (_scrollOffset < 0 && scrollbackDelta > 0)
         {
-            // Freeze viewport while output is streaming.
             _scrollOffset -= scrollbackDelta;
         }
 

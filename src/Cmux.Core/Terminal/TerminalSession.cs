@@ -23,6 +23,7 @@ public sealed class TerminalSession : IDisposable
     private volatile bool _daemonWriteLogged;
     private volatile bool _localWriteNullLogged;
     private readonly object _lock = new();
+    private readonly object _writeLock = new();
     private Timer? _cwdPollTimer;
 
     public TerminalBuffer Buffer { get; }
@@ -297,13 +298,41 @@ public sealed class TerminalSession : IDisposable
         }
         try
         {
-            _writeStream.Write(data, 0, data.Length);
-            _writeStream.Flush();
+            lock (_writeLock)
+            {
+                _writeStream.Write(data, 0, data.Length);
+                _writeStream.Flush();
+            }
         }
         catch (IOException) when (_disposed)
         {
             // Expected during shutdown
         }
+    }
+
+    /// <summary>
+    /// Writes a response to the terminal on a thread pool thread to avoid
+    /// deadlocking when the read thread needs to send a reply (e.g. DA, DSR)
+    /// while the child process's stdin pipe buffer is full.
+    /// </summary>
+    private void WriteResponse(string text)
+    {
+        if (_disposed) return;
+        var bytes = Encoding.UTF8.GetBytes(text);
+        ThreadPool.QueueUserWorkItem(_ =>
+        {
+            if (_disposed || _writeStream == null) return;
+            try
+            {
+                lock (_writeLock)
+                {
+                    _writeStream.Write(bytes, 0, bytes.Length);
+                    _writeStream.Flush();
+                }
+            }
+            catch (IOException) { }
+            catch (ObjectDisposedException) { }
+        });
     }
 
     /// <summary>
@@ -489,13 +518,13 @@ public sealed class TerminalSession : IDisposable
                 if (Param(0) == 6)
                 {
                     // CPR — Cursor Position Report
-                    Write($"\x1b[{Buffer.CursorRow + 1};{Buffer.CursorCol + 1}R");
+                    WriteResponse($"\x1b[{Buffer.CursorRow + 1};{Buffer.CursorCol + 1}R");
                 }
                 break;
 
             case 'c': // DA — Device Attributes
                 if (!isPrivate)
-                    Write("\x1b[?1;0c");
+                    WriteResponse("\x1b[?1;0c");
                 break;
         }
     }

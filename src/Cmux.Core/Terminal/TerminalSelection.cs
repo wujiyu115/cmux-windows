@@ -23,6 +23,7 @@ public class TerminalSelection
 {
     private SelectionPoint? _start;
     private SelectionPoint? _end;
+    private SelectionPoint? _anchor;
 
     public bool HasSelection => _start.HasValue && _end.HasValue;
     public SelectionPoint? Start => _start;
@@ -32,14 +33,22 @@ public class TerminalSelection
 
     public void StartSelection(int row, int col)
     {
-        _start = new SelectionPoint(row, col);
-        _end = new SelectionPoint(row, col);
-        SelectionChanged?.Invoke();
+        _anchor = new SelectionPoint(row, col);
+        if (_start.HasValue)
+        {
+            _start = null;
+            _end = null;
+            SelectionChanged?.Invoke();
+        }
     }
 
     public void ExtendSelection(int row, int col)
     {
-        if (!_start.HasValue) return;
+        if (!_anchor.HasValue) return;
+        if (!_start.HasValue)
+        {
+            _start = _anchor;
+        }
         _end = new SelectionPoint(row, col);
         SelectionChanged?.Invoke();
     }
@@ -48,6 +57,7 @@ public class TerminalSelection
     {
         _start = null;
         _end = null;
+        _anchor = null;
         SelectionChanged?.Invoke();
     }
 
