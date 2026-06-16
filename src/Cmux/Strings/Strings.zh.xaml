@@ -115,15 +115,16 @@
     <system:String x:Key="Workspace_Rename">重命名</system:String>
     <system:String x:Key="Workspace_Duplicate">复制</system:String>
     <system:String x:Key="Workspace_SetIcon">设置工作区图标</system:String>
-    <system:String x:Key="Workspace_AccentIndigo">主题色：靛蓝</system:String>
-    <system:String x:Key="Workspace_AccentGreen">主题色：绿色</system:String>
-    <system:String x:Key="Workspace_AccentAmber">主题色：琥珀</system:String>
-    <system:String x:Key="Workspace_AccentRed">主题色：红色</system:String>
-    <system:String x:Key="Workspace_AccentCyan">主题色：青色</system:String>
-    <system:String x:Key="Workspace_AccentPurple">主题色：紫色</system:String>
-    <system:String x:Key="Workspace_AccentSlate">主题色：石板灰</system:String>
-    <system:String x:Key="Workspace_AccentPink">主题色：粉色</system:String>
-    <system:String x:Key="Workspace_AccentCustom">主题色：自定义...</system:String>
+    <system:String x:Key="Workspace_AccentColor">主题色</system:String>
+    <system:String x:Key="Workspace_AccentIndigo">靛蓝</system:String>
+    <system:String x:Key="Workspace_AccentGreen">绿色</system:String>
+    <system:String x:Key="Workspace_AccentAmber">琥珀</system:String>
+    <system:String x:Key="Workspace_AccentRed">红色</system:String>
+    <system:String x:Key="Workspace_AccentCyan">青色</system:String>
+    <system:String x:Key="Workspace_AccentPurple">紫色</system:String>
+    <system:String x:Key="Workspace_AccentSlate">石板灰</system:String>
+    <system:String x:Key="Workspace_AccentPink">粉色</system:String>
+    <system:String x:Key="Workspace_AccentCustom">自定义...</system:String>
     <system:String x:Key="Workspace_NewSurface">新建标签页</system:String>
     <system:String x:Key="Workspace_MoveUp">上移</system:String>
     <system:String x:Key="Workspace_MoveDown">下移</system:String>
@@ -132,6 +133,7 @@
     <system:String x:Key="Workspace_IconMessage">输入一个图标（表情/符号）或字形代码，如 E8A5、U+E8A5、0xE8A5。</system:String>
     <system:String x:Key="Workspace_SvgNotSupported">工作区图标暂不支持 SVG。请使用表情/符号或 MDL2 十六进制代码。</system:String>
     <system:String x:Key="Workspace_SetWorkingDirectory">设置工作目录...</system:String>
+    <system:String x:Key="Workspace_WorkingDirectoryMessage">输入工作目录路径（支持 WSL 路径，如 /home/user/project）。留空则清除。</system:String>
 
     <!-- Terminal Context Menu -->
     <system:String x:Key="Terminal_Copy">复制</system:String>

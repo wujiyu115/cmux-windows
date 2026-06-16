@@ -115,15 +115,16 @@
     <system:String x:Key="Workspace_Rename">Rename</system:String>
     <system:String x:Key="Workspace_Duplicate">Duplicate</system:String>
     <system:String x:Key="Workspace_SetIcon">Set Workspace Icon</system:String>
-    <system:String x:Key="Workspace_AccentIndigo">Accent: Indigo</system:String>
-    <system:String x:Key="Workspace_AccentGreen">Accent: Green</system:String>
-    <system:String x:Key="Workspace_AccentAmber">Accent: Amber</system:String>
-    <system:String x:Key="Workspace_AccentRed">Accent: Red</system:String>
-    <system:String x:Key="Workspace_AccentCyan">Accent: Cyan</system:String>
-    <system:String x:Key="Workspace_AccentPurple">Accent: Purple</system:String>
-    <system:String x:Key="Workspace_AccentSlate">Accent: Slate</system:String>
-    <system:String x:Key="Workspace_AccentPink">Accent: Pink</system:String>
-    <system:String x:Key="Workspace_AccentCustom">Accent: Custom...</system:String>
+    <system:String x:Key="Workspace_AccentColor">Accent Color</system:String>
+    <system:String x:Key="Workspace_AccentIndigo">Indigo</system:String>
+    <system:String x:Key="Workspace_AccentGreen">Green</system:String>
+    <system:String x:Key="Workspace_AccentAmber">Amber</system:String>
+    <system:String x:Key="Workspace_AccentRed">Red</system:String>
+    <system:String x:Key="Workspace_AccentCyan">Cyan</system:String>
+    <system:String x:Key="Workspace_AccentPurple">Purple</system:String>
+    <system:String x:Key="Workspace_AccentSlate">Slate</system:String>
+    <system:String x:Key="Workspace_AccentPink">Pink</system:String>
+    <system:String x:Key="Workspace_AccentCustom">Custom...</system:String>
     <system:String x:Key="Workspace_NewSurface">New Surface</system:String>
     <system:String x:Key="Workspace_MoveUp">Move Up</system:String>
     <system:String x:Key="Workspace_MoveDown">Move Down</system:String>
@@ -132,6 +133,7 @@
     <system:String x:Key="Workspace_IconMessage">Enter a single icon (emoji/symbol) or a glyph code like E8A5, U+E8A5, 0xE8A5.</system:String>
     <system:String x:Key="Workspace_SvgNotSupported">SVG is not supported in workspace icon yet. Use emoji/symbol or MDL2 hex code.</system:String>
     <system:String x:Key="Workspace_SetWorkingDirectory">Set Working Directory...</system:String>
+    <system:String x:Key="Workspace_WorkingDirectoryMessage">Enter the working directory path (WSL paths like /home/user/project are supported). Leave empty to clear.</system:String>
 
     <!-- Terminal Context Menu -->
     <system:String x:Key="Terminal_Copy">Copy</system:String>

@@ -90,16 +90,16 @@ public partial class WorkspaceSidebarItem : UserControl
     {
         if (Vm == null) return;
 
-        var dialog = new Microsoft.Win32.OpenFolderDialog
+        var prompt = new TextPromptWindow(
+            title: LanguageService.Lang("Workspace_SetWorkingDirectory"),
+            message: LanguageService.Lang("Workspace_WorkingDirectoryMessage"),
+            defaultValue: Vm.StartDirectory ?? "")
         {
-            Title = LanguageService.Lang("Workspace_SetWorkingDirectory"),
+            Owner = Window.GetWindow(this),
         };
 
-        if (!string.IsNullOrEmpty(Vm.StartDirectory) && System.IO.Directory.Exists(Vm.StartDirectory))
-            dialog.InitialDirectory = Vm.StartDirectory;
-
-        if (dialog.ShowDialog(Window.GetWindow(this)) == true)
-            Vm.StartDirectory = dialog.FolderName;
+        if (prompt.ShowDialog() == true)
+            Vm.StartDirectory = string.IsNullOrWhiteSpace(prompt.ResponseText) ? null : prompt.ResponseText.Trim();
     }
 
     private void MoveUp_Click(object sender, RoutedEventArgs e)
