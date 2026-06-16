@@ -42,30 +42,13 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Thumb">
-                    <Border x:Name="thumbBorder" CornerRadius="4" Margin="1">
-                        <Border.Background>
-                            <SolidColorBrush x:Name="thumbBrush" Color="#30FFFFFF" />
-                        </Border.Background>
+                    <Border x:Name="thumbBorder" CornerRadius="4" Margin="1"
+                            Background="{DynamicResource ScrollThumbBrush}">
                     </Border>
                     <ControlTemplate.Triggers>
-                        <EventTrigger RoutedEvent="Mouse.MouseEnter">
-                            <BeginStoryboard>
-                                <Storyboard>
-                                    <ColorAnimation Storyboard.TargetName="thumbBrush"
-                                                    Storyboard.TargetProperty="Color"
-                                                    To="#60FFFFFF" Duration="0:0:0.15" />
-                                </Storyboard>
-                            </BeginStoryboard>
-                        </EventTrigger>
-                        <EventTrigger RoutedEvent="Mouse.MouseLeave">
-                            <BeginStoryboard>
-                                <Storyboard>
-                                    <ColorAnimation Storyboard.TargetName="thumbBrush"
-                                                    Storyboard.TargetProperty="Color"
-                                                    To="#30FFFFFF" Duration="0:0:0.25" />
-                                </Storyboard>
-                            </BeginStoryboard>
-                        </EventTrigger>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="thumbBorder" Property="Background" Value="{DynamicResource ScrollThumbHoverBrush}" />
+                        </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
@@ -87,31 +70,14 @@
                 <ControlTemplate TargetType="Button">
                     <Border x:Name="border"
                             CornerRadius="6"
-                            Padding="{TemplateBinding Padding}">
-                        <Border.Background>
-                            <SolidColorBrush x:Name="borderBrush" Color="Transparent" />
-                        </Border.Background>
+                            Padding="{TemplateBinding Padding}"
+                            Background="Transparent">
                         <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                     </Border>
                     <ControlTemplate.Triggers>
-                        <EventTrigger RoutedEvent="Mouse.MouseEnter">
-                            <BeginStoryboard>
-                                <Storyboard>
-                                    <ColorAnimation Storyboard.TargetName="borderBrush"
-                                                    Storyboard.TargetProperty="Color"
-                                                    To="#15FFFFFF" Duration="0:0:0.15" />
-                                </Storyboard>
-                            </BeginStoryboard>
-                        </EventTrigger>
-                        <EventTrigger RoutedEvent="Mouse.MouseLeave">
-                            <BeginStoryboard>
-                                <Storyboard>
-                                    <ColorAnimation Storyboard.TargetName="borderBrush"
-                                                    Storyboard.TargetProperty="Color"
-                                                    To="Transparent" Duration="0:0:0.15" />
-                                </Storyboard>
-                            </BeginStoryboard>
-                        </EventTrigger>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="border" Property="Background" Value="{DynamicResource HoverOverlayBrush}" />
+                        </Trigger>
                         <Trigger Property="IsPressed" Value="True">
                             <Setter TargetName="border" Property="Background" Value="{DynamicResource SidebarItemSelectedBrush}" />
                         </Trigger>
@@ -177,31 +143,14 @@
                     <Border x:Name="border" CornerRadius="4"
                             Width="{TemplateBinding Width}"
                             Height="{TemplateBinding Height}"
-                            Padding="{TemplateBinding Padding}">
-                        <Border.Background>
-                            <SolidColorBrush x:Name="iconBtnBg" Color="Transparent" />
-                        </Border.Background>
+                            Padding="{TemplateBinding Padding}"
+                            Background="Transparent">
                         <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                     </Border>
                     <ControlTemplate.Triggers>
-                        <EventTrigger RoutedEvent="Mouse.MouseEnter">
-                            <BeginStoryboard>
-                                <Storyboard>
-                                    <ColorAnimation Storyboard.TargetName="iconBtnBg"
-                                                    Storyboard.TargetProperty="Color"
-                                                    To="#15FFFFFF" Duration="0:0:0.15" />
-                                </Storyboard>
-                            </BeginStoryboard>
-                        </EventTrigger>
-                        <EventTrigger RoutedEvent="Mouse.MouseLeave">
-                            <BeginStoryboard>
-                                <Storyboard>
-                                    <ColorAnimation Storyboard.TargetName="iconBtnBg"
-                                                    Storyboard.TargetProperty="Color"
-                                                    To="Transparent" Duration="0:0:0.15" />
-                                </Storyboard>
-                            </BeginStoryboard>
-                        </EventTrigger>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="border" Property="Background" Value="{DynamicResource HoverOverlayBrush}" />
+                        </Trigger>
                         <Trigger Property="IsPressed" Value="True">
                             <Setter TargetName="border" Property="Background" Value="{DynamicResource SidebarItemSelectedBrush}" />
                         </Trigger>
@@ -374,11 +323,11 @@
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter TargetName="border" Property="Background" Value="#20FFFFFF" />
+                            <Setter TargetName="border" Property="Background" Value="{DynamicResource HoverOverlayBrush}" />
                             <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" />
                         </Trigger>
                         <Trigger Property="IsPressed" Value="True">
-                            <Setter TargetName="border" Property="Background" Value="#30FFFFFF" />
+                            <Setter TargetName="border" Property="Background" Value="{DynamicResource PressedOverlayBrush}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>

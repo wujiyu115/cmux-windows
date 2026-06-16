@@ -25,19 +25,24 @@ public static class AppThemeService
         var bg = ToColor(theme.Background);
         var fg = ToColor(theme.Foreground);
         var accent = PickAccent(theme);
+        var isLight = Luminance(bg) > 128;
 
         var sidebarBg = Darken(bg, 0.03);
         var hoverBg = Blend(bg, accent, 0.12);
         var selectedBg = Blend(bg, accent, 0.20);
         var fgDim = Blend(fg, bg, 0.55);
-        var border = Lighten(bg, 0.10);
-        var tabBg = Lighten(bg, 0.04);
-        var tabSelected = Lighten(bg, 0.08);
-        var divider = Lighten(bg, 0.12);
-        var surface = Lighten(bg, 0.03);
-        var surfaceHigh = Lighten(bg, 0.07);
-        var inputBg = Lighten(bg, 0.05);
+        var border = isLight ? Darken(bg, 0.12) : Lighten(bg, 0.10);
+        var tabBg = isLight ? Darken(bg, 0.04) : Lighten(bg, 0.04);
+        var tabSelected = isLight ? Darken(bg, 0.08) : Lighten(bg, 0.08);
+        var divider = isLight ? Darken(bg, 0.14) : Lighten(bg, 0.12);
+        var surface = isLight ? Darken(bg, 0.04) : Lighten(bg, 0.03);
+        var surfaceHigh = isLight ? Darken(bg, 0.08) : Lighten(bg, 0.07);
+        var inputBg = isLight ? Darken(bg, 0.06) : Lighten(bg, 0.05);
         var notification = Darken(accent, 0.05);
+        var hoverOverlay = isLight ? Color.FromArgb(0x20, 0, 0, 0) : Color.FromArgb(0x20, 255, 255, 255);
+        var pressedOverlay = isLight ? Color.FromArgb(0x30, 0, 0, 0) : Color.FromArgb(0x30, 255, 255, 255);
+        var scrollThumb = isLight ? Color.FromArgb(0x40, 0, 0, 0) : Color.FromArgb(0x30, 255, 255, 255);
+        var scrollThumbHover = isLight ? Color.FromArgb(0x60, 0, 0, 0) : Color.FromArgb(0x60, 255, 255, 255);
         var accentGlow = Color.FromArgb(0x80, accent.R, accent.G, accent.B);
         var overlayBg = Color.FromArgb(0xF2, bg.R, bg.G, bg.B);
 
@@ -98,6 +103,10 @@ public static class AppThemeService
         AddBrush("SurfaceHighBrush", new SolidColorBrush(surfaceHigh));
         AddBrush("InputBackgroundBrush", new SolidColorBrush(inputBg));
         AddBrush("OverlayBackgroundBrush", new SolidColorBrush(overlayBg));
+        AddBrush("HoverOverlayBrush", new SolidColorBrush(hoverOverlay));
+        AddBrush("PressedOverlayBrush", new SolidColorBrush(pressedOverlay));
+        AddBrush("ScrollThumbBrush", new SolidColorBrush(scrollThumb));
+        AddBrush("ScrollThumbHoverBrush", new SolidColorBrush(scrollThumbHover));
 
         var accentGradient = new LinearGradientBrush(
             new GradientStopCollection
@@ -201,4 +210,6 @@ public static class AppThemeService
         var db = (double)a.B - b.B;
         return Math.Sqrt(dr * dr + dg * dg + db * db);
     }
+
+    private static double Luminance(Color c) => 0.299 * c.R + 0.587 * c.G + 0.114 * c.B;
 }
