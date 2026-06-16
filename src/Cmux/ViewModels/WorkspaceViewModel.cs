@@ -42,7 +42,7 @@ public partial class WorkspaceViewModel : ObservableObject, IDisposable
     private int _unreadNotificationCount;
 
     [ObservableProperty]
-    private string _portsDisplay = "";
+    private string? _listeningPorts;
 
     [ObservableProperty]
     private bool _hasNotification;
@@ -188,6 +188,24 @@ public partial class WorkspaceViewModel : ObservableObject, IDisposable
                     OnPropertyChanged(nameof(AgentLabel));
                     OnPropertyChanged(nameof(AgentIcon));
                 }
+            }
+
+            // Port scanning
+            try
+            {
+                if (activeSurface?.ShellPid is int shellPid and > 0)
+                {
+                    var ports = PortScanner.GetListeningPorts(shellPid);
+                    ListeningPorts = ports.Count > 0 ? string.Join(", ", ports) : null;
+                }
+                else
+                {
+                    ListeningPorts = null;
+                }
+            }
+            catch
+            {
+                ListeningPorts = null;
             }
         }
         catch
