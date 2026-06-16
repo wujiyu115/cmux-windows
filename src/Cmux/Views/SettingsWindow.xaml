@@ -8,14 +8,6 @@
         ResizeMode="NoResize">
 
     <Window.Resources>
-        <!-- Force dark system brush overrides inside settings window -->
-        <SolidColorBrush x:Key="{x:Static SystemColors.WindowBrushKey}" Color="#FF1A1A1A" />
-        <SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}" Color="#FF1A1A1A" />
-        <SolidColorBrush x:Key="{x:Static SystemColors.WindowTextBrushKey}" Color="#FFE2E2E9" />
-        <SolidColorBrush x:Key="{x:Static SystemColors.ControlTextBrushKey}" Color="#FFE2E2E9" />
-        <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="#FF252547" />
-        <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="#FFE2E2E9" />
-
         <!-- Nav button style -->
         <Style x:Key="NavButton" TargetType="Button">
             <Setter Property="Background" Value="Transparent" />
@@ -49,7 +41,7 @@
 
         <!-- Settings text input style -->
         <Style x:Key="SettingsTextBox" TargetType="TextBox">
-            <Setter Property="Background" Value="#FF1A1A1A" />
+            <Setter Property="Background" Value="{DynamicResource InputBackgroundBrush}" />
             <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" />
             <Setter Property="BorderThickness" Value="1" />
             <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}" />
@@ -59,7 +51,7 @@
         </Style>
 
         <Style x:Key="SettingsPasswordBox" TargetType="PasswordBox">
-            <Setter Property="Background" Value="#FF1A1A1A" />
+            <Setter Property="Background" Value="{DynamicResource InputBackgroundBrush}" />
             <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" />
             <Setter Property="BorderThickness" Value="1" />
             <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}" />
@@ -69,16 +61,16 @@
         </Style>
 
         <Style x:Key="SettingsComboItem" TargetType="ComboBoxItem">
-            <Setter Property="Background" Value="#FF1A1A1A" />
+            <Setter Property="Background" Value="{DynamicResource InputBackgroundBrush}" />
             <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" />
             <Setter Property="Padding" Value="6,4" />
             <Style.Triggers>
                 <Trigger Property="IsHighlighted" Value="True">
-                    <Setter Property="Background" Value="#FF252547" />
+                    <Setter Property="Background" Value="{DynamicResource SidebarItemSelectedBrush}" />
                     <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" />
                 </Trigger>
                 <Trigger Property="IsSelected" Value="True">
-                    <Setter Property="Background" Value="#FF1E1E32" />
+                    <Setter Property="Background" Value="{DynamicResource SurfaceTabSelectedBrush}" />
                     <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" />
                 </Trigger>
             </Style.Triggers>
@@ -86,15 +78,7 @@
 
         <!-- Settings combo style -->
         <Style x:Key="SettingsCombo" TargetType="ComboBox">
-            <Style.Resources>
-                <SolidColorBrush x:Key="{x:Static SystemColors.WindowBrushKey}" Color="#FF1A1A1A" />
-                <SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}" Color="#FF1A1A1A" />
-                <SolidColorBrush x:Key="{x:Static SystemColors.WindowTextBrushKey}" Color="#FFE2E2E9" />
-                <SolidColorBrush x:Key="{x:Static SystemColors.ControlTextBrushKey}" Color="#FFE2E2E9" />
-                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="#FF252547" />
-                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="#FFE2E2E9" />
-            </Style.Resources>
-            <Setter Property="Background" Value="#FF1A1A1A" />
+            <Setter Property="Background" Value="{DynamicResource InputBackgroundBrush}" />
             <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" />
             <Setter Property="BorderThickness" Value="1" />
             <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}" />
@@ -139,7 +123,7 @@
                                          VerticalContentAlignment="Center"
                                          Visibility="Hidden" />
 
-                                <Border Grid.Column="1" Background="#FF252547" CornerRadius="0,4,4,0" IsHitTestVisible="False">
+                                <Border Grid.Column="1" Background="{DynamicResource SidebarItemSelectedBrush}" CornerRadius="0,4,4,0" IsHitTestVisible="False">
                                     <TextBlock Text="&#xE70D;" FontFamily="Segoe MDL2 Assets"
                                                Foreground="{TemplateBinding Foreground}"
                                                HorizontalAlignment="Center" VerticalAlignment="Center"
@@ -170,7 +154,7 @@
                                    PopupAnimation="Slide">
                                 <Border x:Name="DropDownBorder"
                                         Margin="0,2,0,0"
-                                        Background="#FF1A1A1A"
+                                        Background="{DynamicResource InputBackgroundBrush}"
                                         BorderBrush="{TemplateBinding BorderBrush}"
                                         BorderThickness="1"
                                         CornerRadius="6"
@@ -216,7 +200,7 @@
         </Style>
 
         <Style x:Key="SettingsListBox" TargetType="ListBox">
-            <Setter Property="Background" Value="#FF1A1A1A" />
+            <Setter Property="Background" Value="{DynamicResource InputBackgroundBrush}" />
             <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" />
             <Setter Property="BorderThickness" Value="1" />
             <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}" />
@@ -229,10 +213,10 @@
             <Setter Property="Padding" Value="6,4" />
             <Style.Triggers>
                 <Trigger Property="IsSelected" Value="True">
-                    <Setter Property="Background" Value="#FF252547" />
+                    <Setter Property="Background" Value="{DynamicResource SidebarItemSelectedBrush}" />
                 </Trigger>
                 <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="#331A1A2E" />
+                    <Setter Property="Background" Value="{DynamicResource SidebarItemHoverBrush}" />
                 </Trigger>
             </Style.Triggers>
         </Style>
@@ -345,7 +329,7 @@
                             <TextBlock Text="{DynamicResource Settings_Language}" Style="{StaticResource SectionLabel}" />
                             <ComboBox x:Name="LanguageCombo" Grid.Column="1"
                                       Style="{StaticResource SettingsCombo}"
-                                      Background="#FF1A1A1A" Foreground="{DynamicResource ForegroundBrush}"
+                                      Background="{DynamicResource InputBackgroundBrush}" Foreground="{DynamicResource ForegroundBrush}"
                                       Width="200" HorizontalAlignment="Left"
                                       SelectionChanged="LanguageCombo_SelectionChanged" />
                         </Grid>
@@ -359,7 +343,7 @@
                             <TextBlock Text="{DynamicResource Settings_FontFamily}" Style="{StaticResource SectionLabel}" />
                             <ComboBox x:Name="FontFamilyCombo" Grid.Column="1"
                                       Style="{StaticResource SettingsCombo}"
-                                      Background="#FF1A1A1A" Foreground="{DynamicResource ForegroundBrush}"
+                                      Background="{DynamicResource InputBackgroundBrush}" Foreground="{DynamicResource ForegroundBrush}"
                                       Width="320" HorizontalAlignment="Left"
                                       IsTextSearchEnabled="True" />
                         </Grid>
@@ -390,7 +374,7 @@
                             <TextBlock Text="{DynamicResource Settings_Theme}" Style="{StaticResource SectionLabel}" />
                             <StackPanel Grid.Column="1" Orientation="Horizontal">
                                 <ComboBox x:Name="ThemeCombo" Style="{StaticResource SettingsCombo}"
-                                          Background="#FF1A1A1A" Foreground="{DynamicResource ForegroundBrush}"
+                                          Background="{DynamicResource InputBackgroundBrush}" Foreground="{DynamicResource ForegroundBrush}"
                                           Width="200" SelectionChanged="ThemeCombo_SelectionChanged" />
                                 <Border x:Name="ThemePreview" Width="60" Height="30" Margin="12,0,0,0"
                                         CornerRadius="4" BorderThickness="1"
@@ -428,7 +412,7 @@
                             <TextBlock Text="{DynamicResource Settings_CursorStyle}" Style="{StaticResource SectionLabel}" />
                             <ComboBox x:Name="CursorStyleCombo" Grid.Column="1"
                                       Style="{StaticResource SettingsCombo}"
-                                      Background="#FF1A1A1A" Foreground="{DynamicResource ForegroundBrush}"
+                                      Background="{DynamicResource InputBackgroundBrush}" Foreground="{DynamicResource ForegroundBrush}"
                                       Width="140" HorizontalAlignment="Left" />
                         </Grid>
 
@@ -453,7 +437,7 @@
                             <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
                                 <TextBlock x:Name="SystemThemeText" Text="Dark" FontSize="13"
                                            Foreground="{DynamicResource ForegroundBrush}" />
-                                <TextBlock Text="{DynamicResource Settings_Detected}" FontSize="12" Foreground="#FF6B7280" />
+                                <TextBlock Text="{DynamicResource Settings_Detected}" FontSize="12" Foreground="{DynamicResource ForegroundDimBrush}" />
                             </StackPanel>
                         </Grid>
                     </StackPanel>
@@ -472,7 +456,7 @@
                             <TextBlock Text="{DynamicResource Settings_ColorPreset}" Style="{StaticResource SectionLabel}" />
                             <ComboBox x:Name="TerminalThemePresetCombo" Grid.Column="1"
                                       Style="{StaticResource SettingsCombo}"
-                                      Background="#FF1A1A1A" Foreground="{DynamicResource ForegroundBrush}"
+                                      Background="{DynamicResource InputBackgroundBrush}" Foreground="{DynamicResource ForegroundBrush}"
                                       Width="240" HorizontalAlignment="Left"
                                       SelectionChanged="TerminalThemePresetCombo_SelectionChanged" />
                         </Grid>
@@ -567,7 +551,7 @@
                             <TextBlock Text="{DynamicResource Settings_DefaultShell}" Style="{StaticResource SectionLabel}" />
                             <ComboBox x:Name="ShellCombo" Grid.Column="1"
                                       Style="{StaticResource SettingsCombo}"
-                                      Background="#FF1A1A1A" Foreground="{DynamicResource ForegroundBrush}" />
+                                      Background="{DynamicResource InputBackgroundBrush}" Foreground="{DynamicResource ForegroundBrush}" />
                         </Grid>
 
                         <!-- Shell Arguments -->
@@ -747,7 +731,7 @@
                         <TextBlock Text="{DynamicResource Settings_KeyboardShortcuts}" FontSize="18" FontWeight="SemiBold"
                                    Foreground="{DynamicResource ForegroundBrush}" Margin="0,0,0,20" />
 
-                        <Border Background="#FF1A1A1A" CornerRadius="6" Padding="16,12" Margin="0,0,0,6">
+                        <Border Background="{DynamicResource InputBackgroundBrush}" CornerRadius="6" Padding="16,12" Margin="0,0,0,6">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="160" />
@@ -950,7 +934,7 @@
                                  AcceptsReturn="True" VerticalScrollBarVisibility="Auto"
                                  TextWrapping="Wrap" Margin="0,0,0,12" />
 
-                        <Border Background="#FF1A1A1A" CornerRadius="6" Padding="14,12" Margin="0,0,0,10">
+                        <Border Background="{DynamicResource InputBackgroundBrush}" CornerRadius="6" Padding="14,12" Margin="0,0,0,10">
                             <StackPanel>
                                 <TextBlock Text="{DynamicResource Settings_OpenAI}" FontWeight="SemiBold" Foreground="{DynamicResource ForegroundBrush}" Margin="0,0,0,10" />
 
@@ -986,7 +970,7 @@
                             </StackPanel>
                         </Border>
 
-                        <Border Background="#FF1A1A1A" CornerRadius="6" Padding="14,12" Margin="0,0,0,10">
+                        <Border Background="{DynamicResource InputBackgroundBrush}" CornerRadius="6" Padding="14,12" Margin="0,0,0,10">
                             <StackPanel>
                                 <TextBlock Text="{DynamicResource Settings_Anthropic}" FontWeight="SemiBold" Foreground="{DynamicResource ForegroundBrush}" Margin="0,0,0,10" />
 
@@ -1022,7 +1006,7 @@
                             </StackPanel>
                         </Border>
 
-                        <Border Background="#FF1A1A1A" CornerRadius="6" Padding="14,12" Margin="0,0,0,10">
+                        <Border Background="{DynamicResource InputBackgroundBrush}" CornerRadius="6" Padding="14,12" Margin="0,0,0,10">
                             <StackPanel>
                                 <TextBlock Text="{DynamicResource Settings_Tools}" FontWeight="SemiBold" Foreground="{DynamicResource ForegroundBrush}" Margin="0,0,0,10" />
 
@@ -1076,7 +1060,7 @@
                             </StackPanel>
                         </Border>
 
-                        <Border Background="#FF1A1A1A" CornerRadius="6" Padding="14,12" Margin="0,0,0,10">
+                        <Border Background="{DynamicResource InputBackgroundBrush}" CornerRadius="6" Padding="14,12" Margin="0,0,0,10">
                             <StackPanel>
                                 <TextBlock Text="{DynamicResource Settings_PaneSubmit}" FontWeight="SemiBold" Foreground="{DynamicResource ForegroundBrush}" Margin="0,0,0,10" />
 
@@ -1140,7 +1124,7 @@
                             </StackPanel>
                         </Border>
 
-                        <Border Background="#FF1A1A1A" CornerRadius="6" Padding="14,12" Margin="0,0,0,10">
+                        <Border Background="{DynamicResource InputBackgroundBrush}" CornerRadius="6" Padding="14,12" Margin="0,0,0,10">
                             <StackPanel>
                                 <TextBlock Text="{DynamicResource Settings_AgentFiles}" FontWeight="SemiBold" Foreground="{DynamicResource ForegroundBrush}" Margin="0,0,0,10" />
 
@@ -1175,7 +1159,7 @@
                             </StackPanel>
                         </Border>
 
-                        <Border Background="#FF1A1A1A" CornerRadius="6" Padding="14,12" Margin="0,0,0,10">
+                        <Border Background="{DynamicResource InputBackgroundBrush}" CornerRadius="6" Padding="14,12" Margin="0,0,0,10">
                             <StackPanel>
                                 <TextBlock Text="{DynamicResource Settings_ChatPanel}" FontWeight="SemiBold" Foreground="{DynamicResource ForegroundBrush}" Margin="0,0,0,10" />
 
@@ -1200,7 +1184,7 @@
                             </StackPanel>
                         </Border>
 
-                        <Border Background="#FF1A1A1A" CornerRadius="6" Padding="14,12" Margin="0,0,0,10">
+                        <Border Background="{DynamicResource InputBackgroundBrush}" CornerRadius="6" Padding="14,12" Margin="0,0,0,10">
                             <StackPanel>
                                 <TextBlock Text="{DynamicResource Settings_ConversationMemory}" FontWeight="SemiBold" Foreground="{DynamicResource ForegroundBrush}" Margin="0,0,0,10" />
 
@@ -1397,7 +1381,7 @@
                         <TextBlock Text="{DynamicResource Settings_About}" FontSize="18" FontWeight="SemiBold"
                                    Foreground="{DynamicResource ForegroundBrush}" Margin="0,0,0,20" />
 
-                        <Border Background="#FF1A1A1A" CornerRadius="6" Padding="20,16" Margin="0,0,0,12">
+                        <Border Background="{DynamicResource InputBackgroundBrush}" CornerRadius="6" Padding="20,16" Margin="0,0,0,12">
                             <StackPanel>
                                 <TextBlock Text="{DynamicResource Settings_AboutTitle}" FontSize="20" FontWeight="Bold"
                                            Foreground="{DynamicResource ForegroundBrush}" Margin="0,0,0,4" />

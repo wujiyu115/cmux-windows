@@ -124,7 +124,18 @@ public class TerminalControl : FrameworkElement
 
     public TerminalControl()
     {
-        _theme = GhosttyConfigReader.ReadConfig();
+        var settings = SettingsService.Current;
+        var termTheme = TerminalThemes.GetEffective(settings);
+        _theme = new GhosttyTheme
+        {
+            Background = termTheme.Background,
+            Foreground = termTheme.Foreground,
+            Palette = termTheme.Palette,
+            SelectionBackground = termTheme.SelectionBg,
+            CursorColor = termTheme.CursorColor,
+            FontFamily = settings.FontFamily,
+            FontSize = settings.FontSize,
+        };
         _visual = new DrawingVisual();
         AddVisualChild(_visual);
         AddLogicalChild(_visual);
@@ -132,7 +143,6 @@ public class TerminalControl : FrameworkElement
         _fontSize = _theme.FontSize;
         _typeface = new Typeface(new FontFamily(_theme.FontFamily), FontStyles.Normal, FontWeights.Normal, FontStretches.Normal);
 
-        var settings = SettingsService.Current;
         _cursorStyle = settings.CursorStyle;
         _cursorBlink = settings.CursorBlink;
 

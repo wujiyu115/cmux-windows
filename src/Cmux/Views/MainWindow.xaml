@@ -18,20 +18,6 @@
     </WindowChrome.WindowChrome>
 
     <Window.Resources>
-        <SolidColorBrush x:Key="{x:Static SystemColors.MenuBrushKey}" Color="#FF141420" />
-        <SolidColorBrush x:Key="{x:Static SystemColors.MenuTextBrushKey}" Color="#FFE2E2E9" />
-        <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="#FF252547" />
-        <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="#FFE2E2E9" />
-        <SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}" Color="#FF141420" />
-        <SolidColorBrush x:Key="{x:Static SystemColors.WindowBrushKey}" Color="#FF141420" />
-
-        <SolidColorBrush x:Key="{x:Static SystemColors.MenuBarBrushKey}" Color="#FF141420" />
-        <SolidColorBrush x:Key="{x:Static SystemColors.MenuHighlightBrushKey}" Color="#FF252547" />
-        <SolidColorBrush x:Key="{x:Static SystemColors.ControlLightBrushKey}" Color="#FF2A2A3C" />
-        <SolidColorBrush x:Key="{x:Static SystemColors.ControlLightLightBrushKey}" Color="#FF2A2A3C" />
-        <SolidColorBrush x:Key="{x:Static SystemColors.ControlDarkBrushKey}" Color="#FF2A2A3C" />
-        <SolidColorBrush x:Key="{x:Static SystemColors.ControlDarkDarkBrushKey}" Color="#FF2A2A3C" />
-
         <Style x:Key="AppMenuStyle" TargetType="Menu">
             <Setter Property="Background" Value="{DynamicResource SidebarBackgroundBrush}" />
             <Setter Property="BorderBrush" Value="Transparent" />
@@ -60,17 +46,17 @@
                                    Focusable="False"
                                    PopupAnimation="None"
                                    IsOpen="{TemplateBinding IsSubmenuOpen}">
-                                <Border Background="#FF141420" BorderBrush="#FF2A2A3C" BorderThickness="1" Padding="4" SnapsToDevicePixels="True">
+                                <Border Background="{DynamicResource SurfaceBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Padding="4" SnapsToDevicePixels="True">
                                     <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Cycle" />
                                 </Border>
                             </Popup>
                         </Grid>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsHighlighted" Value="True">
-                                <Setter TargetName="TopItemBg" Property="Background" Value="#FF1A1A2E" />
+                                <Setter TargetName="TopItemBg" Property="Background" Value="{DynamicResource SidebarItemHoverBrush}" />
                             </Trigger>
                             <Trigger Property="IsSubmenuOpen" Value="True">
-                                <Setter TargetName="TopItemBg" Property="Background" Value="#FF1A1A2E" />
+                                <Setter TargetName="TopItemBg" Property="Background" Value="{DynamicResource SidebarItemHoverBrush}" />
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -100,7 +86,7 @@
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsHighlighted" Value="True">
-                                <Setter TargetName="SubItemBg" Property="Background" Value="#FF252547" />
+                                <Setter TargetName="SubItemBg" Property="Background" Value="{DynamicResource SidebarItemSelectedBrush}" />
                             </Trigger>
                             <Trigger Property="IsEnabled" Value="False">
                                 <Setter Property="Foreground" Value="{DynamicResource ForegroundDimBrush}" />
@@ -116,7 +102,7 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Separator">
-                        <Border Height="1" Margin="6,4" Background="#FF2A2A3C" />
+                        <Border Height="1" Margin="6,4" Background="{DynamicResource BorderBrush}" />
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
@@ -267,7 +253,7 @@
                                 <TextBox x:Name="WorkspaceFilterBox"
                                          Grid.Row="1" Grid.ColumnSpan="2"
                                          Margin="0,8,0,0" Padding="8,5"
-                                         Background="#FF141420" Foreground="{DynamicResource ForegroundBrush}"
+                                         Background="{DynamicResource SurfaceBrush}" Foreground="{DynamicResource ForegroundBrush}"
                                          BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1"
                                          CaretBrush="{DynamicResource ForegroundBrush}" SelectionBrush="{DynamicResource AccentBrush}"
                                          ToolTip="{DynamicResource Sidebar_FilterTooltip}"
@@ -302,10 +288,7 @@
                                                                RadiusX="1.5" RadiusY="1.5" Opacity="0"
                                                                Margin="0,4">
                                                         <Rectangle.Fill>
-                                                            <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
-                                                                <GradientStop Color="#FF6366F1" Offset="0" />
-                                                                <GradientStop Color="#FFA78BFA" Offset="1" />
-                                                            </LinearGradientBrush>
+                                                            <SolidColorBrush Color="{DynamicResource AccentColor}" />
                                                         </Rectangle.Fill>
                                                     </Rectangle>
                                                     <Border x:Name="border" Background="{TemplateBinding Background}"
@@ -361,10 +344,7 @@
                                                 Padding="6,2" HorizontalAlignment="Right"
                                                 Visibility="{Binding TotalUnreadCount, Converter={StaticResource IntToVisibility}}">
                                             <Border.Background>
-                                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
-                                                    <GradientStop Color="#FF6366F1" Offset="0" />
-                                                    <GradientStop Color="#FFA78BFA" Offset="1" />
-                                                </LinearGradientBrush>
+                                                <SolidColorBrush Color="{DynamicResource AccentColor}" />
                                             </Border.Background>
                                             <TextBlock Text="{Binding TotalUnreadCount}" FontSize="10"
                                                        Foreground="White" FontWeight="SemiBold" />
@@ -508,7 +488,7 @@
                                         VerticalAlignment="Center" Background="Transparent">
                                     <StackPanel Orientation="Horizontal">
                                         <Ellipse x:Name="DaemonStatusDot" Width="6" Height="6"
-                                                 Fill="#FF6B7280" Margin="0,0,4,0" VerticalAlignment="Center" />
+                                                 Fill="{DynamicResource ForegroundDimBrush}" Margin="0,0,4,0" VerticalAlignment="Center" />
                                         <TextBlock x:Name="DaemonStatusText" Text="{DynamicResource Status_Daemon}" FontSize="10"
                                                    Foreground="{DynamicResource ForegroundDimBrush}" VerticalAlignment="Center" />
                                     </StackPanel>
@@ -615,7 +595,7 @@
                                      ScrollViewer.HorizontalScrollBarVisibility="Disabled">
                                 <ListBox.ItemTemplate>
                                     <DataTemplate>
-                                        <Border Padding="8,6" Margin="4,3" CornerRadius="6" Background="#221A1A2E"
+                                        <Border Padding="8,6" Margin="4,3" CornerRadius="6" Background="{DynamicResource SidebarItemHoverBrush}"
                                                 HorizontalAlignment="Stretch">
                                             <StackPanel>
                                                 <TextBlock Text="{Binding Header}" Foreground="{DynamicResource ForegroundDimBrush}" FontSize="10" />

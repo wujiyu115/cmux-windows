@@ -59,11 +59,7 @@
                                        Height="2" VerticalAlignment="Bottom" Margin="0,0,0,-4"
                                        RadiusX="1" RadiusY="1" Opacity="0">
                                 <Rectangle.Fill>
-                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
-                                        <GradientStop Color="#FF6366F1" Offset="0" />
-                                        <GradientStop Color="#FF818CF8" Offset="0.5" />
-                                        <GradientStop Color="#FFA78BFA" Offset="1" />
-                                    </LinearGradientBrush>
+                                    <SolidColorBrush Color="{DynamicResource AccentColor}" />
                                 </Rectangle.Fill>
                             </Rectangle>
                         </Grid>
@@ -99,7 +95,7 @@
                                     <Storyboard>
                                         <ColorAnimation Storyboard.TargetName="tabBg"
                                                         Storyboard.TargetProperty="Color"
-                                                        To="#FF1A1A2E" Duration="0:0:0.15" />
+                                                        To="#15FFFFFF" Duration="0:0:0.15" />
                                     </Storyboard>
                                 </BeginStoryboard>
                             </MultiDataTrigger.EnterActions>

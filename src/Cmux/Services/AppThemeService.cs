@@ -138,6 +138,23 @@ public static class AppThemeService
         glowEffect.Freeze();
         dict["GlowEffect"] = glowEffect;
 
+        // SystemColors overrides for native WPF controls (Menu, ComboBox, ListBox)
+        void AddSysBrush(ResourceKey key, Color c) { var b = new SolidColorBrush(c); b.Freeze(); dict[key] = b; }
+        AddSysBrush(SystemColors.MenuBrushKey, surface);
+        AddSysBrush(SystemColors.MenuTextBrushKey, fg);
+        AddSysBrush(SystemColors.HighlightBrushKey, selectedBg);
+        AddSysBrush(SystemColors.HighlightTextBrushKey, fg);
+        AddSysBrush(SystemColors.ControlBrushKey, surface);
+        AddSysBrush(SystemColors.WindowBrushKey, surface);
+        AddSysBrush(SystemColors.MenuBarBrushKey, surface);
+        AddSysBrush(SystemColors.MenuHighlightBrushKey, selectedBg);
+        AddSysBrush(SystemColors.ControlLightBrushKey, border);
+        AddSysBrush(SystemColors.ControlLightLightBrushKey, border);
+        AddSysBrush(SystemColors.ControlDarkBrushKey, border);
+        AddSysBrush(SystemColors.ControlDarkDarkBrushKey, border);
+        AddSysBrush(SystemColors.WindowTextBrushKey, fg);
+        AddSysBrush(SystemColors.ControlTextBrushKey, fg);
+
         return dict;
     }
 

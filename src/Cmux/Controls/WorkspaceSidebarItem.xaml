@@ -163,10 +163,7 @@
                 HorizontalAlignment="Left"
                 Visibility="{Binding AgentLabel, Converter={StaticResource NullToCollapsed}}">
             <Border.Background>
-                <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
-                    <GradientStop Color="#FF6C5CE7" Offset="0" />
-                    <GradientStop Color="#FFA855F7" Offset="1" />
-                </LinearGradientBrush>
+                <SolidColorBrush Color="{DynamicResource AccentColor}" />
             </Border.Background>
             <StackPanel Orientation="Horizontal">
                 <TextBlock Text="{Binding AgentIcon}" FontFamily="Segoe MDL2 Assets"
