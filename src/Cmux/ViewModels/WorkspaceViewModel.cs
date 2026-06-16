@@ -48,6 +48,9 @@ public partial class WorkspaceViewModel : ObservableObject, IDisposable
     private bool _hasNotification;
 
     [ObservableProperty]
+    private bool _isGitDirty;
+
+    [ObservableProperty]
     private AgentType _detectedAgent;
 
     public string AgentLabel => AgentDetector.GetLabel(DetectedAgent);
@@ -170,6 +173,8 @@ public partial class WorkspaceViewModel : ObservableObject, IDisposable
                     GitBranch = branch;
                     Workspace.GitBranch = branch;
                 }
+
+                IsGitDirty = GitService.IsDirty(dir);
             }
 
             // AI agent detection

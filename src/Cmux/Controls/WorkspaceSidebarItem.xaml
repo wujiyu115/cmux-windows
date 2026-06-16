@@ -182,7 +182,12 @@
                        VerticalAlignment="Center" />
             <TextBlock Text="{Binding GitBranch}"
                        Foreground="{DynamicResource AccentBrush}"
-                       FontSize="11" TextTrimming="CharacterEllipsis" />
+                       FontSize="11" TextTrimming="CharacterEllipsis"
+                       VerticalAlignment="Center" />
+            <Ellipse Width="6" Height="6" Margin="5,0,0,0"
+                     Fill="{DynamicResource WarningBrush}"
+                     VerticalAlignment="Center"
+                     Visibility="{Binding IsGitDirty, Converter={StaticResource BoolToVisibility}}" />
         </StackPanel>
 
         <!-- Working directory -->

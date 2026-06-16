@@ -82,6 +82,35 @@ public static class GitService
         return null;
     }
 
+    /// <summary>
+    /// Returns true if the working directory has uncommitted changes (dirty state).
+    /// </summary>
+    public static bool IsDirty(string? directory)
+    {
+        if (string.IsNullOrEmpty(directory) || !Directory.Exists(directory))
+            return false;
+        try
+        {
+            var psi = new ProcessStartInfo("git", "status --porcelain")
+            {
+                WorkingDirectory = directory,
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                UseShellExecute = false,
+                CreateNoWindow = true,
+            };
+            using var proc = Process.Start(psi);
+            if (proc == null) return false;
+            var output = proc.StandardOutput.ReadToEnd();
+            proc.WaitForExit(3000);
+            return !string.IsNullOrWhiteSpace(output);
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
     private static string? RunGit(string arguments, string workingDirectory)
     {
         try
