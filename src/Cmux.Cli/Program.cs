@@ -1,3 +1,5 @@
+using System.IO.Pipes;
+using System.Text;
 using System.Text.Json;
 using Cmux.Core.IPC;
 
@@ -40,6 +42,7 @@ public static class Program
                 "surface" => await HandleSurface(args[1..]),
                 "split" => await HandleSplit(args[1..]),
                 "status" => await HandleStatus(),
+                "events" => await HandleEvents(args[1..]),
                 "completion" => HandleCompletion(args[1..]),
                 "help" or "--help" or "-h" => PrintHelp(),
                 "version" or "--version" or "-v" => PrintVersion(),
@@ -162,6 +165,39 @@ public static class Program
         return 0;
     }
 
+    private static async Task<int> HandleEvents(string[] args)
+    {
+        var parsed = ParseArgs(args);
+        var tag = parsed.GetValueOrDefault("tag");
+        var pipeName = !string.IsNullOrEmpty(tag) ? $"cmux-{tag}" : "cmux";
+
+        using var pipe = new NamedPipeClientStream(".", pipeName, PipeDirection.InOut, PipeOptions.Asynchronous);
+
+        try
+        {
+            await pipe.ConnectAsync(3000);
+        }
+        catch
+        {
+            Console.Error.WriteLine("Error: Could not connect to cmux. Is it running?");
+            return 1;
+        }
+
+        var utf8NoBom = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false);
+        using var writer = new StreamWriter(pipe, utf8NoBom, leaveOpen: true) { AutoFlush = true };
+        using var reader = new StreamReader(pipe, utf8NoBom, leaveOpen: true);
+
+        await writer.WriteLineAsync("EVENTS.STREAM");
+
+        string? line;
+        while ((line = await reader.ReadLineAsync()) != null)
+        {
+            Console.WriteLine(line);
+        }
+
+        return 0;
+    }
+
     private static async Task<int> SendAndPrint(string command, Dictionary<string, string>? args = null)
     {
         var response = await NamedPipeClient.SendCommand(command, args);
@@ -260,6 +296,9 @@ public static class Program
                 down                Split horizontally (top/bottom)
 
               status                Show cmux status
+
+              events                Stream real-time events (JSON lines)
+                --tag <name>        Connect to tagged cmux instance
 
               completion            Print shell completion script
                 powershell          PowerShell completion (use: cmux completion powershell | Invoke-Expression)

@@ -34,6 +34,13 @@ public sealed class NamedPipeServer : IDisposable
     /// </summary>
     public Func<string, Dictionary<string, string>, Task<string>>? OnCommand { get; set; }
 
+    /// <summary>
+    /// Invoked when a streaming command (e.g. EVENTS.STREAM) is received.
+    /// The callback receives a line-writing action and a cancellation token;
+    /// it should write JSON lines until the token fires or the pipe breaks.
+    /// </summary>
+    public Func<Action<string>, CancellationToken, Task>? OnStreamCommand { get; set; }
+
     public NamedPipeServer(string? tag = null)
     {
         _pipeName = string.IsNullOrEmpty(tag) ? "cmux" : $"cmux-{tag}";
@@ -123,7 +130,21 @@ public sealed class NamedPipeServer : IDisposable
                     response = JsonSerializer.Serialize(new { error = "No handler registered" });
                 }
 
-                await writer.WriteLineAsync(response);
+                // If the handler returns the stream marker, enter streaming mode
+                if (response == "<<STREAM>>" && OnStreamCommand != null)
+                {
+                    using var streamCts = CancellationTokenSource.CreateLinkedTokenSource(ct);
+                    void WriteLine(string line)
+                    {
+                        try { writer.WriteLine(line); }
+                        catch { streamCts.Cancel(); }
+                    }
+                    await OnStreamCommand(WriteLine, streamCts.Token);
+                }
+                else
+                {
+                    await writer.WriteLineAsync(response);
+                }
             }
         }
         catch (IOException)

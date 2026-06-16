@@ -48,6 +48,8 @@ public partial class MainViewModel : ObservableObject
 
     public NotificationService NotificationService => _notificationService;
 
+    public EventBus EventBus { get; } = new();
+
     public MainViewModel()
     {
         _notificationService = App.NotificationService;
@@ -56,11 +58,16 @@ public partial class MainViewModel : ObservableObject
             TotalUnreadCount = _notificationService.UnreadCount;
             UpdateWorkspaceNotificationCounts();
         };
+        _notificationService.NotificationAdded += n =>
+        {
+            EventBus.Publish("notification.added", new { title = n.Title, body = n.Body });
+        };
 
         // Wire up the named pipe command handler
         if (App.PipeServer != null)
         {
             App.PipeServer.OnCommand = HandlePipeCommand;
+            App.PipeServer.OnStreamCommand = HandleEventStream;
         }
 
         // Restore session or create default workspace
@@ -86,6 +93,7 @@ public partial class MainViewModel : ObservableObject
         var vm = new WorkspaceViewModel(workspace, _notificationService);
         Workspaces.Add(vm);
         SelectedWorkspace = vm;
+        EventBus.Publish("workspace.created", new { id = workspace.Id, name = workspace.Name });
     }
 
     public void DuplicateWorkspace(WorkspaceViewModel source)
@@ -174,10 +182,13 @@ public partial class MainViewModel : ObservableObject
         if (workspace == null) return;
         if (Workspaces.Count <= 1) return; // Keep at least one
 
+        var closedId = workspace.Workspace.Id;
+        var closedName = workspace.Name;
         int index = Workspaces.IndexOf(workspace);
         workspace.CaptureAllSurfaceTranscripts("workspace-close");
         workspace.Dispose();
         Workspaces.Remove(workspace);
+        EventBus.Publish("workspace.closed", new { id = closedId, name = closedName });
 
         if (SelectedWorkspace == workspace)
         {
@@ -237,6 +248,14 @@ public partial class MainViewModel : ObservableObject
         }
 
         OnPropertyChanged(nameof(IsSidebarExpanded));
+    }
+
+    partial void OnSelectedWorkspaceChanged(WorkspaceViewModel? value)
+    {
+        if (value != null)
+        {
+            EventBus.Publish("workspace.selected", new { id = value.Workspace.Id, name = value.Name });
+        }
     }
 
     [RelayCommand]
@@ -436,9 +455,31 @@ public partial class MainViewModel : ObservableObject
                 "PANE.WRITE" => HandlePaneWrite(args),
                 "PANE.READ" => HandlePaneRead(args),
                 "STATUS" => HandleStatus(),
+                "EVENTS.STREAM" => "<<STREAM>>",
                 _ => JsonSerializer.Serialize(new { error = $"Unknown command: {command}" }),
             };
         });
+    }
+
+    private async Task HandleEventStream(Action<string> writeLine, CancellationToken ct)
+    {
+        var tcs = new TaskCompletionSource();
+        using var reg = ct.Register(() => tcs.TrySetResult());
+
+        var subId = EventBus.Subscribe(evt =>
+        {
+            try { writeLine(evt.ToJson()); }
+            catch { tcs.TrySetResult(); }
+        });
+
+        try
+        {
+            await tcs.Task;
+        }
+        finally
+        {
+            EventBus.Unsubscribe(subId);
+        }
     }
 
     private string HandleNotifyCommand(Dictionary<string, string> args)
