@@ -365,30 +365,53 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="MenuItem">
-                    <Border x:Name="border" Background="{TemplateBinding Background}"
-                            CornerRadius="4" Padding="{TemplateBinding Padding}" Margin="2,1">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="20" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" Text="{TemplateBinding Icon}" FontFamily="Segoe MDL2 Assets"
-                                       FontSize="12" Foreground="{StaticResource ForegroundDimBrush}"
-                                       VerticalAlignment="Center" />
-                            <ContentPresenter Grid.Column="1" ContentSource="Header" VerticalAlignment="Center"
-                                              RecognizesAccessKey="True" />
-                            <TextBlock Grid.Column="2" Text="{TemplateBinding InputGestureText}"
-                                       Foreground="{StaticResource ForegroundDimBrush}" FontSize="11"
-                                       VerticalAlignment="Center" Margin="16,0,0,0" />
-                        </Grid>
-                    </Border>
+                    <Grid>
+                        <Border x:Name="border" Background="{TemplateBinding Background}"
+                                CornerRadius="4" Padding="{TemplateBinding Padding}" Margin="2,1">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="20" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="{TemplateBinding Icon}" FontFamily="Segoe MDL2 Assets"
+                                           FontSize="12" Foreground="{StaticResource ForegroundDimBrush}"
+                                           VerticalAlignment="Center" />
+                                <ContentPresenter Grid.Column="1" ContentSource="Header" VerticalAlignment="Center"
+                                                  RecognizesAccessKey="True" />
+                                <TextBlock x:Name="gestureText" Grid.Column="2" Text="{TemplateBinding InputGestureText}"
+                                           Foreground="{StaticResource ForegroundDimBrush}" FontSize="11"
+                                           VerticalAlignment="Center" Margin="16,0,0,0" />
+                                <TextBlock x:Name="submenuArrow" Grid.Column="2" Text="&#xE76C;"
+                                           FontFamily="Segoe MDL2 Assets" FontSize="10"
+                                           Foreground="{StaticResource ForegroundDimBrush}"
+                                           VerticalAlignment="Center" Margin="16,0,0,0"
+                                           Visibility="Collapsed" />
+                            </Grid>
+                        </Border>
+                        <Popup x:Name="PART_Popup" IsOpen="{Binding IsSubmenuOpen, RelativeSource={RelativeSource TemplatedParent}}"
+                               Placement="Right" AllowsTransparency="True" Focusable="False"
+                               PopupAnimation="Fade" HorizontalOffset="-2">
+                            <Border Background="{StaticResource SidebarBrush}"
+                                    BorderBrush="{StaticResource BorderBrush}" BorderThickness="1"
+                                    CornerRadius="8" Padding="2">
+                                <Border.Effect>
+                                    <DropShadowEffect BlurRadius="20" ShadowDepth="4" Color="#000000" Opacity="0.5" Direction="270" />
+                                </Border.Effect>
+                                <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Cycle" />
+                            </Border>
+                        </Popup>
+                    </Grid>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsHighlighted" Value="True">
                             <Setter TargetName="border" Property="Background" Value="#FF1A1A2E" />
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="False">
                             <Setter Property="Opacity" Value="0.4" />
+                        </Trigger>
+                        <Trigger Property="HasItems" Value="True">
+                            <Setter TargetName="submenuArrow" Property="Visibility" Value="Visible" />
+                            <Setter TargetName="gestureText" Property="Visibility" Value="Collapsed" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
