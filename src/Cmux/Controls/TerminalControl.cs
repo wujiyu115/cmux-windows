@@ -420,16 +420,20 @@ public class TerminalControl : FrameworkElement
             // Visual bell flash
             if (DateTime.UtcNow < _bellFlashUntil)
             {
-                dc.DrawRectangle(GetCachedBrush(Color.FromArgb(25, 255, 255, 255)), null,
+                var fgColor = ToWpfColor(_theme.Foreground);
+                dc.DrawRectangle(GetCachedBrush(Color.FromArgb(25, fgColor.R, fgColor.G, fgColor.B)), null,
                     new Rect(0, 0, ActualWidth, ActualHeight));
             }
 
             // Attention flash (notification jump)
+            var accentColor = _theme.CursorColor.HasValue
+                ? ToWpfColor(_theme.CursorColor.Value)
+                : ToWpfColor(_theme.Foreground);
             if (DateTime.UtcNow < _attentionFlashUntil)
             {
-                dc.DrawRectangle(GetCachedBrush(Color.FromArgb(38, 0x1F, 0xA0, 0xFF)), null,
+                dc.DrawRectangle(GetCachedBrush(Color.FromArgb(38, accentColor.R, accentColor.G, accentColor.B)), null,
                     new Rect(0, 0, ActualWidth, ActualHeight));
-                var attentionPen = new Pen(GetCachedBrush(Color.FromArgb(230, 0x1F, 0xA0, 0xFF)), 3);
+                var attentionPen = new Pen(GetCachedBrush(Color.FromArgb(230, accentColor.R, accentColor.G, accentColor.B)), 3);
                 attentionPen.Freeze();
                 dc.DrawRoundedRectangle(null, attentionPen, new Rect(2, 2, ActualWidth - 4, ActualHeight - 4), 6, 6);
             }
@@ -437,7 +441,7 @@ public class TerminalControl : FrameworkElement
             // Notification ring
             if (HasNotification)
             {
-                var notifPen = new Pen(GetCachedBrush(Color.FromArgb(180, 0x63, 0x66, 0xF1)), 2);
+                var notifPen = new Pen(GetCachedBrush(Color.FromArgb(180, accentColor.R, accentColor.G, accentColor.B)), 2);
                 notifPen.Freeze();
                 dc.DrawRoundedRectangle(null, notifPen, new Rect(1, 1, ActualWidth - 2, ActualHeight - 2), 4, 4);
             }
@@ -445,7 +449,7 @@ public class TerminalControl : FrameworkElement
             // Focused pane indicator
             if (IsPaneFocused)
             {
-                var focusPen = new Pen(GetCachedBrush(Color.FromArgb(50, 0x81, 0x8C, 0xF8)), 1);
+                var focusPen = new Pen(GetCachedBrush(Color.FromArgb(50, accentColor.R, accentColor.G, accentColor.B)), 1);
                 focusPen.Freeze();
                 dc.DrawRectangle(null, focusPen, new Rect(0, 0, ActualWidth, ActualHeight));
             }
@@ -544,7 +548,7 @@ public class TerminalControl : FrameworkElement
                     // URL hover highlight
                     if (_hoveredUrl is { } url && visRow == url.row && c >= url.startCol && c <= url.endCol)
                     {
-                        var urlPen = new Pen(GetCachedBrush(Color.FromRgb(0x81, 0x8C, 0xF8)), 1);
+                        var urlPen = new Pen(GetCachedBrush(Color.FromArgb(200, accentColor.R, accentColor.G, accentColor.B)), 1);
                         urlPen.Freeze();
                         dc.DrawLine(urlPen, new Point(x, y + _cellHeight - 1), new Point(x + cellPixelWidth, y + _cellHeight - 1));
                     }
@@ -634,13 +638,13 @@ public class TerminalControl : FrameworkElement
                     FlowDirection.LeftToRight,
                     _typeface,
                     10,
-                    GetCachedBrush(Color.FromArgb(160, 0x81, 0x8C, 0xF8)),
+                    GetCachedBrush(Color.FromArgb(160, accentColor.R, accentColor.G, accentColor.B)),
                     dpi);
                 double iw = indicatorText.WidthIncludingTrailingWhitespace + 12;
                 double ih = indicatorText.Height + 4;
                 double ix = ActualWidth - iw - 8;
                 dc.DrawRoundedRectangle(
-                    GetCachedBrush(Color.FromArgb(200, 0x14, 0x14, 0x14)), null,
+                    GetCachedBrush(Color.FromArgb(200, bgColor.R, bgColor.G, bgColor.B)), null,
                     new Rect(ix, 6, iw, ih), 4, 4);
                 dc.DrawText(indicatorText, new Point(ix + 6, 8));
             }
@@ -1533,22 +1537,27 @@ public class TerminalControl : FrameworkElement
             return;
         }
 
+        var surfaceBrush = Application.Current.FindResource("SurfaceBrush") as Brush ?? Brushes.Transparent;
+        var borderBrush = Application.Current.FindResource("BorderBrush") as Brush ?? Brushes.Gray;
+        var fgBrush = Application.Current.FindResource("ForegroundBrush") as Brush ?? Brushes.White;
+        var dividerBrush = Application.Current.FindResource("DividerBrush") as Brush ?? Brushes.Gray;
+
         var menu = new ContextMenu
         {
-            Background = new SolidColorBrush(Color.FromRgb(0x14, 0x14, 0x20)),
-            BorderBrush = new SolidColorBrush(Color.FromRgb(0x2A, 0x2A, 0x3C)),
+            Background = surfaceBrush,
+            BorderBrush = borderBrush,
             BorderThickness = new Thickness(1),
             Padding = new Thickness(4),
         };
 
         var menuItemStyle = new Style(typeof(MenuItem));
-        menuItemStyle.Setters.Add(new Setter(Control.ForegroundProperty, new SolidColorBrush(Color.FromRgb(0xE2, 0xE2, 0xE9))));
+        menuItemStyle.Setters.Add(new Setter(Control.ForegroundProperty, fgBrush));
         menuItemStyle.Setters.Add(new Setter(Control.BackgroundProperty, Brushes.Transparent));
         menuItemStyle.Setters.Add(new Setter(Control.PaddingProperty, new Thickness(8, 5, 8, 5)));
         menuItemStyle.Setters.Add(new Setter(Control.FontSizeProperty, 12.0));
 
         var separatorStyle = new Style(typeof(Separator));
-        separatorStyle.Setters.Add(new Setter(Control.BackgroundProperty, new SolidColorBrush(Color.FromRgb(0x2A, 0x2A, 0x3C))));
+        separatorStyle.Setters.Add(new Setter(Control.BackgroundProperty, dividerBrush));
         separatorStyle.Setters.Add(new Setter(FrameworkElement.MarginProperty, new Thickness(4, 2, 4, 2)));
 
         menu.Resources.Add(typeof(MenuItem), menuItemStyle);
@@ -1618,7 +1627,7 @@ public class TerminalControl : FrameworkElement
         // Close Pane
         var closePane = new MenuItem { Header = LanguageService.Lang("Terminal_ClosePane") };
         closePane.Icon = MakeIcon("\uE711");
-        closePane.Foreground = new SolidColorBrush(Color.FromRgb(0xEF, 0x44, 0x44));
+        closePane.Foreground = Application.Current.FindResource("ErrorBrush") as Brush ?? Brushes.Red;
         closePane.Click += (_, _) => ClosePaneRequested?.Invoke();
         menu.Items.Add(closePane);
 

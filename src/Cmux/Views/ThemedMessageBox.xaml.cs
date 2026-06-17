@@ -32,19 +32,19 @@ public partial class ThemedMessageBox : Window
         {
             case MessageBoxImage.Information:
                 dlg.IconText.Text = "";
-                dlg.IconText.Foreground = new SolidColorBrush(Color.FromRgb(0x63, 0x66, 0xF1));
+                dlg.IconText.Foreground = (Application.Current?.FindResource("AccentBrush") as Brush ?? Brushes.DodgerBlue);
                 break;
             case MessageBoxImage.Warning:
                 dlg.IconText.Text = "";
-                dlg.IconText.Foreground = new SolidColorBrush(Color.FromRgb(0xFB, 0xBF, 0x24));
+                dlg.IconText.Foreground = (Application.Current?.FindResource("WarningBrush") as Brush ?? Brushes.Orange);
                 break;
             case MessageBoxImage.Error:
                 dlg.IconText.Text = "";
-                dlg.IconText.Foreground = new SolidColorBrush(Color.FromRgb(0xEF, 0x44, 0x44));
+                dlg.IconText.Foreground = (Application.Current?.FindResource("ErrorBrush") as Brush ?? Brushes.Red);
                 break;
             case MessageBoxImage.Question:
                 dlg.IconText.Text = "";
-                dlg.IconText.Foreground = new SolidColorBrush(Color.FromRgb(0x63, 0x66, 0xF1));
+                dlg.IconText.Foreground = (Application.Current?.FindResource("AccentBrush") as Brush ?? Brushes.DodgerBlue);
                 break;
             default:
                 dlg.IconText.Visibility = Visibility.Collapsed;

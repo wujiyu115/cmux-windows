@@ -178,8 +178,8 @@ public partial class MainWindow : Window
     {
         var connected = App.DaemonClient.IsConnected;
         DaemonStatusDot.Fill = connected
-            ? new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(0x34, 0xD3, 0x99)) // green
-            : new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(0x6B, 0x72, 0x80)); // gray
+            ? (Application.Current?.FindResource("SuccessBrush") as System.Windows.Media.Brush ?? System.Windows.Media.Brushes.Green)
+            : (Application.Current?.FindResource("ForegroundDimBrush") as System.Windows.Media.Brush ?? System.Windows.Media.Brushes.Gray);
         DaemonStatusText.Text = connected ? LanguageService.Lang("Status_Daemon") : LanguageService.Lang("Status_Local");
         DaemonStatusBorder.ToolTip = connected
             ? LanguageService.Lang("Status_DaemonConnected")

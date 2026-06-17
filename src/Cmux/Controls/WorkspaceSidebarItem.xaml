@@ -52,7 +52,7 @@
                     </MenuItem>
                     <MenuItem Header="{DynamicResource Workspace_AccentRed}" Click="SetColor_Click" Tag="#FFEF4444">
                         <MenuItem.Icon>
-                            <TextBlock Text="●" Foreground="#FFEF4444" />
+                            <TextBlock Text="●" Foreground="{DynamicResource ErrorBrush}" />
                         </MenuItem.Icon>
                     </MenuItem>
                     <MenuItem Header="{DynamicResource Workspace_AccentCyan}" Click="SetColor_Click" Tag="#FF06B6D4">
@@ -109,10 +109,10 @@
                 </MenuItem>
                 <Separator />
                 <MenuItem Header="{DynamicResource Workspace_CloseWorkspace}" InputGestureText="Ctrl+Shift+W" Click="Close_Click"
-                          Foreground="#FFEF4444">
+                          Foreground="{DynamicResource ErrorBrush}">
                     <MenuItem.Icon>
                         <TextBlock Text="&#xE711;" FontFamily="Segoe MDL2 Assets" FontSize="12"
-                                   Foreground="#FFEF4444" />
+                                   Foreground="{DynamicResource ErrorBrush}" />
                     </MenuItem.Icon>
                 </MenuItem>
             </ContextMenu>
