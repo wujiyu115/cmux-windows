@@ -207,20 +207,30 @@ public partial class SurfaceTabBar : UserControl
 
     private void TabBorder_MouseEnter(object sender, MouseEventArgs e)
     {
-        if (sender is Border border && border.Background is SolidColorBrush)
+        if (sender is Border border && border.Background is SolidColorBrush brush)
         {
+            if (brush.IsFrozen)
+            {
+                brush = brush.Clone();
+                border.Background = brush;
+            }
             var color = TryFindResource("HoverOverlayColor") as Color? ?? Colors.Transparent;
             var anim = new ColorAnimation(color, new Duration(TimeSpan.FromSeconds(0.15)));
-            ((SolidColorBrush)border.Background).BeginAnimation(SolidColorBrush.ColorProperty, anim);
+            brush.BeginAnimation(SolidColorBrush.ColorProperty, anim);
         }
     }
 
     private void TabBorder_MouseLeave(object sender, MouseEventArgs e)
     {
-        if (sender is Border border && border.Background is SolidColorBrush)
+        if (sender is Border border && border.Background is SolidColorBrush brush)
         {
+            if (brush.IsFrozen)
+            {
+                brush = brush.Clone();
+                border.Background = brush;
+            }
             var anim = new ColorAnimation(Colors.Transparent, new Duration(TimeSpan.FromSeconds(0.15)));
-            ((SolidColorBrush)border.Background).BeginAnimation(SolidColorBrush.ColorProperty, anim);
+            brush.BeginAnimation(SolidColorBrush.ColorProperty, anim);
         }
     }
 }
