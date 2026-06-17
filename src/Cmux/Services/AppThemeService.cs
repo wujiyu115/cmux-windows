@@ -175,6 +175,8 @@ public static class AppThemeService
 
     private static Color PickAccent(TerminalTheme theme)
     {
+        if (theme.AccentColor.HasValue)
+            return ToColor(theme.AccentColor.Value);
         var cursor = ToColor(theme.CursorColor);
         var fg = ToColor(theme.Foreground);
         if (ColorDistance(cursor, fg) < 30 && theme.Palette.Length > 4)
