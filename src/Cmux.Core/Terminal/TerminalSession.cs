@@ -163,6 +163,24 @@ public sealed class TerminalSession : IDisposable
             ? fallbackDirectory
             : workingDirectory;
 
+        // CreateProcess doesn't support UNC paths as working directory.
+        // For WSL, pass the path via --cd; for others, fall back to user profile.
+        var processCommand = command;
+        var processCwd = effectiveWorkingDirectory;
+        if (processCwd.StartsWith(@"\\"))
+        {
+            DevLogService.Log("Terminal", $"UNC path detected, falling back CWD. original=\"{processCwd}\"");
+            processCwd = fallbackDirectory;
+
+            if (!string.IsNullOrEmpty(processCommand) &&
+                processCommand.Contains("wsl", StringComparison.OrdinalIgnoreCase))
+            {
+                var wslPath = ConvertUncToWslPath(effectiveWorkingDirectory);
+                if (wslPath != null)
+                    processCommand = $"{processCommand} --cd \"{wslPath}\"";
+            }
+        }
+
         WorkingDirectory = effectiveWorkingDirectory;
 
         lock (_lock)
@@ -172,7 +190,7 @@ public sealed class TerminalSession : IDisposable
             DevLogService.LogTiming("Terminal", "PseudoConsole.Create", sw);
 
             sw = DevLogService.StartTiming();
-            _process = new TerminalProcess(_console, command, effectiveWorkingDirectory, environmentVariables);
+            _process = new TerminalProcess(_console, processCommand, processCwd, environmentVariables);
             DevLogService.LogTiming("Terminal", $"TerminalProcess created pid={_process.ProcessId}", sw);
 
             _readStream = new FileStream(_console.ReadPipe, FileAccess.Read);
@@ -705,6 +723,35 @@ public sealed class TerminalSession : IDisposable
                 }
             }
         }
+    }
+
+    /// <summary>
+    /// Converts a WSL UNC path (\\wsl$\distro\path or \\wsl.localhost\distro\path
+    /// or \\hostname\home\...) to a Linux path that wsl.exe --cd understands.
+    /// Returns null if the path can't be converted.
+    /// </summary>
+    private static string? ConvertUncToWslPath(string uncPath)
+    {
+        var normalized = uncPath.Replace('\\', '/').TrimStart('/');
+
+        // \\wsl$\Ubuntu\home\user → /home/user
+        // \\wsl.localhost\Ubuntu\home\user → /home/user
+        if (normalized.StartsWith("wsl$/", StringComparison.OrdinalIgnoreCase) ||
+            normalized.StartsWith("wsl.localhost/", StringComparison.OrdinalIgnoreCase))
+        {
+            var afterPrefix = normalized.IndexOf('/') + 1; // skip "wsl$/" or "wsl.localhost/"
+            var distroEnd = normalized.IndexOf('/', afterPrefix);
+            if (distroEnd >= 0)
+                return normalized[distroEnd..]; // "/home/user/..."
+            return "~";
+        }
+
+        // Generic UNC like \\hostname\home\user\path — assume /home/user/path
+        var parts = normalized.Split('/', StringSplitOptions.RemoveEmptyEntries);
+        if (parts.Length > 1)
+            return "/" + string.Join("/", parts.Skip(1));
+
+        return "~";
     }
 
     public void Dispose()
