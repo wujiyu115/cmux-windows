@@ -54,7 +54,7 @@ public partial class WorkspaceSidebarItem : UserControl
 
         if (value.StartsWith("<svg", StringComparison.OrdinalIgnoreCase))
         {
-            MessageBox.Show(LanguageService.Lang("Workspace_SvgNotSupported"),
+            ThemedMessageBox.Show(LanguageService.Lang("Workspace_SvgNotSupported"),
                 LanguageService.Lang("Workspace_IconTitle"), MessageBoxButton.OK, MessageBoxImage.Information);
             return;
         }

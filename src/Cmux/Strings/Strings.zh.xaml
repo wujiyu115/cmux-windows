@@ -467,6 +467,11 @@
     <system:String x:Key="Settings_SystemThemeLight">Light</system:String>
     <system:String x:Key="Settings_SystemThemeDark">Dark</system:String>
 
+    <!-- Message box buttons -->
+    <system:String x:Key="MsgBox_OK">确定</system:String>
+    <system:String x:Key="MsgBox_Yes">是</system:String>
+    <system:String x:Key="MsgBox_No">否</system:String>
+
     <!-- About dialog -->
     <system:String x:Key="About_Title">关于 cmux</system:String>
     <system:String x:Key="About_Body">cmux for Windows

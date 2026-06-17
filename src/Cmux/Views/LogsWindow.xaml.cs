@@ -277,7 +277,7 @@ public partial class LogsWindow : Window
         var surface = ownerVm?.SelectedWorkspace?.SelectedSurface;
         if (surface?.FocusedPaneId is not string paneId)
         {
-            MessageBox.Show(LanguageService.Lang("Logs_NoPaneAvailable"), LanguageService.Lang("Logs_DialogTitle"), MessageBoxButton.OK, MessageBoxImage.Information);
+            ThemedMessageBox.Show(LanguageService.Lang("Logs_NoPaneAvailable"), LanguageService.Lang("Logs_DialogTitle"), MessageBoxButton.OK, MessageBoxImage.Information);
             return false;
         }
 
@@ -350,7 +350,7 @@ public partial class LogsWindow : Window
         }
         catch
         {
-            MessageBox.Show($"Logs folder: {dir}", LanguageService.Lang("Logs_DialogTitle"), MessageBoxButton.OK, MessageBoxImage.Information);
+            ThemedMessageBox.Show($"Logs folder: {dir}", LanguageService.Lang("Logs_DialogTitle"), MessageBoxButton.OK, MessageBoxImage.Information);
         }
     }
 
@@ -367,7 +367,7 @@ public partial class LogsWindow : Window
         }
         catch
         {
-            MessageBox.Show($"Terminal captures folder: {dir}", LanguageService.Lang("Logs_DialogTitle"), MessageBoxButton.OK, MessageBoxImage.Information);
+            ThemedMessageBox.Show($"Terminal captures folder: {dir}", LanguageService.Lang("Logs_DialogTitle"), MessageBoxButton.OK, MessageBoxImage.Information);
         }
     }
 

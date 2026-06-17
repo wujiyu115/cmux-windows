@@ -6,6 +6,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using Cmux.Core.Models;
 using Cmux.Services;
+using Cmux.Views;
 
 namespace Cmux.Controls;
 
@@ -140,7 +141,7 @@ public partial class SnippetPicker : UserControl
         var content = NewSnippetContent.Text.Trim();
         if (string.IsNullOrWhiteSpace(content))
         {
-            MessageBox.Show(LanguageService.Lang("Snippet_EmptyContent"), LanguageService.Lang("Snippet_Title"), MessageBoxButton.OK, MessageBoxImage.Information);
+            ThemedMessageBox.Show(LanguageService.Lang("Snippet_EmptyContent"), LanguageService.Lang("Snippet_Title"), MessageBoxButton.OK, MessageBoxImage.Information);
             NewSnippetContent.Focus();
             return;
         }
@@ -229,7 +230,7 @@ public partial class SnippetPicker : UserControl
         var snippet = GetSnippetFromSender(sender);
         if (snippet == null) return;
 
-        var result = MessageBox.Show(
+        var result = ThemedMessageBox.Show(
             LanguageService.Lang("Snippet_DeleteConfirm", snippet.Name),
             LanguageService.Lang("Snippet_DeleteTitle"),
             MessageBoxButton.YesNo,

@@ -653,11 +653,12 @@ public partial class MainWindow : Window
     }
     private void MenuAbout_Click(object sender, RoutedEventArgs e)
     {
-        MessageBox.Show(
+        ThemedMessageBox.Show(
             LanguageService.Lang("About_Body"),
             LanguageService.Lang("About_Title"),
             MessageBoxButton.OK,
-            MessageBoxImage.Information);
+            MessageBoxImage.Information,
+            this);
     }
 
     // Toolbar handlers
@@ -1404,7 +1405,7 @@ public partial class MainWindow : Window
         var history = surface.GetCommandHistory(paneId);
         if (history.Count == 0)
         {
-            MessageBox.Show(LanguageService.Lang("History_NoHistory"), LanguageService.Lang("History_DialogTitle"), MessageBoxButton.OK, MessageBoxImage.Information);
+            ThemedMessageBox.Show(LanguageService.Lang("History_NoHistory"), LanguageService.Lang("History_DialogTitle"), MessageBoxButton.OK, MessageBoxImage.Information, this);
             return;
         }
 
@@ -1434,7 +1435,7 @@ public partial class MainWindow : Window
         var history = surface.GetCommandHistory(paneId);
         if (history.Count == 0)
         {
-            MessageBox.Show(LanguageService.Lang("History_NoHistory"), LanguageService.Lang("History_DialogTitle"), MessageBoxButton.OK, MessageBoxImage.Information);
+            ThemedMessageBox.Show(LanguageService.Lang("History_NoHistory"), LanguageService.Lang("History_DialogTitle"), MessageBoxButton.OK, MessageBoxImage.Information, this);
             return;
         }
 

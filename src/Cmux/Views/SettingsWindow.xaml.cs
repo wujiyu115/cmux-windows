@@ -273,13 +273,13 @@ public partial class SettingsWindow : Window
         agent.EnableTargetSubmitProfiles = AgentEnableSubmitProfilesCheck.IsChecked == true;
         if (!TryParseSubmitProfilesJson(AgentSubmitProfilesJsonBox.Text, out var submitProfiles, out var submitProfilesParseError))
         {
-            MessageBox.Show(submitProfilesParseError, LanguageService.Lang("Settings_DialogTitle"), MessageBoxButton.OK, MessageBoxImage.Warning);
+            ThemedMessageBox.Show(submitProfilesParseError, LanguageService.Lang("Settings_DialogTitle"), MessageBoxButton.OK, MessageBoxImage.Warning);
             return false;
         }
 
         if (!ValidateSubmitProfiles(submitProfiles, out var submitProfilesValidationError))
         {
-            MessageBox.Show(submitProfilesValidationError, LanguageService.Lang("Settings_DialogTitle"), MessageBoxButton.OK, MessageBoxImage.Warning);
+            ThemedMessageBox.Show(submitProfilesValidationError, LanguageService.Lang("Settings_DialogTitle"), MessageBoxButton.OK, MessageBoxImage.Warning);
             return false;
         }
 
@@ -310,13 +310,13 @@ public partial class SettingsWindow : Window
         {
             if (!TryParseCustomToolsJson(CustomToolsJsonBox.Text, out var parsedTools, out var parseError))
             {
-                MessageBox.Show(parseError, LanguageService.Lang("Settings_DialogTitle"), MessageBoxButton.OK, MessageBoxImage.Warning);
+                ThemedMessageBox.Show(parseError, LanguageService.Lang("Settings_DialogTitle"), MessageBoxButton.OK, MessageBoxImage.Warning);
                 return false;
             }
 
             if (!ValidateCustomTools(parsedTools, out var validationError))
             {
-                MessageBox.Show(validationError, LanguageService.Lang("Settings_DialogTitle"), MessageBoxButton.OK, MessageBoxImage.Warning);
+                ThemedMessageBox.Show(validationError, LanguageService.Lang("Settings_DialogTitle"), MessageBoxButton.OK, MessageBoxImage.Warning);
                 return false;
             }
 
@@ -329,7 +329,7 @@ public partial class SettingsWindow : Window
         {
             if (!ValidateCustomTools(_customToolsDraft, out var validationError))
             {
-                MessageBox.Show(validationError, LanguageService.Lang("Settings_DialogTitle"), MessageBoxButton.OK, MessageBoxImage.Warning);
+                ThemedMessageBox.Show(validationError, LanguageService.Lang("Settings_DialogTitle"), MessageBoxButton.OK, MessageBoxImage.Warning);
                 return false;
             }
 
@@ -343,13 +343,13 @@ public partial class SettingsWindow : Window
         {
             if (!TryParseMcpServersJson(McpServersJsonBox.Text, out var parsedServers, out var parseError))
             {
-                MessageBox.Show(parseError, LanguageService.Lang("Settings_DialogTitle"), MessageBoxButton.OK, MessageBoxImage.Warning);
+                ThemedMessageBox.Show(parseError, LanguageService.Lang("Settings_DialogTitle"), MessageBoxButton.OK, MessageBoxImage.Warning);
                 return false;
             }
 
             if (!ValidateMcpServers(parsedServers, out var validationError))
             {
-                MessageBox.Show(validationError, LanguageService.Lang("Settings_DialogTitle"), MessageBoxButton.OK, MessageBoxImage.Warning);
+                ThemedMessageBox.Show(validationError, LanguageService.Lang("Settings_DialogTitle"), MessageBoxButton.OK, MessageBoxImage.Warning);
                 return false;
             }
 
@@ -362,7 +362,7 @@ public partial class SettingsWindow : Window
         {
             if (!ValidateMcpServers(_mcpServersDraft, out var validationError))
             {
-                MessageBox.Show(validationError, LanguageService.Lang("Settings_DialogTitle"), MessageBoxButton.OK, MessageBoxImage.Warning);
+                ThemedMessageBox.Show(validationError, LanguageService.Lang("Settings_DialogTitle"), MessageBoxButton.OK, MessageBoxImage.Warning);
                 return false;
             }
 
@@ -558,13 +558,13 @@ public partial class SettingsWindow : Window
 
         if (string.IsNullOrWhiteSpace(draft.Name))
         {
-            MessageBox.Show(LanguageService.Lang("Msg_ToolNameRequired"), LanguageService.Lang("Settings_DialogTitle"), MessageBoxButton.OK, MessageBoxImage.Warning);
+            ThemedMessageBox.Show(LanguageService.Lang("Msg_ToolNameRequired"), LanguageService.Lang("Settings_DialogTitle"), MessageBoxButton.OK, MessageBoxImage.Warning);
             return;
         }
 
         if (string.IsNullOrWhiteSpace(draft.CommandTemplate))
         {
-            MessageBox.Show(LanguageService.Lang("Msg_ToolCommandRequired"), LanguageService.Lang("Settings_DialogTitle"), MessageBoxButton.OK, MessageBoxImage.Warning);
+            ThemedMessageBox.Show(LanguageService.Lang("Msg_ToolCommandRequired"), LanguageService.Lang("Settings_DialogTitle"), MessageBoxButton.OK, MessageBoxImage.Warning);
             return;
         }
 
@@ -601,13 +601,13 @@ public partial class SettingsWindow : Window
 
         if (string.IsNullOrWhiteSpace(draft.Name))
         {
-            MessageBox.Show(LanguageService.Lang("Msg_McpNameRequired"), LanguageService.Lang("Settings_DialogTitle"), MessageBoxButton.OK, MessageBoxImage.Warning);
+            ThemedMessageBox.Show(LanguageService.Lang("Msg_McpNameRequired"), LanguageService.Lang("Settings_DialogTitle"), MessageBoxButton.OK, MessageBoxImage.Warning);
             return;
         }
 
         if (string.IsNullOrWhiteSpace(draft.Command))
         {
-            MessageBox.Show(LanguageService.Lang("Msg_McpCommandRequired"), LanguageService.Lang("Settings_DialogTitle"), MessageBoxButton.OK, MessageBoxImage.Warning);
+            ThemedMessageBox.Show(LanguageService.Lang("Msg_McpCommandRequired"), LanguageService.Lang("Settings_DialogTitle"), MessageBoxButton.OK, MessageBoxImage.Warning);
             return;
         }
 

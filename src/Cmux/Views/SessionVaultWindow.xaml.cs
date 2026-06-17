@@ -179,7 +179,7 @@ public partial class SessionVaultWindow : Window
         }
         catch
         {
-            MessageBox.Show($"Session vault folder: {dir}", LanguageService.Lang("Vault_Title"), MessageBoxButton.OK, MessageBoxImage.Information);
+            ThemedMessageBox.Show($"Session vault folder: {dir}", LanguageService.Lang("Vault_Title"), MessageBoxButton.OK, MessageBoxImage.Information);
         }
     }
 
@@ -218,7 +218,7 @@ public partial class SessionVaultWindow : Window
         }
         catch
         {
-            MessageBox.Show(selected.Entry.FilePath, LanguageService.Lang("Vault_Title"), MessageBoxButton.OK, MessageBoxImage.Information);
+            ThemedMessageBox.Show(selected.Entry.FilePath, LanguageService.Lang("Vault_Title"), MessageBoxButton.OK, MessageBoxImage.Information);
         }
     }
 
