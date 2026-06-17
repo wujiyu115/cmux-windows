@@ -133,6 +133,9 @@ public class TerminalControl : FrameworkElement
             Palette = termTheme.Palette,
             SelectionBackground = termTheme.SelectionBg,
             CursorColor = termTheme.CursorColor,
+            SearchHitBackground = termTheme.SearchHitBg,
+            SearchHitBackgroundCurrent = termTheme.SearchHitBgCurrent,
+            SearchHitForeground = termTheme.SearchHitFg,
             FontFamily = settings.FontFamily,
             FontSize = settings.FontSize,
         };
@@ -462,8 +465,10 @@ public class TerminalControl : FrameworkElement
             // Use cached search match sets (built once in SetSearchHighlights)
             var searchMatchSet = _searchMatchSetCache ?? EmptyMatchSet;
             var currentMatchSet = _currentMatchSetCache ?? EmptyMatchSet;
-            var searchMatchBrush = searchMatchSet.Count > 0 ? GetCachedBrush(Color.FromArgb(100, 0xFB, 0xBF, 0x24)) : null;
-            var currentMatchBrush = currentMatchSet.Count > 0 ? GetCachedBrush(Color.FromArgb(180, 0xFB, 0x92, 0x3C)) : null;
+            var searchHitBg = _theme.SearchHitBackground.HasValue ? ToWpfColor(_theme.SearchHitBackground.Value) : Color.FromRgb(0xFB, 0xBF, 0x24);
+            var searchHitBgCurrent = _theme.SearchHitBackgroundCurrent.HasValue ? ToWpfColor(_theme.SearchHitBackgroundCurrent.Value) : Color.FromRgb(0xFB, 0x92, 0x3C);
+            var searchMatchBrush = searchMatchSet.Count > 0 ? GetCachedBrush(searchHitBg) : null;
+            var currentMatchBrush = currentMatchSet.Count > 0 ? GetCachedBrush(searchHitBgCurrent) : null;
 
             // Render visible rows with batched text
             for (int visRow = 0; visRow < _rows; visRow++)
@@ -558,6 +563,8 @@ public class TerminalControl : FrameworkElement
                     if (hasChar)
                     {
                         var fgColor = cellFg.IsDefault ? ToWpfColor(_theme.Foreground) : ToWpfColor(cellFg);
+                        if ((isSearchMatch || isCurrentMatch) && _theme.SearchHitForeground.HasValue)
+                            fgColor = ToWpfColor(_theme.SearchHitForeground.Value);
                         bool bold = attr.Flags.HasFlag(CellFlags.Bold);
                         bool italic = attr.Flags.HasFlag(CellFlags.Italic);
                         bool dim = attr.Flags.HasFlag(CellFlags.Dim);
@@ -1785,6 +1792,9 @@ public class TerminalControl : FrameworkElement
             Palette = theme.Palette,
             SelectionBackground = theme.SelectionBg,
             CursorColor = theme.CursorColor,
+            SearchHitBackground = theme.SearchHitBg,
+            SearchHitBackgroundCurrent = theme.SearchHitBgCurrent,
+            SearchHitForeground = theme.SearchHitFg,
             FontFamily = fontFamily,
             FontSize = fontSize
         };

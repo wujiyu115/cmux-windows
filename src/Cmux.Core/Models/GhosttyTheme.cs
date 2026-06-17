@@ -9,6 +9,9 @@ public class GhosttyTheme
     public TerminalColor? SelectionBackground { get; set; }
     public TerminalColor? SelectionForeground { get; set; }
     public TerminalColor? CursorColor { get; set; }
+    public TerminalColor? SearchHitBackground { get; set; }
+    public TerminalColor? SearchHitBackgroundCurrent { get; set; }
+    public TerminalColor? SearchHitForeground { get; set; }
     public string FontFamily { get; set; } = "Cascadia Mono";
     public double FontSize { get; set; } = 13.0;
 
