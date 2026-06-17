@@ -326,6 +326,7 @@
     <system:String x:Key="Settings_ScrollbackLines">Scrollback Lines</system:String>
     <system:String x:Key="Settings_VisualBell">Visual Bell</system:String>
     <system:String x:Key="Settings_BracketedPaste">Bracketed Paste</system:String>
+    <system:String x:Key="Settings_AmbiguousWidthDouble">Ambiguous Width (CJK)</system:String>
     <system:String x:Key="Settings_RestoreSession">Restore Session</system:String>
     <system:String x:Key="Settings_RestoreSessionDesc">Restore previous session on startup</system:String>
     <system:String x:Key="Settings_ConfirmClose">Confirm Close</system:String>

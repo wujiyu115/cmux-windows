@@ -326,6 +326,7 @@
     <system:String x:Key="Settings_ScrollbackLines">回滚行数</system:String>
     <system:String x:Key="Settings_VisualBell">可视响铃</system:String>
     <system:String x:Key="Settings_BracketedPaste">括号粘贴</system:String>
+    <system:String x:Key="Settings_AmbiguousWidthDouble">模糊宽度(CJK双宽)</system:String>
     <system:String x:Key="Settings_RestoreSession">恢复会话</system:String>
     <system:String x:Key="Settings_RestoreSessionDesc">启动时恢复上一次会话</system:String>
     <system:String x:Key="Settings_ConfirmClose">关闭确认</system:String>

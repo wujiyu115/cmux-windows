@@ -2,10 +2,12 @@ namespace Cmux.Core.Terminal;
 
 public static class UnicodeWidth
 {
+    public static bool AmbiguousIsWide { get; set; }
+
     public static bool IsWideChar(char c)
     {
         int cp = c;
-        if (cp >= 0x2500 && cp <= 0x25FF) return true; // Box Drawing, Block Elements, Geometric Shapes (EA Ambiguous, wide in CJK)
+        if (AmbiguousIsWide && cp >= 0x2500 && cp <= 0x25FF) return true;
         return cp >= 0x1100 &&
             (cp <= 0x115F                  // Hangul Jamo
             || cp == 0x2329 || cp == 0x232A // LEFT/RIGHT-POINTING ANGLE BRACKET

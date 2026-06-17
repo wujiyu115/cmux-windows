@@ -471,6 +471,17 @@
                             <CheckBox x:Name="BracketedPasteCheck" Grid.Column="1"
                                       Style="{StaticResource SettingsCheck}" />
                         </Grid>
+
+                        <!-- Ambiguous Width Double (CJK) -->
+                        <Grid Margin="0,0,0,10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="160" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="{DynamicResource Settings_AmbiguousWidthDouble}" Style="{StaticResource SectionLabel}" />
+                            <CheckBox x:Name="AmbiguousWidthDoubleCheck" Grid.Column="1"
+                                      Style="{StaticResource SettingsCheck}" />
+                        </Grid>
                     </StackPanel>
 
                     <!-- ═══ Behavior Section ═══ -->

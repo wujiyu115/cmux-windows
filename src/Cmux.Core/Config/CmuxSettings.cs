@@ -36,6 +36,7 @@ public class CmuxSettings
     public bool VisualBell { get; set; } = true;
     public bool BracketedPaste { get; set; } = true;
     public string WordSeparators { get; set; } = " \t\n{}[]()\"'`,:;<>";
+    public bool AmbiguousWidthDouble { get; set; } = false;
 
     // ── Behavior ────────────────────────────────────────────────
 

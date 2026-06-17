@@ -99,6 +99,7 @@ public partial class SettingsWindow : Window
         ScrollbackBox.Text = s.ScrollbackLines.ToString();
         VisualBellCheck.IsChecked = s.VisualBell;
         BracketedPasteCheck.IsChecked = s.BracketedPaste;
+        AmbiguousWidthDoubleCheck.IsChecked = s.AmbiguousWidthDouble;
 
         RestoreSessionCheck.IsChecked = s.RestoreSessionOnStartup;
         ConfirmCloseCheck.IsChecked = s.ConfirmOnClose;
@@ -213,6 +214,7 @@ public partial class SettingsWindow : Window
         if (int.TryParse(ScrollbackBox.Text, out int sb)) s.ScrollbackLines = sb;
         s.VisualBell = VisualBellCheck.IsChecked == true;
         s.BracketedPaste = BracketedPasteCheck.IsChecked == true;
+        s.AmbiguousWidthDouble = AmbiguousWidthDoubleCheck.IsChecked == true;
 
         s.RestoreSessionOnStartup = RestoreSessionCheck.IsChecked == true;
         s.ConfirmOnClose = ConfirmCloseCheck.IsChecked == true;

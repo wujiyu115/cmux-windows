@@ -90,6 +90,7 @@ public partial class MainWindow : Window
 
         Services.AppThemeService.ApplyTheme(theme);
         Opacity = Math.Clamp(settings.Opacity, 0.5, 1.0);
+        Core.Terminal.UnicodeWidth.AmbiguousIsWide = settings.AmbiguousWidthDouble;
 
         // Update all visible terminal controls
         foreach (var workspace in ViewModel.Workspaces)
