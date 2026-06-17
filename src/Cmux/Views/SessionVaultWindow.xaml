@@ -27,7 +27,7 @@
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="RowBg" Property="Background" Value="#1FFFFFFF" />
+                                <Setter TargetName="RowBg" Property="Background" Value="{DynamicResource HoverOverlayBrush}" />
                             </Trigger>
                             <Trigger Property="IsSelected" Value="True">
                                 <Setter TargetName="RowBg" Property="Background" Value="{DynamicResource SidebarItemSelectedBrush}" />

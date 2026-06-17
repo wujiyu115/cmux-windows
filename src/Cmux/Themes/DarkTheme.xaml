@@ -162,7 +162,7 @@
          AccentButton — gradient background, prominent CTA
          ═══════════════════════════════════════════════════════════════════ -->
     <Style x:Key="AccentButton" TargetType="Button">
-        <Setter Property="Foreground" Value="#FFFFFFFF" />
+        <Setter Property="Foreground" Value="{DynamicResource AccentForegroundBrush}" />
         <Setter Property="FontWeight" Value="SemiBold" />
         <Setter Property="BorderThickness" Value="0" />
         <Setter Property="Padding" Value="16,8" />

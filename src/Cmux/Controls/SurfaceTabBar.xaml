@@ -95,7 +95,7 @@
                                     <Storyboard>
                                         <ColorAnimation Storyboard.TargetName="tabBg"
                                                         Storyboard.TargetProperty="Color"
-                                                        To="#15FFFFFF" Duration="0:0:0.15" />
+                                                        To="{DynamicResource HoverOverlayColor}" Duration="0:0:0.15" />
                                     </Storyboard>
                                 </BeginStoryboard>
                             </MultiDataTrigger.EnterActions>

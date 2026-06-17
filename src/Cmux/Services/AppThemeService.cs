@@ -44,6 +44,7 @@ public static class AppThemeService
         var scrollThumb = isLight ? Color.FromArgb(0x40, 0, 0, 0) : Color.FromArgb(0x30, 255, 255, 255);
         var scrollThumbHover = isLight ? Color.FromArgb(0x60, 0, 0, 0) : Color.FromArgb(0x60, 255, 255, 255);
         var scrollTrack = isLight ? Color.FromArgb(0x10, 0, 0, 0) : Color.FromArgb(0x10, 255, 255, 255);
+        var accentFg = Luminance(accent) > 140 ? Color.FromRgb(0x1A, 0x1A, 0x1A) : Color.FromRgb(0xFF, 0xFF, 0xFF);
         var accentGlow = Color.FromArgb(0x80, accent.R, accent.G, accent.B);
         var overlayBg = Color.FromArgb(0xF2, bg.R, bg.G, bg.B);
 
@@ -83,6 +84,8 @@ public static class AppThemeService
         AddColor("PinkAccent", pinkAccent);
         AddColor("OrangeAccent", orangeAccent);
         AddColor("InputBackgroundColor", inputBg);
+        AddColor("HoverOverlayColor", hoverOverlay);
+        AddColor("PressedOverlayColor", pressedOverlay);
         AddColor("CloseButtonHoverColor", Color.FromRgb(0xE8, 0x11, 0x23));
 
         AddBrush("BackgroundBrush", new SolidColorBrush(bg));
@@ -109,6 +112,7 @@ public static class AppThemeService
         AddBrush("ScrollThumbBrush", new SolidColorBrush(scrollThumb));
         AddBrush("ScrollThumbHoverBrush", new SolidColorBrush(scrollThumbHover));
         AddBrush("ScrollTrackBrush", new SolidColorBrush(scrollTrack));
+        AddBrush("AccentForegroundBrush", new SolidColorBrush(accentFg));
 
         var accentGradient = new LinearGradientBrush(
             new GradientStopCollection

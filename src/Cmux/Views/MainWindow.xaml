@@ -358,7 +358,7 @@
                                                 <SolidColorBrush Color="{DynamicResource AccentColor}" />
                                             </Border.Background>
                                             <TextBlock Text="{Binding TotalUnreadCount}" FontSize="10"
-                                                       Foreground="White" FontWeight="SemiBold" />
+                                                       Foreground="{DynamicResource AccentForegroundBrush}" FontWeight="SemiBold" />
                                         </Border>
                                     </Grid>
                                 </Button>

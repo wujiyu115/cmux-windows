@@ -27,11 +27,11 @@
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="Bd" Property="Background" Value="#20FFFFFF" />
+                                <Setter TargetName="Bd" Property="Background" Value="{DynamicResource HoverOverlayBrush}" />
                             </Trigger>
                             <Trigger Property="Tag" Value="active">
                                 <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" />
-                                <Setter TargetName="Bd" Property="Background" Value="#30FFFFFF" />
+                                <Setter TargetName="Bd" Property="Background" Value="{DynamicResource PressedOverlayBrush}" />
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
