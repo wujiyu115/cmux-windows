@@ -611,7 +611,14 @@ public class TerminalControl : FrameworkElement
             }
 
             // Cursor (only when viewing live buffer)
-            if (!isScrolledBack && buffer.CursorVisible && IsPaneFocused && (_cursorVisible || !_cursorBlink))
+            // Suppress the cursor when it's parked at the bottom-right cell of an alt-screen:
+            // ConPTY re-emits ?25h on frame sync and can override a TUI app's ?25l, leaving a
+            // blinking phantom cursor at the last-written cell. A real input cursor is never
+            // at the exact last row+col, so this heuristic is safe.
+            bool phantomAtBottomRight = buffer.IsAlternateScreen
+                && buffer.CursorRow == _rows - 1
+                && buffer.CursorCol >= _cols - 1;
+            if (!isScrolledBack && buffer.CursorVisible && !phantomAtBottomRight && IsPaneFocused && (_cursorVisible || !_cursorBlink))
             {
                 double cx = buffer.CursorCol * _cellWidth;
                 double cy = buffer.CursorRow * _cellHeight;
