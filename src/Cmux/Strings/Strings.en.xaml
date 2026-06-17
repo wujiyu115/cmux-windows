@@ -141,6 +141,16 @@
     <system:String x:Key="Group_Rename">Rename Group</system:String>
     <system:String x:Key="Group_Delete">Delete Group</system:String>
     <system:String x:Key="Workspace_EnvVarsMessage">Enter environment variables, one per line, in KEY=VALUE format. These will be injected into new terminal sessions.</system:String>
+    <system:String x:Key="Workspace_DefaultTerminal">Default Terminal</system:String>
+    <system:String x:Key="Workspace_ShellGlobalDefault">(Global Default)</system:String>
+
+    <!-- Workspace Creation Dialog -->
+    <system:String x:Key="WorkspaceCreate_Title">New Workspace</system:String>
+    <system:String x:Key="WorkspaceCreate_Name">Workspace Name</system:String>
+    <system:String x:Key="WorkspaceCreate_Shell">Default Terminal</system:String>
+    <system:String x:Key="WorkspaceCreate_Color">Accent Color</system:String>
+    <system:String x:Key="WorkspaceCreate_Create">Create</system:String>
+    <system:String x:Key="WorkspaceCreate_Cancel">Cancel</system:String>
 
     <!-- Terminal Context Menu -->
     <system:String x:Key="Terminal_Copy">Copy</system:String>

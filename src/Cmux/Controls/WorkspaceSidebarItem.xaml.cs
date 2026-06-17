@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using Cmux.Core.Models;
+using Cmux.Core.Services;
 using Cmux.Services;
 using Cmux.ViewModels;
 using Cmux.Views;
@@ -209,6 +210,45 @@ public partial class WorkspaceSidebarItem : UserControl
 
         glyph = char.ConvertFromUtf32((int)codePoint);
         return true;
+    }
+
+    private void DefaultTerminalMenu_SubmenuOpened(object sender, RoutedEventArgs e)
+    {
+        if (sender is not MenuItem menu || Vm is null) return;
+
+        menu.Items.Clear();
+
+        var globalItem = new MenuItem
+        {
+            Header = LanguageService.Lang("Workspace_ShellGlobalDefault"),
+        };
+        if (string.IsNullOrWhiteSpace(Vm.DefaultShell))
+            globalItem.Icon = new TextBlock { Text = "✓", FontWeight = FontWeights.Bold };
+        globalItem.Click += (_, _) => Vm.DefaultShell = null;
+        menu.Items.Add(globalItem);
+
+        menu.Items.Add(new Separator());
+
+        var shells = ShellDetector.DetectShells();
+        foreach (var shell in shells)
+        {
+            var item = new MenuItem
+            {
+                Header = shell.Name,
+                Tag = shell.Path,
+            };
+            if (string.Equals(Vm.DefaultShell, shell.Path, StringComparison.OrdinalIgnoreCase))
+                item.Icon = new TextBlock { Text = "✓", FontWeight = FontWeights.Bold };
+            else
+                item.Icon = new TextBlock { Text = shell.Icon, FontSize = 14 };
+
+            item.Click += (s, _) =>
+            {
+                if (s is MenuItem mi && mi.Tag is string path)
+                    Vm.DefaultShell = path;
+            };
+            menu.Items.Add(item);
+        }
     }
 
     private void MoveToGroupMenu_SubmenuOpened(object sender, RoutedEventArgs e)

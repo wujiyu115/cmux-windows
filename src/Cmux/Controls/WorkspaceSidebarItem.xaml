@@ -81,6 +81,13 @@
                         </MenuItem.Icon>
                     </MenuItem>
                 </MenuItem>
+                <MenuItem Header="{DynamicResource Workspace_DefaultTerminal}" x:Name="DefaultTerminalMenu"
+                          SubmenuOpened="DefaultTerminalMenu_SubmenuOpened">
+                    <MenuItem.Icon>
+                        <TextBlock Text="&#xE756;" FontFamily="Segoe MDL2 Assets" FontSize="12" />
+                    </MenuItem.Icon>
+                    <MenuItem Header="..." />
+                </MenuItem>
                 <MenuItem Header="{DynamicResource Workspace_MoveToGroup}" x:Name="MoveToGroupMenu"
                           SubmenuOpened="MoveToGroupMenu_SubmenuOpened">
                     <MenuItem.Icon>

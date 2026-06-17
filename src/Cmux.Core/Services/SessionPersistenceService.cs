@@ -85,6 +85,7 @@ public class SessionPersistenceService
                 WorkingDirectory = ws.WorkingDirectory,
                 StartDirectory = ws.StartDirectory,
                 EnvironmentVariables = ws.EnvironmentVariables.Count > 0 ? ws.EnvironmentVariables : null,
+                DefaultShell = ws.DefaultShell,
                 GroupId = ws.GroupId,
                 SelectedSurfaceIndex = ws.Surfaces.IndexOf(ws.SelectedSurface!),
             };

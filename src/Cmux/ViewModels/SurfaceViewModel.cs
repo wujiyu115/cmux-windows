@@ -19,6 +19,7 @@ public partial class SurfaceViewModel : ObservableObject, IDisposable
     private readonly Dictionary<string, List<string>> _paneCommandHistory = [];
     private readonly Dictionary<string, string?> _paneShells = [];
     private readonly string? _workspaceStartDirectory;
+    private readonly string? _workspaceDefaultShell;
     private readonly Dictionary<string, string>? _workspaceEnvVars;
     private readonly HashSet<string> _daemonPanes = [];
     private readonly HashSet<string> _daemonOutputLogged = [];
@@ -70,11 +71,12 @@ public partial class SurfaceViewModel : ObservableObject, IDisposable
         }
     }
 
-    public SurfaceViewModel(Surface surface, string workspaceId, NotificationService notificationService, string? initialShell = null, string? workspaceStartDirectory = null, Dictionary<string, string>? workspaceEnvVars = null)
+    public SurfaceViewModel(Surface surface, string workspaceId, NotificationService notificationService, string? initialShell = null, string? workspaceStartDirectory = null, Dictionary<string, string>? workspaceEnvVars = null, string? workspaceDefaultShell = null)
     {
         Surface = surface;
         _workspaceId = workspaceId;
         _workspaceStartDirectory = workspaceStartDirectory;
+        _workspaceDefaultShell = workspaceDefaultShell;
         _workspaceEnvVars = workspaceEnvVars is { Count: > 0 } ? workspaceEnvVars : null;
         _notificationService = notificationService;
         _name = surface.Name;
@@ -503,8 +505,10 @@ public partial class SurfaceViewModel : ObservableObject, IDisposable
         return session;
     }
 
-    private static string? GetConfiguredShell()
+    private string? GetConfiguredShell()
     {
+        if (!string.IsNullOrWhiteSpace(_workspaceDefaultShell))
+            return _workspaceDefaultShell;
         var shell = SettingsService.Current.DefaultShell;
         return string.IsNullOrWhiteSpace(shell) ? null : shell;
     }

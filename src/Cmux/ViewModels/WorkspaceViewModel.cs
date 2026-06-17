@@ -21,6 +21,9 @@ public partial class WorkspaceViewModel : ObservableObject, IDisposable
     private string _accentColor;
 
     [ObservableProperty]
+    private string? _defaultShell;
+
+    [ObservableProperty]
     private ObservableCollection<SurfaceViewModel> _surfaces = [];
 
     [ObservableProperty]
@@ -79,13 +82,14 @@ public partial class WorkspaceViewModel : ObservableObject, IDisposable
         _name = workspace.Name;
         _iconGlyph = workspace.IconGlyph;
         _accentColor = workspace.AccentColor;
+        _defaultShell = workspace.DefaultShell;
         _startDirectory = workspace.StartDirectory;
         _notificationService = notificationService;
 
         // Create surface VMs for existing surfaces
         foreach (var surface in workspace.Surfaces)
         {
-            var surfaceVm = new SurfaceViewModel(surface, workspace.Id, notificationService, workspaceStartDirectory: workspace.StartDirectory, workspaceEnvVars: workspace.EnvironmentVariables);
+            var surfaceVm = new SurfaceViewModel(surface, workspace.Id, notificationService, workspaceStartDirectory: workspace.StartDirectory, workspaceEnvVars: workspace.EnvironmentVariables, workspaceDefaultShell: workspace.DefaultShell);
             surfaceVm.WorkingDirectoryChanged += OnSurfaceWorkingDirectoryChanged;
             Surfaces.Add(surfaceVm);
         }
@@ -109,7 +113,7 @@ public partial class WorkspaceViewModel : ObservableObject, IDisposable
         var surface = new Surface { Name = LanguageService.Lang("Default_Terminal", Surfaces.Count + 1) };
         Workspace.Surfaces.Add(surface);
 
-        var surfaceVm = new SurfaceViewModel(surface, Workspace.Id, _notificationService, workspaceStartDirectory: Workspace.StartDirectory, workspaceEnvVars: Workspace.EnvironmentVariables);
+        var surfaceVm = new SurfaceViewModel(surface, Workspace.Id, _notificationService, workspaceStartDirectory: Workspace.StartDirectory, workspaceEnvVars: Workspace.EnvironmentVariables, workspaceDefaultShell: Workspace.DefaultShell);
         surfaceVm.WorkingDirectoryChanged += OnSurfaceWorkingDirectoryChanged;
         Surfaces.Add(surfaceVm);
         SelectedSurface = surfaceVm;
@@ -120,7 +124,7 @@ public partial class WorkspaceViewModel : ObservableObject, IDisposable
         var surface = new Surface { Name = LanguageService.Lang("Default_Terminal", Surfaces.Count + 1) };
         Workspace.Surfaces.Add(surface);
 
-        var surfaceVm = new SurfaceViewModel(surface, Workspace.Id, _notificationService, shellPath, workspaceStartDirectory: Workspace.StartDirectory, workspaceEnvVars: Workspace.EnvironmentVariables);
+        var surfaceVm = new SurfaceViewModel(surface, Workspace.Id, _notificationService, shellPath, workspaceStartDirectory: Workspace.StartDirectory, workspaceEnvVars: Workspace.EnvironmentVariables, workspaceDefaultShell: Workspace.DefaultShell);
         surfaceVm.WorkingDirectoryChanged += OnSurfaceWorkingDirectoryChanged;
         Surfaces.Add(surfaceVm);
         SelectedSurface = surfaceVm;
@@ -189,6 +193,8 @@ public partial class WorkspaceViewModel : ObservableObject, IDisposable
             AccentColor = config.Color;
         if (config.Icon != null)
             IconGlyph = config.Icon;
+        if (config.Shell != null)
+            DefaultShell = config.Shell;
         if (config.Env.Count > 0)
         {
             foreach (var (key, value) in config.Env)
@@ -282,6 +288,11 @@ public partial class WorkspaceViewModel : ObservableObject, IDisposable
     partial void OnAccentColorChanged(string value)
     {
         Workspace.AccentColor = value;
+    }
+
+    partial void OnDefaultShellChanged(string? value)
+    {
+        Workspace.DefaultShell = value;
     }
 
     partial void OnStartDirectoryChanged(string? value)

@@ -49,6 +49,9 @@ public class WorkspaceState
     [JsonPropertyName("selectedSurfaceIndex")]
     public int? SelectedSurfaceIndex { get; set; }
 
+    [JsonPropertyName("defaultShell")]
+    public string? DefaultShell { get; set; }
+
     [JsonPropertyName("groupId")]
     public string? GroupId { get; set; }
 

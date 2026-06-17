@@ -179,6 +179,28 @@ public partial class MainViewModel : ObservableObject
         EventBus.Publish("workspace.created", new { id = workspace.Id, name = workspace.Name });
     }
 
+    public void CreateNewWorkspace(string? name, string? defaultShell, string? accentColor)
+    {
+        var workspace = new Workspace
+        {
+            Name = string.IsNullOrWhiteSpace(name) ? LanguageService.Lang("Default_Workspace", Workspaces.Count + 1) : name,
+        };
+        if (!string.IsNullOrWhiteSpace(defaultShell))
+            workspace.DefaultShell = defaultShell;
+        if (!string.IsNullOrWhiteSpace(accentColor))
+            workspace.AccentColor = accentColor;
+
+        var surface = new Surface { Name = LanguageService.Lang("Default_Terminal1") };
+        workspace.Surfaces.Add(surface);
+        workspace.SelectedSurface = surface;
+
+        var vm = new WorkspaceViewModel(workspace, _notificationService);
+        Workspaces.Add(vm);
+        SelectedWorkspace = vm;
+        OnPropertyChanged(nameof(SidebarItems));
+        EventBus.Publish("workspace.created", new { id = workspace.Id, name = workspace.Name });
+    }
+
     public void DuplicateWorkspace(WorkspaceViewModel source)
     {
         var clone = new Workspace
@@ -186,6 +208,7 @@ public partial class MainViewModel : ObservableObject
             Name = source.Name + LanguageService.Lang("Tab_Copy"),
             IconGlyph = source.IconGlyph,
             AccentColor = source.AccentColor,
+            DefaultShell = source.DefaultShell,
             WorkingDirectory = source.WorkingDirectory,
             StartDirectory = source.StartDirectory,
             EnvironmentVariables = new Dictionary<string, string>(source.Workspace.EnvironmentVariables),
@@ -432,6 +455,7 @@ public partial class MainViewModel : ObservableObject
                 WorkingDirectory = wsState.WorkingDirectory,
                 StartDirectory = wsState.StartDirectory,
                 EnvironmentVariables = wsState.EnvironmentVariables ?? new(),
+                DefaultShell = wsState.DefaultShell,
                 GroupId = wsState.GroupId,
             };
 

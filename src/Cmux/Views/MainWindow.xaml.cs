@@ -431,7 +431,7 @@ public partial class MainWindow : Window
             switch (e.Key)
             {
                 case Key.N: // New workspace
-                    ViewModel.CreateNewWorkspace();
+                    ShowWorkspaceCreationDialog();
                     e.Handled = true;
                     return;
                 case Key.B: // Toggle sidebar
@@ -647,6 +647,20 @@ public partial class MainWindow : Window
     private void MenuOpenSessionVault_Click(object sender, RoutedEventArgs e) => OpenSessionVault();
     private void MenuToggleAgentChat_Click(object sender, RoutedEventArgs e) => ToggleAgentChat();
     private void MenuOpenSettings_Click(object sender, RoutedEventArgs e) => OpenSettings();
+
+    private void NewWorkspace_Click(object sender, RoutedEventArgs e) => ShowWorkspaceCreationDialog();
+
+    private void ShowWorkspaceCreationDialog()
+    {
+        var defaultName = LanguageService.Lang("Default_Workspace", ViewModel.Workspaces.Count + 1);
+        var dialog = new WorkspaceCreationWindow(defaultName)
+        {
+            Owner = this,
+        };
+
+        if (dialog.ShowDialog() == true)
+            ViewModel.CreateNewWorkspace(dialog.WorkspaceName, dialog.SelectedShell, dialog.SelectedColor);
+    }
     private void MenuOpenKeyboardShortcuts_Click(object sender, RoutedEventArgs e)
     {
         var settings = new SettingsWindow("Keyboard") { Owner = this };
@@ -1113,7 +1127,7 @@ public partial class MainWindow : Window
     {
         return
         [
-            new() { Id = "new-workspace", Label = LanguageService.Lang("Palette_NewWorkspace"), Icon = "\uE710", Shortcut = "Ctrl+N", Category = "Workspace", Execute = () => ViewModel.CreateNewWorkspace() },
+            new() { Id = "new-workspace", Label = LanguageService.Lang("Palette_NewWorkspace"), Icon = "\uE710", Shortcut = "Ctrl+N", Category = "Workspace", Execute = () => ShowWorkspaceCreationDialog() },
             new() { Id = "new-surface", Label = LanguageService.Lang("Palette_NewSurface"), Icon = "\uE710", Shortcut = "Ctrl+T", Category = "Surface", Execute = () => ViewModel.SelectedWorkspace?.CreateNewSurface() },
             new() { Id = "close-surface", Label = LanguageService.Lang("Palette_CloseSurface"), Icon = "\uE711", Shortcut = "Ctrl+W", Category = "Surface", Execute = () => { var s = ViewModel.SelectedWorkspace?.SelectedSurface; if (s != null) ViewModel.SelectedWorkspace?.CloseSurface(s); } },
             new() { Id = "close-workspace", Label = LanguageService.Lang("Palette_CloseWorkspace"), Icon = "\uE711", Shortcut = "Ctrl+Shift+W", Category = "Workspace", Execute = () => ViewModel.CloseWorkspace(ViewModel.SelectedWorkspace) },
