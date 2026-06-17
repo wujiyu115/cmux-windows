@@ -43,6 +43,7 @@ public static class AppThemeService
         var pressedOverlay = isLight ? Color.FromArgb(0x30, 0, 0, 0) : Color.FromArgb(0x30, 255, 255, 255);
         var scrollThumb = isLight ? Color.FromArgb(0x40, 0, 0, 0) : Color.FromArgb(0x30, 255, 255, 255);
         var scrollThumbHover = isLight ? Color.FromArgb(0x60, 0, 0, 0) : Color.FromArgb(0x60, 255, 255, 255);
+        var scrollTrack = isLight ? Color.FromArgb(0x10, 0, 0, 0) : Color.FromArgb(0x10, 255, 255, 255);
         var accentGlow = Color.FromArgb(0x80, accent.R, accent.G, accent.B);
         var overlayBg = Color.FromArgb(0xF2, bg.R, bg.G, bg.B);
 
@@ -107,6 +108,7 @@ public static class AppThemeService
         AddBrush("PressedOverlayBrush", new SolidColorBrush(pressedOverlay));
         AddBrush("ScrollThumbBrush", new SolidColorBrush(scrollThumb));
         AddBrush("ScrollThumbHoverBrush", new SolidColorBrush(scrollThumbHover));
+        AddBrush("ScrollTrackBrush", new SolidColorBrush(scrollTrack));
 
         var accentGradient = new LinearGradientBrush(
             new GradientStopCollection
