@@ -6,49 +6,9 @@
 
 ---
 
-## 为什么 / 适用人群 / 功能 / 使用方法
+## 项目介绍
 
-| 为什么（问题） | 适用人群 | 功能 | 使用方法 |
-|---|---|---|---|
-| 在多个项目和 shell 之间容易丢失上下文 | 管理多个仓库/任务的开发者 | **工作区 + 表面（标签页）** | `Ctrl+N` 新建工作区，`Ctrl+T` 新建表面，`Ctrl+1..9` 切换 |
-| 一个终端永远不够 | 重度 CLI 用户、AI 辅助工作流 | **分屏**（右/下） | `Ctrl+D` 右分屏，`Ctrl+Shift+D` 下分屏，`Ctrl+Alt+方向键` 切换焦点 |
-| 容易错过 AI 代理的输出 | AI 编码用户（Claude/Codex 等） | **OSC 通知 + 未读追踪** | `Ctrl+I` 打开通知，`Ctrl+Shift+U` 跳到最新未读 |
-| 需要对执行的命令进行审计 | 安全敏感/调试工作流 | **命令日志 + 历史选择器** | `Ctrl+Shift+L` 日志，`Ctrl+Alt+H` 命令历史，从 UI 插入/运行 |
-| 希望崩溃/重启后恢复完整会话 | 长时间运行的会话 | **会话持久化 + 捕获转录** | 启动时自动恢复 + 打开**会话保险库**（`Ctrl+Shift+V`） |
-| 需要可搜索的输出历史（类似 Termius vault） | 任何需要回顾终端会话的用户 | **会话保险库浏览器** | 打开保险库，筛选捕获，预览转录，复制/打开文件 |
-| 需要深色主题的一致性和个性化 | 注重用户体验/可读性的用户 | **19 套内置主题 + 自定义配色** | 设置（`Ctrl+,`）选择主题/字体/光标 + 工作区强调色 |
-| 想要快速操作而不找鼠标 | 键盘优先的高级用户 | **命令面板 + 快捷键 + 组合键** | `Ctrl+Shift+P` 命令面板，`Ctrl+K` 组合键序列 |
-| 需要从脚本/工具进行自动化 | 集成者/代理钩子 | **命名管道 CLI API**（`cmux`） | `cmux notify`，`cmux workspace`，`cmux split`，`cmux status` |
-| 想在终端内使用 AI 助手 | AI 辅助编码用户 | **内置代理聊天**（OpenAI / Anthropic） | `Ctrl+Shift+A` 切换代理面板，在设置中配置服务商 |
-| 想要按项目定制 shell 和环境变量 | 多项目开发者 | **项目配置**（`cmux.json`） | 在项目根目录放置 `.cmux/cmux.json`，自定义 shell、环境、颜色 |
-| 需要查看哪些端口在监听 | 运行本地服务器的开发者 | **侧边栏显示监听端口** | 侧边栏自动显示子进程的 TCP 监听端口 |
-
----
-
-## 核心能力
-
-- 原生 **ConPTY 终端模拟**（真正的 Windows 终端后端）
-- 工作区侧边栏，显示元数据（git 分支、当前目录、通知、监听端口）
-- 可折叠的**工作区分组**
-- 多表面标签页和分屏布局管理（含预设布局）
-- **内置代理聊天面板**（OpenAI / Anthropic 服务商，MCP 服务器，自定义工具）
-- 通知接收（OSC 9/99/777），用于编码代理
-- **代理钩子事件**（stop、notification、session-start、permission-request、pre-tool-use）
-- 命令日志/历史，带过滤和快速重放
-- **片段系统**，支持模板（`{{key}}` 占位符）、分类、标签、收藏
-- 终端转录捕获 + 会话保险库浏览
-- 持久化会话（窗口 + 工作区/表面/面板状态，自动保存）
-- **19 套内置终端主题**（深色 + 浅色）+ 自定义配色编辑
-- **Shell 配置**（PowerShell、WSL、cmd — 各带自定义环境变量和主题）
-- **项目级配置**（`.cmux/cmux.json`）按项目设置环境变量、shell、颜色
-- **国际化**（英文 / 中文界面，运行时可切换）
-- **浏览器面板**（WebView2）在终端旁显示网页内容
-- 深色桌面 UI，键盘优先导航 + **组合键快捷键**
-- CJK 支持（东亚歧义宽度可配置）
-
----
-
-## 截图
+cmux 是一款原生 Windows 终端多路复用器，将 tmux 风格的工作区管理带到 Windows 桌面。它结合了真正的 ConPTY 终端后端与 WPF 深色界面、内置 AI 代理聊天、会话持久化和 CLI 自动化 — 全部键盘优先，全部本地运行。
 
 <details>
   <summary>展开截图</summary>
@@ -65,93 +25,67 @@
 
 ---
 
-## 构建和运行（Windows）
+## 功能特性
 
-### 系统要求
+### 工作区与布局
 
-- Windows 10/11
-- [.NET 10 SDK](https://dotnet.microsoft.com/download)
-- 可选：Visual Studio 2022 / Build Tools
+- 原生 **ConPTY 终端模拟**（真正的 Windows 终端后端）
+- 工作区侧边栏，显示元数据（git 分支、当前目录、通知、监听端口）
+- 可折叠的**工作区分组**
+- 多表面标签页和**分屏布局**，含预设布局（两列、三列、网格、主+堆栈）
+- **片段系统** — 可复用命令模板，支持 `{{key}}` 占位符、分类、标签、收藏
 
-### 克隆
+### 会话与审计
 
-```powershell
-git clone <repo-url> cmux-windows
-cd cmux-windows
-```
+- **会话持久化** — 自动保存和恢复（窗口 + 工作区/表面/面板状态）
+- **命令日志 + 历史选择器** — 筛选、插入、重放
+- **终端转录捕获** + 会话保险库浏览（可搜索的输出历史）
+- 通知接收（OSC 9/99/777），用于编码代理
 
-### 开发运行
+### 代理 / AI 聊天
 
-```powershell
-dotnet build Cmux.sln -c Debug
-dotnet run --project src/Cmux/Cmux.csproj -c Debug
-```
+- **内置代理聊天面板**（`Ctrl+Shift+A`） — OpenAI / Anthropic 服务商
+- **自定义工具** — 定义工具配置（名称、描述、命令模板）
+- **MCP 服务器** — Model Context Protocol 集成（命令、参数、工作目录）
+- **Bash 工具** — 可选 shell 执行，可配置超时
+- **Web 搜索** — Exa 集成
+- **对话记忆** — 持久线程，带 token 追踪和自动压缩
+- **代理会话恢复** — 重启时恢复之前的代理会话
+- **密钥存储** — API 密钥使用 Windows DPAPI 加密
+- **代理钩子事件** — stop、notification、session-start、permission-request、pre-tool-use
 
----
+### 主题与个性化
 
-## 在 Windows 上构建 `.exe`
+- **19 套内置终端主题**（12 深色 + 7 浅色）：Dracula、Nord、One Dark、Monokai、Tokyo Night、Catppuccin Mocha、Gruvbox、Everforest、Kanagawa、Ayu、Solarized、GitHub Light、Rose Pine Dawn 等
+- 自定义配色编辑 + 工作区强调色
+- **Shell 配置** — PowerShell、WSL、cmd，每个配置可设环境变量和主题覆盖
+- **项目级配置**（`.cmux/cmux.json`） — 按项目设置 shell、环境、颜色、图标
+- **Ghostty 配置导入** — 从 `ghostty/config` 读取主题、字体、字号
+- **浏览器面板**（WebView2）在终端旁显示网页内容
 
-### 快速构建（GUI + CLI）
+### 键盘优先
 
-```powershell
-build.bat
-```
+- **命令面板**（`Ctrl+Shift+P`） — 模糊搜索、布局预设、均分面板、测试通知、恢复代理会话
+- **组合键快捷键**（`Ctrl+K` 后按第二个键，超时可配置）
+- CJK 支持 — 东亚歧义宽度可配置
 
-输出 `publish/cmuxw.exe` 和 `publish/cmux.exe`。
+### 国际化
 
-### 1) 框架依赖 `.exe`（最小输出）
-
-```powershell
-dotnet publish src/Cmux/Cmux.csproj -c Release -r win-x64 --self-contained false -o publish/cmux-win-x64
-```
-
-输出：
-- `publish/cmux-win-x64/cmuxw.exe`
-
-适用于目标机器已安装 .NET 运行时的场景。
-
-### 2) 自包含 `.exe`（无需安装运行时）
-
-```powershell
-dotnet publish src/Cmux/Cmux.csproj -c Release -r win-x64 --self-contained true -o publish/cmux-win-x64-sc
-```
-
-输出：
-- `publish/cmux-win-x64-sc/cmuxw.exe`
-
-### 3) 单文件自包含 `.exe`（便携产物）
-
-```powershell
-dotnet publish src/Cmux/Cmux.csproj -c Release -r win-x64 --self-contained true /p:PublishSingleFile=true /p:PublishTrimmed=false -o publish/cmux-win-x64-single
-```
-
-输出：
-- `publish/cmux-win-x64-single/cmuxw.exe`
-
-> 注意：WebView2 相关功能可能需要 WebView2 运行时，取决于目标系统状态。
-
-### 构建 CLI 可执行文件
-
-```powershell
-dotnet publish src/Cmux.Cli/Cmux.Cli.csproj -c Release -r win-x64 --self-contained true -o publish/cmux-cli
-```
-
-将 `publish/cmux-cli` 添加到 `PATH` 即可全局使用 `cmux` 命令。
+- **英文** / **中文**界面 — 在设置中运行时切换
 
 ---
 
-## 快速上手（5 分钟）
+## 快速上手
 
 1. 启动 `cmuxw.exe`
-2. `Ctrl+N` 为你的仓库创建工作区
-3. `Ctrl+T` 创建额外的表面（标签页）
-4. 用 `Ctrl+D` / `Ctrl+Shift+D` 分屏
-5. 用 `Ctrl+Shift+P` 打开命令面板快速操作
-6. 用 `Ctrl+Shift+A` 打开代理聊天面板
-7. 用 `Ctrl+Shift+L` 打开日志
-8. 用 `Ctrl+Shift+V` 打开会话保险库
-9. 用 `Ctrl+,` 打开设置 — 选择主题，配置代理服务商，设置 Shell 配置
-10. 在设置中切换界面语言（英文 / 中文）
+2. `Ctrl+N` — 新建工作区
+3. `Ctrl+T` — 新建表面（标签页）
+4. `Ctrl+D` / `Ctrl+Shift+D` — 分屏
+5. `Ctrl+Shift+P` — 命令面板快速操作
+6. `Ctrl+Shift+A` — 切换代理聊天面板
+7. `Ctrl+Shift+L` — 命令日志
+8. `Ctrl+Shift+V` — 会话保险库
+9. `Ctrl+,` — 设置（主题、代理服务商、Shell 配置、语言）
 
 ---
 
@@ -209,18 +143,6 @@ dotnet publish src/Cmux.Cli/Cmux.Cli.csproj -c Release -r win-x64 --self-contain
 |---|---|
 | `Ctrl+K, Ctrl+T` | 新建表面 |
 | `Ctrl+K, Ctrl+W` | 关闭工作区 |
-
----
-
-## 命令面板操作
-
-用 `Ctrl+Shift+P` 打开。可用操作包括：
-
-- 预设布局：**两列**、**三列**、**网格**、**主+堆栈**
-- **均分面板** — 让所有分屏面板等宽
-- **测试通知** — 验证通知管道是否正常
-- **恢复代理会话** — 继续之前的代理对话
-- **插入上一条命令** — 快速插入最近一条历史命令
 
 ---
 
@@ -287,66 +209,45 @@ cmux version
 
 ---
 
-## Shell 配置
+## 开发指南
 
-在设置（`Ctrl+,`）中配置多个 Shell 配置。每个配置可以有：
+### 系统要求
 
-- 自定义命令和参数（如 `wsl`、`powershell`、`cmd`）
-- 工作目录
-- 每个配置的环境变量
-- 主题覆盖
+- Windows 10/11
+- [.NET 10 SDK](https://dotnet.microsoft.com/download)
+- 可选：Visual Studio 2022 / Build Tools
 
----
+### 克隆与开发运行
 
-## 内置主题
+```powershell
+git clone <repo-url> cmux-windows
+cd cmux-windows
+dotnet build Cmux.sln -c Debug
+dotnet run --project src/Cmux/Cmux.csproj -c Debug
+```
 
-包含 19 套终端主题 — 深色和浅色：
+### 构建 `.exe`
 
-**深色**：Default Dark、Dracula、Nord、Solarized Dark、One Dark、Monokai、Tokyo Night、Catppuccin Mocha、Gruvbox、Everforest Dark、Kanagawa、Ayu Dark
+快速构建（GUI + CLI）：
 
-**浅色**：Solarized Light、Catppuccin Latte、GitHub Light、Rose Pine Dawn、One Light、Tokyo Night Light、Everforest Light、Ayu Light、Nord Light、Gruvbox Light、Dracula Light
+```powershell
+build.bat
+```
 
-> 也可以从 Ghostty 配置文件导入主题（`~/.config/ghostty/config` 或 `%APPDATA%\ghostty\config`）。
+输出 `publish/cmuxw.exe` 和 `publish/cmux.exe`。
 
----
+其他选项：
 
-## 片段
+| 类型 | 命令 | 输出 |
+|---|---|---|
+| 框架依赖 | `dotnet publish src/Cmux/Cmux.csproj -c Release -r win-x64 --self-contained false -o publish/cmux-win-x64` | `cmuxw.exe`（最小，需 .NET 运行时） |
+| 自包含 | `dotnet publish src/Cmux/Cmux.csproj -c Release -r win-x64 --self-contained true -o publish/cmux-win-x64-sc` | `cmuxw.exe`（无需运行时） |
+| 单文件 | `dotnet publish src/Cmux/Cmux.csproj -c Release -r win-x64 --self-contained true /p:PublishSingleFile=true /p:PublishTrimmed=false -o publish/cmux-win-x64-single` | `cmuxw.exe`（便携） |
+| 仅 CLI | `dotnet publish src/Cmux.Cli/Cmux.Cli.csproj -c Release -r win-x64 --self-contained true -o publish/cmux-cli` | `cmux.exe`（添加到 `PATH`） |
 
-片段面板支持创建可复用的命令模板：
+> 注意：WebView2 相关功能可能需要 WebView2 运行时。
 
-- **模板占位符**：使用 `{{key}}` 语法进行参数替换
-- 按**分类**和**标签**组织
-- **收藏**和**使用计数**方便快速访问
-- 创建、编辑、删除、插入片段到终端
-
----
-
-## 代理 / AI 聊天
-
-内置 AI 聊天面板，在设置中完整配置：
-
-- **服务商**：OpenAI 兼容和 Anthropic 端点（自定义 base URL、模型、API 密钥）
-- **自定义工具**：定义工具配置（名称、描述、命令模板）
-- **MCP 服务器**：Model Context Protocol 集成（命令、参数、工作目录）
-- **Bash 工具**：可选 shell 执行工具，可配置超时
-- **Web 搜索**：Exa 搜索集成
-- **对话记忆**：持久线程，带 token 追踪和自动压缩
-- **流式输出**：可开关流式响应
-- **代理会话恢复**：重启时恢复之前的代理会话
-- **密钥存储**：API 密钥使用 Windows DPAPI 加密存储
-
----
-
-## 国际化
-
-在设置中运行时切换界面语言：
-
-- **英文**（`en`）
-- **中文**（`zh`）
-
----
-
-## 架构（概览）
+### 架构
 
 ```text
 src/

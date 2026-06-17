@@ -6,52 +6,12 @@ A dark, keyboard-first terminal multiplexer for Windows, inspired by tmux/cmux w
 
 ---
 
-## Why / Who / What / How
+## Introduction
 
-| Why (problem) | Who (for) | What (feature) | How to use |
-|---|---|---|---|
-| You lose context across projects and shells | Developers juggling many repos/tasks | **Workspaces + surfaces (tabs)** | `Ctrl+N` new workspace, `Ctrl+T` new surface, switch with `Ctrl+1..9` |
-| One terminal is never enough | CLI-heavy users, agent workflows | **Split panes** (right/down) | `Ctrl+D` split right, `Ctrl+Shift+D` split down, `Ctrl+Alt+Arrow` focus pane |
-| You miss important agent outputs | AI-assisted coding users (Claude/Codex/etc.) | **OSC notifications + unread tracking** | `Ctrl+I` open notifications, `Ctrl+Shift+U` jump to latest unread |
-| You need auditability of executed commands | Security-conscious / debugging workflows | **Command logs + history picker** | `Ctrl+Shift+L` logs, `Ctrl+Alt+H` command history, insert/run from UI |
-| You want full session recall after crashes/restarts | Long-running sessions | **Session persistence + transcript capture** | Auto restore on startup + open **Session Vault** (`Ctrl+Shift+V`) |
-| You want searchable output history like Termius vault | Anyone reviewing terminal sessions | **Session Vault browser** | Open vault, filter captures, preview transcript, copy/open file |
-| You need dark theme consistency and personalization | Users who care about UX/readability | **19 built-in themes + custom colors** | Settings (`Ctrl+,`) for theme/font/cursor + workspace accents |
-| You want quick actions without mouse hunting | Keyboard-first power users | **Command palette + shortcuts + chords** | `Ctrl+Shift+P` command palette, `Ctrl+K` chord sequences |
-| You need automation from scripts/tools | Integrators/agent hooks | **Named pipe CLI API** (`cmux`) | `cmux notify`, `cmux workspace`, `cmux split`, `cmux status` |
-| You want an AI assistant inside your terminal | AI-assisted coding users | **Built-in agent chat** (OpenAI / Anthropic) | `Ctrl+Shift+A` toggle agent panel, configure providers in Settings |
-| You want per-project shell and env setup | Multi-project developers | **Project config** (`cmux.json`) | Place `.cmux/cmux.json` in project root for custom shell, env, color |
-| You need to see what's listening | Devs running local servers | **Listening ports in sidebar** | Sidebar auto-shows TCP ports of child processes |
-
----
-
-## Core capabilities
-
-- Native **ConPTY terminal emulation** (real Windows terminal backend)
-- Workspace sidebar with metadata (git branch, cwd, notifications, listening ports)
-- Collapsible **workspace groups** in sidebar
-- Multi-surface tabs and split-pane layout management (with preset layouts)
-- **Built-in agent chat panel** (OpenAI / Anthropic providers, MCP servers, custom tools)
-- Notification ingestion (OSC 9/99/777) for coding agents
-- **Agent hook events** (stop, notification, session-start, permission-request, pre-tool-use)
-- Command logs/history with filtering and quick replay
-- **Snippets system** with templates (`{{key}}` placeholders), categories, tags, favorites
-- Terminal transcript capture + Session Vault browsing
-- Persistent sessions (window + workspace/surface/pane state, auto-save)
-- **19 built-in terminal themes** (dark + light) + custom color editing
-- **Shell profiles** (PowerShell, WSL, cmd — each with custom env and theme)
-- **Project-level config** (`.cmux/cmux.json`) for per-project env, shell, color
-- **Localization** (English / Chinese UI, switchable at runtime)
-- **Browser panel** (WebView2) for web content alongside terminal
-- Dark desktop UI with keyboard-first navigation + **chord shortcuts**
-- CJK support (East Asian ambiguous-width configurable)
-
----
-
-## Screenshots
+cmux is a native Windows terminal multiplexer that brings tmux-style workspace management to the Windows desktop. It combines a real ConPTY terminal backend with a WPF-based dark UI, built-in AI agent chat, session persistence, and a CLI for automation — all keyboard-first, all local.
 
 <details>
-  <summary>Open screenshots</summary>
+  <summary>Screenshots</summary>
 
   <p><strong>Main workspace view</strong></p>
   <img src="assets/screenshots/1.jpg" alt="cmux main workspace" width="1000" />
@@ -65,93 +25,67 @@ A dark, keyboard-first terminal multiplexer for Windows, inspired by tmux/cmux w
 
 ---
 
-## Build and run (Windows)
+## Features
 
-### Requirements
+### Workspace & layout
 
-- Windows 10/11
-- [.NET 10 SDK](https://dotnet.microsoft.com/download)
-- Optional: Visual Studio 2022 / Build Tools
+- Native **ConPTY terminal emulation** (real Windows terminal backend)
+- Workspace sidebar with metadata (git branch, cwd, notifications, listening ports)
+- Collapsible **workspace groups** in sidebar
+- Multi-surface tabs and **split-pane layout** with preset layouts (2-column, 3-column, grid, main+stack)
+- **Snippets system** — reusable command templates with `{{key}}` placeholders, categories, tags, favorites
 
-### Clone
+### Session & audit
 
-```powershell
-git clone <repo-url> cmux-windows
-cd cmux-windows
-```
+- **Session persistence** — auto-save and restore (window + workspace/surface/pane state)
+- **Command logs + history picker** — filter, insert, replay
+- **Terminal transcript capture** + Session Vault browsing (searchable output history)
+- Notification ingestion (OSC 9/99/777) for coding agents
 
-### Dev run
+### Agent / AI chat
 
-```powershell
-dotnet build Cmux.sln -c Debug
-dotnet run --project src/Cmux/Cmux.csproj -c Debug
-```
+- **Built-in agent chat panel** (`Ctrl+Shift+A`) — OpenAI / Anthropic providers
+- **Custom tools** — define tool configs with name, description, command template
+- **MCP servers** — Model Context Protocol integration (command, arguments, working directory)
+- **Bash tool** — optional shell execution with configurable timeout
+- **Web search** — Exa integration
+- **Conversation memory** — persistent threads with token tracking and auto-compaction
+- **Agent session resume** — restore previous agent sessions on restart
+- **Secret storage** — API keys encrypted with Windows DPAPI
+- **Agent hook events** — stop, notification, session-start, permission-request, pre-tool-use
 
----
+### Theming & personalization
 
-## Build `.exe` on Windows
+- **19 built-in terminal themes** (12 dark + 7 light): Dracula, Nord, One Dark, Monokai, Tokyo Night, Catppuccin Mocha, Gruvbox, Everforest, Kanagawa, Ayu, Solarized, GitHub Light, Rose Pine Dawn, etc.
+- Custom color editing + workspace accent colors
+- **Shell profiles** — PowerShell, WSL, cmd with per-profile env vars and theme override
+- **Project-level config** (`.cmux/cmux.json`) — per-project shell, env, color, icon
+- **Ghostty config import** — read `ghostty/config` for theme, font, size
+- **Browser panel** (WebView2) for web content alongside terminal
 
-### Quick build (GUI + CLI)
+### Keyboard-first
 
-```powershell
-build.bat
-```
+- **Command palette** (`Ctrl+Shift+P`) — fuzzy search, layout presets, equalize panes, test notification, agent resume
+- **Chord shortcuts** (`Ctrl+K` then second key within configurable timeout)
+- CJK support — East Asian ambiguous-width configurable
 
-Outputs `publish/cmuxw.exe` and `publish/cmux.exe`.
+### Localization
 
-### 1) Framework-dependent `.exe` (smallest output)
-
-```powershell
-dotnet publish src/Cmux/Cmux.csproj -c Release -r win-x64 --self-contained false -o publish/cmux-win-x64
-```
-
-Output:
-- `publish/cmux-win-x64/cmuxw.exe`
-
-Use this when target machines already have .NET runtime installed.
-
-### 2) Self-contained `.exe` (no runtime install needed)
-
-```powershell
-dotnet publish src/Cmux/Cmux.csproj -c Release -r win-x64 --self-contained true -o publish/cmux-win-x64-sc
-```
-
-Output:
-- `publish/cmux-win-x64-sc/cmuxw.exe`
-
-### 3) Single-file self-contained `.exe` (portable artifact)
-
-```powershell
-dotnet publish src/Cmux/Cmux.csproj -c Release -r win-x64 --self-contained true /p:PublishSingleFile=true /p:PublishTrimmed=false -o publish/cmux-win-x64-single
-```
-
-Output:
-- `publish/cmux-win-x64-single/cmuxw.exe`
-
-> Note: WebView2-backed features may require WebView2 Runtime depending on target system state.
-
-### Build CLI executable
-
-```powershell
-dotnet publish src/Cmux.Cli/Cmux.Cli.csproj -c Release -r win-x64 --self-contained true -o publish/cmux-cli
-```
-
-Add `publish/cmux-cli` to `PATH` to use `cmux` globally.
+- **English** / **Chinese** UI — switchable at runtime in Settings
 
 ---
 
-## First 5 minutes (how to use)
+## Quick start
 
 1. Launch `cmuxw.exe`
-2. `Ctrl+N` to create a workspace for your repo
-3. `Ctrl+T` to create additional surfaces (tabs)
-4. Split panes with `Ctrl+D` / `Ctrl+Shift+D`
-5. Open command palette with `Ctrl+Shift+P` for quick actions
-6. Open agent chat with `Ctrl+Shift+A`
-7. Open logs with `Ctrl+Shift+L`
-8. Open Session Vault with `Ctrl+Shift+V`
-9. Open settings with `Ctrl+,` — pick a theme, configure agent providers, set shell profiles
-10. Switch UI language in Settings (English / Chinese)
+2. `Ctrl+N` — new workspace
+3. `Ctrl+T` — new surface (tab)
+4. `Ctrl+D` / `Ctrl+Shift+D` — split panes
+5. `Ctrl+Shift+P` — command palette for quick actions
+6. `Ctrl+Shift+A` — toggle agent chat panel
+7. `Ctrl+Shift+L` — command logs
+8. `Ctrl+Shift+V` — session vault
+9. `Ctrl+,` — settings (theme, agent providers, shell profiles, language)
 
 ---
 
@@ -212,18 +146,6 @@ Press `Ctrl+K`, then a second key within 500ms (configurable via `ChordTimeoutMs
 
 ---
 
-## Command palette actions
-
-Open with `Ctrl+Shift+P`. Available actions include:
-
-- Layout presets: **2-Column**, **3-Column**, **Grid**, **Main+Stack**
-- **Equalize Panes** — make all split panes equal size
-- **Test Notification** — verify notification pipeline
-- **Agent Resume** — resume a previous agent conversation
-- **Insert Last Command** — quick-insert most recent command from history
-
----
-
 ## CLI usage
 
 ```powershell
@@ -268,7 +190,7 @@ cmux version
 
 ## Project configuration
 
-Place `.cmux/cmux.json` in your project root to configure per-project defaults:
+Place `.cmux/cmux.json` in your project root for per-project defaults:
 
 ```json
 {
@@ -287,66 +209,45 @@ Place `.cmux/cmux.json` in your project root to configure per-project defaults:
 
 ---
 
-## Shell profiles
+## Development guide
 
-Configure multiple shell profiles in Settings (`Ctrl+,`). Each profile can have:
+### Requirements
 
-- Custom command and arguments (e.g., `wsl`, `powershell`, `cmd`)
-- Working directory
-- Per-profile environment variables
-- Theme override
+- Windows 10/11
+- [.NET 10 SDK](https://dotnet.microsoft.com/download)
+- Optional: Visual Studio 2022 / Build Tools
 
----
+### Clone & dev run
 
-## Built-in themes
+```powershell
+git clone <repo-url> cmux-windows
+cd cmux-windows
+dotnet build Cmux.sln -c Debug
+dotnet run --project src/Cmux/Cmux.csproj -c Debug
+```
 
-19 terminal themes included — dark and light:
+### Build `.exe`
 
-**Dark**: Default Dark, Dracula, Nord, Solarized Dark, One Dark, Monokai, Tokyo Night, Catppuccin Mocha, Gruvbox, Everforest Dark, Kanagawa, Ayu Dark
+Quick build (GUI + CLI):
 
-**Light**: Solarized Light, Catppuccin Latte, GitHub Light, Rose Pine Dawn, One Light, Tokyo Night Light, Everforest Light, Ayu Light, Nord Light, Gruvbox Light, Dracula Light
+```powershell
+build.bat
+```
 
-> Can also import themes from Ghostty config files (`~/.config/ghostty/config` or `%APPDATA%\ghostty\config`).
+Outputs `publish/cmuxw.exe` and `publish/cmux.exe`.
 
----
+Other options:
 
-## Snippets
+| Type | Command | Output |
+|---|---|---|
+| Framework-dependent | `dotnet publish src/Cmux/Cmux.csproj -c Release -r win-x64 --self-contained false -o publish/cmux-win-x64` | `cmuxw.exe` (smallest, needs .NET runtime) |
+| Self-contained | `dotnet publish src/Cmux/Cmux.csproj -c Release -r win-x64 --self-contained true -o publish/cmux-win-x64-sc` | `cmuxw.exe` (no runtime needed) |
+| Single-file | `dotnet publish src/Cmux/Cmux.csproj -c Release -r win-x64 --self-contained true /p:PublishSingleFile=true /p:PublishTrimmed=false -o publish/cmux-win-x64-single` | `cmuxw.exe` (portable) |
+| CLI only | `dotnet publish src/Cmux.Cli/Cmux.Cli.csproj -c Release -r win-x64 --self-contained true -o publish/cmux-cli` | `cmux.exe` (add to `PATH`) |
 
-The Snippets panel lets you create reusable command templates:
+> Note: WebView2-backed features may require WebView2 Runtime.
 
-- **Template placeholders**: use `{{key}}` syntax for parameter substitution
-- Organize by **category** and **tags**
-- **Favorites** and **use counting** for quick access
-- Create, edit, delete, and insert snippets into the terminal
-
----
-
-## Agent / AI chat
-
-Built-in AI chat panel with full configuration in Settings:
-
-- **Providers**: OpenAI-compatible and Anthropic endpoints (custom base URLs, models, API keys)
-- **Custom tools**: define tool configs with name, description, command template
-- **MCP servers**: Model Context Protocol integration (command, arguments, working directory)
-- **Bash tool**: optional shell execution tool with configurable timeout
-- **Web search**: Exa search integration
-- **Conversation memory**: persistent threads with token tracking, auto-compaction
-- **Streaming**: toggle streaming responses
-- **Agent session resume**: restore previous agent sessions on restart
-- **Secret storage**: API keys encrypted with Windows DPAPI
-
----
-
-## Localization
-
-Switch UI language at runtime in Settings:
-
-- **English** (`en`)
-- **Chinese** (`zh`)
-
----
-
-## Architecture (high level)
+### Architecture
 
 ```text
 src/
