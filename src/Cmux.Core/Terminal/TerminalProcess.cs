@@ -1,6 +1,7 @@
 using System.ComponentModel;
 using System.Runtime.InteropServices;
 using System.Text;
+using Cmux.Core.Services;
 using static Cmux.Core.Terminal.ConPtyInterop;
 
 namespace Cmux.Core.Terminal;
@@ -43,6 +44,9 @@ public sealed class TerminalProcess : IDisposable
             if (environmentVariables is { Count: > 0 })
                 envBlock = BuildEnvironmentBlock(environmentVariables);
 
+            DevLogService.Log("Process", $"CreateProcess command=\"{shellCommand}\" cwd=\"{workingDirectory}\"");
+            var sw = DevLogService.StartTiming();
+
             bool success = CreateProcess(
                 null,
                 shellCommand,
@@ -54,6 +58,8 @@ public sealed class TerminalProcess : IDisposable
                 workingDirectory,
                 ref startupInfo,
                 out _processInfo);
+
+            DevLogService.LogTiming("Process", $"CreateProcess result={success}", sw);
 
             if (!success)
             {

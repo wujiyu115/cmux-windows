@@ -59,6 +59,10 @@ public class CmuxSettings
     public Dictionary<string, string> KeyBindings { get; set; } = [];
     public List<string> RecentDirectories { get; set; } = [];
     public AgentSettings Agent { get; set; } = new();
+
+    // ── Developer ───────────────────────────────────────────────
+
+    public bool DevLogEnabled { get; set; } = false;
 }
 
 /// <summary>

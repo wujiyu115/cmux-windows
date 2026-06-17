@@ -503,4 +503,13 @@
     <system:String x:Key="AgentDefault_Handler">/agent</system:String>
     <system:String x:Key="AgentDefault_SystemPrompt">你是一个务实的工程助手，运行在 cmux 中。保持回答简洁且面向行动。</system:String>
 
+    <!-- Developer -->
+    <system:String x:Key="Settings_Developer">开发者</system:String>
+    <system:String x:Key="Settings_DevLogDescription">启用开发者日志以记录终端创建、会话启动和进程启动的详细耗时信息。用于诊断性能问题。</system:String>
+    <system:String x:Key="Settings_EnableDevLog">启用日志</system:String>
+    <system:String x:Key="Settings_DevLogPath">日志文件</system:String>
+    <system:String x:Key="Settings_ViewLog">查看日志</system:String>
+    <system:String x:Key="Settings_ClearLog">清除日志</system:String>
+    <system:String x:Key="Settings_OpenLogFolder">打开目录</system:String>
+
 </ResourceDictionary>

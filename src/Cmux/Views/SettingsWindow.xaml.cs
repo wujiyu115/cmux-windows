@@ -190,6 +190,9 @@ public partial class SettingsWindow : Window
         UpdateTerminalColorEditorsEnabledState();
         RefreshTerminalColorPreviews();
         UpdateThemePreview();
+
+        DevLogEnabledCheck.IsChecked = s.DevLogEnabled;
+        DevLogPathText.Text = DevLogService.GetLogPath();
     }
 
     private bool SaveSettings()
@@ -388,9 +391,10 @@ public partial class SettingsWindow : Window
         KeyboardSection.Visibility = section == "Keyboard" ? Visibility.Visible : Visibility.Collapsed;
         AgentSection.Visibility = section == "Agent" ? Visibility.Visible : Visibility.Collapsed;
         AboutSection.Visibility = section == "About" ? Visibility.Visible : Visibility.Collapsed;
+        DeveloperSection.Visibility = section == "Developer" ? Visibility.Visible : Visibility.Collapsed;
 
         // Update nav button active state via Tag
-        foreach (var btn in new[] { NavAppearance, NavTerminal, NavBehavior, NavKeyboard, NavAgent, NavAbout })
+        foreach (var btn in new[] { NavAppearance, NavTerminal, NavBehavior, NavKeyboard, NavAgent, NavAbout, NavDeveloper })
             btn.Tag = btn.Name == $"Nav{section}" ? "active" : null;
     }
 
@@ -1055,6 +1059,36 @@ public partial class SettingsWindow : Window
             "crlf" => 3,
             _ => 0,
         };
+    }
+
+    // ── Developer ──────────────────────────────────────────────────
+
+    private void DevLogEnabledCheck_Changed(object sender, RoutedEventArgs e)
+    {
+        var enabled = DevLogEnabledCheck.IsChecked == true;
+        DevLogService.IsEnabled = enabled;
+        SettingsService.Current.DevLogEnabled = enabled;
+        SettingsService.Save();
+    }
+
+    private void ViewLog_Click(object sender, RoutedEventArgs e)
+    {
+        var path = DevLogService.GetLogPath();
+        if (!File.Exists(path))
+            File.WriteAllText(path, "");
+        System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(path) { UseShellExecute = true });
+    }
+
+    private void ClearLog_Click(object sender, RoutedEventArgs e)
+    {
+        DevLogService.Clear();
+    }
+
+    private void OpenLogFolder_Click(object sender, RoutedEventArgs e)
+    {
+        var dir = Path.GetDirectoryName(DevLogService.GetLogPath());
+        if (dir != null && Directory.Exists(dir))
+            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(dir) { UseShellExecute = true });
     }
 
 }

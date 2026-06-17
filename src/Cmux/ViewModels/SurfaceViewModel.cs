@@ -359,12 +359,15 @@ public partial class SurfaceViewModel : ObservableObject, IDisposable
 
     private TerminalSession StartSession(string paneId, string? workingDirectory = null, PaneStateSnapshot? restoredState = null, string? shell = null)
     {
+        var sessionSw = DevLogService.StartTiming();
         var effectiveShell = shell ?? GetConfiguredShell();
         // Store the explicit override (null = use default shell from settings)
         _paneShells[paneId] = shell;
 
         // Fallback chain: explicit cwd → restored snapshot cwd → workspace start directory
         workingDirectory ??= restoredState?.WorkingDirectory ?? _workspaceStartDirectory;
+
+        DevLogService.Log("Session", $"StartSession pane={paneId} shell=\"{effectiveShell}\" cwd=\"{workingDirectory}\"");
 
         // Wait for daemon connect task (includes starting daemon if needed).
         // First pane blocks up to 5s; subsequent panes get the cached result instantly.
@@ -373,9 +376,11 @@ public partial class SurfaceViewModel : ObservableObject, IDisposable
             if (!_daemonWaitDone)
             {
                 DaemonLog($"[StartSession:{paneId}] Waiting for daemon connect task...");
+                var daemonSw = DevLogService.StartTiming();
                 try { App.DaemonConnectTask.Wait(5000); }
                 catch { /* timeout or connect failure — proceed with local */ }
                 _daemonWaitDone = true;
+                DevLogService.LogTiming("Session", "Daemon wait", daemonSw);
             }
         }
 
@@ -398,7 +403,10 @@ public partial class SurfaceViewModel : ObservableObject, IDisposable
         }
 
         DaemonLog($"[StartSession:{paneId}] Using LOCAL session");
-        return StartLocalSession(paneId, workingDirectory, restoredState, effectiveShell);
+        DevLogService.Log("Session", $"Using LOCAL session for pane={paneId}");
+        var result = StartLocalSession(paneId, workingDirectory, restoredState, effectiveShell);
+        DevLogService.LogTiming("Session", $"StartSession total pane={paneId}", sessionSw);
+        return result;
     }
 
     private static void DaemonLog(string message) => App.DaemonLog(message);
@@ -507,10 +515,17 @@ public partial class SurfaceViewModel : ObservableObject, IDisposable
         WireSessionEvents(session, paneId);
 
         _sessions[paneId] = session;
-        session.Start(command: shell, workingDirectory: workingDirectory ?? restoredState?.WorkingDirectory, environmentVariables: _workspaceEnvVars);
 
-        if (restoredState?.BufferSnapshot != null)
-            session.RestoreBufferSnapshot(restoredState.BufferSnapshot);
+        var effectiveCwd = workingDirectory ?? restoredState?.WorkingDirectory;
+        var envVars = _workspaceEnvVars;
+        var snapshot = restoredState?.BufferSnapshot;
+
+        _ = Task.Run(() =>
+        {
+            session.Start(command: shell, workingDirectory: effectiveCwd, environmentVariables: envVars);
+            if (snapshot != null)
+                session.RestoreBufferSnapshot(snapshot);
+        });
 
         return session;
     }

@@ -1,5 +1,6 @@
 using System.ComponentModel;
 using System.Runtime.InteropServices;
+using Cmux.Core.Services;
 using Microsoft.Win32.SafeHandles;
 using static Cmux.Core.Terminal.ConPtyInterop;
 
@@ -60,7 +61,9 @@ public sealed class PseudoConsole : IDisposable
         }
 
         var size = new COORD(cols, rows);
+        var sw = DevLogService.StartTiming();
         int hr = CreatePseudoConsole(size, inputReadPipe, outputWritePipe, 0, out var handle);
+        DevLogService.LogTiming("ConPTY", $"CreatePseudoConsole {cols}x{rows}", sw);
 
         if (hr != 0)
         {

@@ -181,6 +181,14 @@
                             <TextBlock Text="{DynamicResource Settings_About}" VerticalAlignment="Center" />
                         </StackPanel>
                     </Button>
+                    <Button x:Name="NavDeveloper" Style="{StaticResource NavButton}"
+                            Click="NavButton_Click">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="&#xEC7A;" FontFamily="Segoe MDL2 Assets" FontSize="14"
+                                       VerticalAlignment="Center" Margin="0,0,10,0" />
+                            <TextBlock Text="{DynamicResource Settings_Developer}" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </Button>
                 </StackPanel>
 
                 <!-- Divider -->
@@ -1263,6 +1271,50 @@
                             </StackPanel>
                         </Border>
                     </StackPanel>
+
+                    <!-- ── Developer ─────────────────────────── -->
+                    <StackPanel x:Name="DeveloperSection" Visibility="Collapsed">
+                        <TextBlock Text="{DynamicResource Settings_Developer}" FontSize="18" FontWeight="SemiBold"
+                                   Foreground="{DynamicResource ForegroundBrush}" Margin="0,0,0,20" />
+
+                        <TextBlock Text="{DynamicResource Settings_DevLogDescription}"
+                                   Foreground="{DynamicResource ForegroundDimBrush}" FontSize="13"
+                                   TextWrapping="Wrap" Margin="0,0,0,16" />
+
+                        <!-- Enable toggle -->
+                        <Grid Margin="0,0,0,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="160" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="{DynamicResource Settings_EnableDevLog}" Style="{StaticResource SectionLabel}" />
+                            <CheckBox x:Name="DevLogEnabledCheck" Grid.Column="1"
+                                      Checked="DevLogEnabledCheck_Changed" Unchecked="DevLogEnabledCheck_Changed" />
+                        </Grid>
+
+                        <!-- Log file path -->
+                        <Grid Margin="0,0,0,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="160" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="{DynamicResource Settings_DevLogPath}" Style="{StaticResource SectionLabel}" />
+                            <TextBlock x:Name="DevLogPathText" Grid.Column="1"
+                                       Foreground="{DynamicResource ForegroundDimBrush}" FontSize="12"
+                                       VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
+                        </Grid>
+
+                        <!-- Action buttons -->
+                        <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
+                            <Button Content="{DynamicResource Settings_ViewLog}" Style="{StaticResource CmuxButton}"
+                                    Padding="14,7" Margin="0,0,8,0" Click="ViewLog_Click" />
+                            <Button Content="{DynamicResource Settings_ClearLog}" Style="{StaticResource CmuxButton}"
+                                    Padding="14,7" Margin="0,0,8,0" Click="ClearLog_Click" />
+                            <Button Content="{DynamicResource Settings_OpenLogFolder}" Style="{StaticResource CmuxButton}"
+                                    Padding="14,7" Click="OpenLogFolder_Click" />
+                        </StackPanel>
+                    </StackPanel>
+
                     </Grid>
                 </ScrollViewer>
             </Grid>

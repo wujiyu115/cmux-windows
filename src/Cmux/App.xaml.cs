@@ -26,6 +26,7 @@ public partial class App : Application
 
         Services.LanguageService.SetLanguage(SettingsService.Current.Language);
         Services.AppThemeService.ApplyTheme(TerminalThemes.GetEffective(SettingsService.Current));
+        DevLogService.IsEnabled = SettingsService.Current.DevLogEnabled;
 
         // Add global exception handlers to diagnose crashes
         DispatcherUnhandledException += (s, args) =>

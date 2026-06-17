@@ -2,6 +2,7 @@ using System.IO.Pipes;
 using System.Text;
 using System.Diagnostics;
 using Cmux.Core.IPC;
+using Cmux.Core.Services;
 using Microsoft.Win32.SafeHandles;
 
 namespace Cmux.Core.Terminal;
@@ -151,6 +152,9 @@ public sealed class TerminalSession : IDisposable
     /// </summary>
     public void Start(string? command = null, string? workingDirectory = null, Dictionary<string, string>? environmentVariables = null)
     {
+        var totalSw = DevLogService.StartTiming();
+        DevLogService.Log("Terminal", $"Start command=\"{command}\" cwd=\"{workingDirectory}\" pane={PaneId}");
+
         var fallbackDirectory = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
         if (string.IsNullOrWhiteSpace(fallbackDirectory))
             fallbackDirectory = Environment.CurrentDirectory;
@@ -163,8 +167,13 @@ public sealed class TerminalSession : IDisposable
 
         lock (_lock)
         {
+            var sw = DevLogService.StartTiming();
             _console = PseudoConsole.Create((short)Buffer.Cols, (short)Buffer.Rows);
+            DevLogService.LogTiming("Terminal", "PseudoConsole.Create", sw);
+
+            sw = DevLogService.StartTiming();
             _process = new TerminalProcess(_console, command, effectiveWorkingDirectory, environmentVariables);
+            DevLogService.LogTiming("Terminal", $"TerminalProcess created pid={_process.ProcessId}", sw);
 
             _readStream = new FileStream(_console.ReadPipe, FileAccess.Read);
             _writeStream = new FileStream(_console.WritePipe, FileAccess.Write);
@@ -187,6 +196,8 @@ public sealed class TerminalSession : IDisposable
 
         _cwdPollTimer = new Timer(_ => PollWorkingDirectory(), null,
             TimeSpan.FromSeconds(2), TimeSpan.FromSeconds(2));
+
+        DevLogService.LogTiming("Terminal", "Start total", totalSw);
     }
 
     private void PollWorkingDirectory()
