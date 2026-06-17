@@ -23,7 +23,9 @@
                 <DataTemplate DataType="{x:Type vm:SurfaceViewModel}">
                     <Border x:Name="tabBorder" Padding="14,6" Cursor="Hand"
                             Margin="2,4,2,4" CornerRadius="6"
-                            MouseLeftButtonDown="Tab_Click">
+                            MouseLeftButtonDown="Tab_Click"
+                            MouseEnter="TabBorder_MouseEnter"
+                            MouseLeave="TabBorder_MouseLeave">
                         <Border.Background>
                             <SolidColorBrush x:Name="tabBg" Color="Transparent" />
                         </Border.Background>
@@ -85,30 +87,7 @@
                         <Trigger SourceName="tabBorder" Property="IsMouseOver" Value="True">
                             <Setter TargetName="closeBtn" Property="Opacity" Value="0.7" />
                         </Trigger>
-                        <!-- Hover animation (non-selected tabs) -->
-                        <MultiDataTrigger>
-                            <MultiDataTrigger.Conditions>
-                                <Condition Binding="{Binding IsMouseOver, ElementName=tabBorder}" Value="True" />
-                            </MultiDataTrigger.Conditions>
-                            <MultiDataTrigger.EnterActions>
-                                <BeginStoryboard>
-                                    <Storyboard>
-                                        <ColorAnimation Storyboard.TargetName="tabBg"
-                                                        Storyboard.TargetProperty="Color"
-                                                        To="{DynamicResource HoverOverlayColor}" Duration="0:0:0.15" />
-                                    </Storyboard>
-                                </BeginStoryboard>
-                            </MultiDataTrigger.EnterActions>
-                            <MultiDataTrigger.ExitActions>
-                                <BeginStoryboard>
-                                    <Storyboard>
-                                        <ColorAnimation Storyboard.TargetName="tabBg"
-                                                        Storyboard.TargetProperty="Color"
-                                                        To="Transparent" Duration="0:0:0.15" />
-                                    </Storyboard>
-                                </BeginStoryboard>
-                            </MultiDataTrigger.ExitActions>
-                        </MultiDataTrigger>
+                        <!-- Hover animation handled in code-behind (DynamicResource can't be used in frozen Storyboards) -->
                     </DataTemplate.Triggers>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>

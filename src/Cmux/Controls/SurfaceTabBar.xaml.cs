@@ -1,6 +1,9 @@
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Animation;
 using System.Linq;
 using Cmux.ViewModels;
 using Cmux.Core.Services;
@@ -199,6 +202,25 @@ public partial class SurfaceTabBar : UserControl
             var others = ws.Surfaces.Where(s => s != surface).ToList();
             foreach (var other in others)
                 ws.CloseSurface(other);
+        }
+    }
+
+    private void TabBorder_MouseEnter(object sender, MouseEventArgs e)
+    {
+        if (sender is Border border && border.Background is SolidColorBrush)
+        {
+            var color = TryFindResource("HoverOverlayColor") as Color? ?? Colors.Transparent;
+            var anim = new ColorAnimation(color, new Duration(TimeSpan.FromSeconds(0.15)));
+            ((SolidColorBrush)border.Background).BeginAnimation(SolidColorBrush.ColorProperty, anim);
+        }
+    }
+
+    private void TabBorder_MouseLeave(object sender, MouseEventArgs e)
+    {
+        if (sender is Border border && border.Background is SolidColorBrush)
+        {
+            var anim = new ColorAnimation(Colors.Transparent, new Duration(TimeSpan.FromSeconds(0.15)));
+            ((SolidColorBrush)border.Background).BeginAnimation(SolidColorBrush.ColorProperty, anim);
         }
     }
 }
