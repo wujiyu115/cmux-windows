@@ -1,5 +1,7 @@
 # cmux for Windows
 
+[中文文档](README_CN.md)
+
 A dark, keyboard-first terminal multiplexer for Windows, inspired by tmux/cmux workflows but built natively with WPF + ConPTY.
 
 ---
