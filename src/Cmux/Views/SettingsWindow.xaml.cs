@@ -193,6 +193,7 @@ public partial class SettingsWindow : Window
         UpdateThemePreview();
 
         DevLogEnabledCheck.IsChecked = s.DevLogEnabled;
+        DevLogMaxSizeBox.Text = s.DevLogMaxSizeMB.ToString();
         DevLogPathText.Text = DevLogService.GetLogPath();
     }
 
@@ -379,6 +380,9 @@ public partial class SettingsWindow : Window
         ApplySecretUpdate(ExaApiKeyBox, agent.Exa.ApiKeySecretName, ref _clearExaKey);
 
         s.Agent = agent;
+
+        if (int.TryParse(DevLogMaxSizeBox.Text, out int devLogMax) && devLogMax >= 0)
+            s.DevLogMaxSizeMB = devLogMax;
 
         SettingsService.Save();
         SettingsService.NotifyChanged();
@@ -1070,6 +1074,8 @@ public partial class SettingsWindow : Window
         var enabled = DevLogEnabledCheck.IsChecked == true;
         DevLogService.IsEnabled = enabled;
         SettingsService.Current.DevLogEnabled = enabled;
+        if (int.TryParse(DevLogMaxSizeBox.Text, out int maxMb) && maxMb >= 0)
+            SettingsService.Current.DevLogMaxSizeMB = maxMb;
         SettingsService.Save();
     }
 

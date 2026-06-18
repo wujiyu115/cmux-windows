@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using Cmux.Core.Config;
 
 namespace Cmux.Core.Services;
 
@@ -26,10 +27,31 @@ public static class DevLogService
         {
             lock (_lock)
             {
+                long maxBytes = SettingsService.Current.DevLogMaxSizeMB * 1024L * 1024;
+                var fi = new FileInfo(_logPath);
+                if (maxBytes > 0 && fi.Exists && fi.Length > maxBytes)
+                    TruncateLog(fi);
+
                 using var fs = new FileStream(_logPath, FileMode.Append, FileAccess.Write, FileShare.ReadWrite);
                 using var sw = new StreamWriter(fs);
                 sw.Write($"[{DateTime.Now:yyyy-MM-dd HH:mm:ss.fff}] [{category}] {message}\n");
             }
+        }
+        catch { }
+    }
+
+    private static void TruncateLog(FileInfo fi)
+    {
+        try
+        {
+            var bytes = File.ReadAllBytes(fi.FullName);
+            int keepFrom = bytes.Length / 2;
+            // Advance to the next newline so we don't start mid-line
+            while (keepFrom < bytes.Length && bytes[keepFrom] != (byte)'\n')
+                keepFrom++;
+            if (keepFrom < bytes.Length)
+                keepFrom++;
+            File.WriteAllBytes(fi.FullName, bytes[keepFrom..]);
         }
         catch { }
     }

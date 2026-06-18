@@ -64,6 +64,7 @@ public class CmuxSettings
     // ── Developer ───────────────────────────────────────────────
 
     public bool DevLogEnabled { get; set; } = false;
+    public int DevLogMaxSizeMB { get; set; } = 2;
 }
 
 /// <summary>

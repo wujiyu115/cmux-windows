@@ -524,6 +524,7 @@
     <system:String x:Key="Settings_DevLogDescription">启用开发者日志以记录终端创建、会话启动和进程启动的详细耗时信息。用于诊断性能问题。</system:String>
     <system:String x:Key="Settings_EnableDevLog">启用日志</system:String>
     <system:String x:Key="Settings_DevLogPath">日志文件</system:String>
+    <system:String x:Key="Settings_DevLogMaxSize">日志大小上限</system:String>
     <system:String x:Key="Settings_ViewLog">查看日志</system:String>
     <system:String x:Key="Settings_ClearLog">清除日志</system:String>
     <system:String x:Key="Settings_OpenLogFolder">打开目录</system:String>

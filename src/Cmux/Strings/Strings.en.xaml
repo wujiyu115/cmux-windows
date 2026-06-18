@@ -524,6 +524,7 @@ A terminal multiplexer optimized for modern workflows.</system:String>
     <system:String x:Key="Settings_DevLogDescription">Enable developer logging to record detailed timing information for terminal creation, session startup, and process launching. Useful for diagnosing performance issues.</system:String>
     <system:String x:Key="Settings_EnableDevLog">Enable Logging</system:String>
     <system:String x:Key="Settings_DevLogPath">Log File</system:String>
+    <system:String x:Key="Settings_DevLogMaxSize">Max Log Size</system:String>
     <system:String x:Key="Settings_ViewLog">View Log</system:String>
     <system:String x:Key="Settings_ClearLog">Clear Log</system:String>
     <system:String x:Key="Settings_OpenLogFolder">Open Folder</system:String>
