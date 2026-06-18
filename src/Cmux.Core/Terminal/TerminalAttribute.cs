@@ -20,6 +20,7 @@ public struct TerminalColor : IEquatable<TerminalColor>
     public byte G;
     public byte B;
     public bool IsDefault;
+    public int PaletteIndex;
 
     public TerminalColor(byte r, byte g, byte b)
     {
@@ -27,16 +28,17 @@ public struct TerminalColor : IEquatable<TerminalColor>
         G = g;
         B = b;
         IsDefault = false;
+        PaletteIndex = -1;
     }
 
-    public static TerminalColor Default => new() { IsDefault = true };
+    public static TerminalColor Default => new() { IsDefault = true, PaletteIndex = -1 };
 
     public static TerminalColor FromIndex(int index)
     {
         // Standard 256-color lookup
         if (index < 16)
         {
-            return index switch
+            var c = index switch
             {
                 0 => new(0x00, 0x00, 0x00),
                 1 => new(0xAA, 0x00, 0x00),
@@ -56,6 +58,8 @@ public struct TerminalColor : IEquatable<TerminalColor>
                 15 => new(0xFF, 0xFF, 0xFF),
                 _ => Default,
             };
+            c.PaletteIndex = index;
+            return c;
         }
 
         if (index < 232)
@@ -82,10 +86,10 @@ public struct TerminalColor : IEquatable<TerminalColor>
     public static TerminalColor FromRgb(byte r, byte g, byte b) => new(r, g, b);
 
     public bool Equals(TerminalColor other) =>
-        R == other.R && G == other.G && B == other.B && IsDefault == other.IsDefault;
+        R == other.R && G == other.G && B == other.B && IsDefault == other.IsDefault && PaletteIndex == other.PaletteIndex;
 
     public override bool Equals(object? obj) => obj is TerminalColor c && Equals(c);
-    public override int GetHashCode() => HashCode.Combine(R, G, B, IsDefault);
+    public override int GetHashCode() => HashCode.Combine(R, G, B, IsDefault, PaletteIndex);
     public static bool operator ==(TerminalColor left, TerminalColor right) => left.Equals(right);
     public static bool operator !=(TerminalColor left, TerminalColor right) => !left.Equals(right);
 }

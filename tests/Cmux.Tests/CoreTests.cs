@@ -463,11 +463,16 @@ public class TerminalColorTests
         black.R.Should().Be(0);
         black.G.Should().Be(0);
         black.B.Should().Be(0);
+        black.PaletteIndex.Should().Be(0);
 
         var white = TerminalColor.FromIndex(15);
         white.R.Should().Be(0xFF);
         white.G.Should().Be(0xFF);
         white.B.Should().Be(0xFF);
+        white.PaletteIndex.Should().Be(15);
+
+        var extended = TerminalColor.FromIndex(128);
+        extended.PaletteIndex.Should().Be(-1);
     }
 
     [Fact]

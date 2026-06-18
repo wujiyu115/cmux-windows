@@ -524,17 +524,17 @@ public class TerminalControl : FrameworkElement
                     bool isSelected = _selection.IsSelected(visRow, c);
                     bool isInverse = attr.Flags.HasFlag(CellFlags.Inverse) != isSelected;
 
-                    // Cell colors
+                    // Cell colors (resolve palette indices to theme colors)
                     TerminalColor cellBg, cellFg;
                     if (isInverse)
                     {
-                        cellBg = attr.Foreground.IsDefault ? _theme.Foreground : attr.Foreground;
-                        cellFg = attr.Background.IsDefault ? _theme.Background : attr.Background;
+                        cellBg = attr.Foreground.IsDefault ? _theme.Foreground : ResolveColor(attr.Foreground);
+                        cellFg = attr.Background.IsDefault ? _theme.Background : ResolveColor(attr.Background);
                     }
                     else
                     {
-                        cellBg = attr.Background;
-                        cellFg = attr.Foreground;
+                        cellBg = ResolveColor(attr.Background);
+                        cellFg = ResolveColor(attr.Foreground);
                     }
 
                     if (isSelected && _theme.SelectionBackground.HasValue)
@@ -743,6 +743,13 @@ public class TerminalControl : FrameworkElement
             pen.Freeze();
             dc.DrawLine(pen, new Point(x, y + _cellHeight / 2), new Point(x + runWidth, y + _cellHeight / 2));
         }
+    }
+
+    private TerminalColor ResolveColor(TerminalColor c)
+    {
+        if (c.PaletteIndex >= 0 && c.PaletteIndex < _theme.Palette.Length)
+            return _theme.Palette[c.PaletteIndex];
+        return c;
     }
 
     private static Color ToWpfColor(TerminalColor c) =>
