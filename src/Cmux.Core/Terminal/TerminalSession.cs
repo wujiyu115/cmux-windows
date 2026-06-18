@@ -23,7 +23,7 @@ public sealed class TerminalSession : IDisposable
     private volatile bool _disposed;
     private volatile bool _daemonWriteLogged;
     private volatile bool _localWriteNullLogged;
-    private readonly object _lock = new();
+    private object _lock => Buffer.SyncRoot;
     private readonly object _writeLock = new();
     private Timer? _cwdPollTimer;
 

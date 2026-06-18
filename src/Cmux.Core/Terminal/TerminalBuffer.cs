@@ -53,6 +53,8 @@ public class TerminalBuffer
     private int _savedMainCursorCol;
     private TerminalAttribute _savedMainAttribute;
 
+    public object SyncRoot { get; } = new();
+
     public int ScrollbackCount => _scrollback.Count;
     public int TotalLines => Rows + _scrollback.Count;
     public bool ScreenJustCleared { get; set; }

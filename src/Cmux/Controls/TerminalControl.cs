@@ -205,30 +205,33 @@ public class TerminalControl : FrameworkElement
             return;
 
         var buffer = _session.Buffer;
-        var currentScrollback = buffer.ScrollbackCount;
-        var scrollbackDelta = currentScrollback - _lastScrollbackCount;
-
-        if (buffer.ScreenJustCleared)
+        lock (buffer.SyncRoot)
         {
-            buffer.ScreenJustCleared = false;
-            _scrollOffset = 0;
-            _followOutput = true;
-        }
-        else if (_followOutput || _scrollOffset == 0)
-        {
-            _scrollOffset = 0;
-            _followOutput = true;
-        }
-        else if (_scrollOffset < 0 && scrollbackDelta > 0)
-        {
-            _scrollOffset -= scrollbackDelta;
-        }
+            var currentScrollback = buffer.ScrollbackCount;
+            var scrollbackDelta = currentScrollback - _lastScrollbackCount;
 
-        _scrollOffset = Math.Clamp(_scrollOffset, -currentScrollback, 0);
-        if (_scrollOffset == 0)
-            _followOutput = true;
+            if (buffer.ScreenJustCleared)
+            {
+                buffer.ScreenJustCleared = false;
+                _scrollOffset = 0;
+                _followOutput = true;
+            }
+            else if (_followOutput || _scrollOffset == 0)
+            {
+                _scrollOffset = 0;
+                _followOutput = true;
+            }
+            else if (_scrollOffset < 0 && scrollbackDelta > 0)
+            {
+                _scrollOffset -= scrollbackDelta;
+            }
 
-        _lastScrollbackCount = currentScrollback;
+            _scrollOffset = Math.Clamp(_scrollOffset, -currentScrollback, 0);
+            if (_scrollOffset == 0)
+                _followOutput = true;
+
+            _lastScrollbackCount = currentScrollback;
+        }
         RequestRender();
     }
 
@@ -414,6 +417,8 @@ public class TerminalControl : FrameworkElement
         {
             var buffer = _session.Buffer;
             using var dc = _visual.RenderOpen();
+            lock (buffer.SyncRoot)
+            {
             var dpi = VisualTreeHelper.GetDpi(this).PixelsPerDip;
 
             // Background
@@ -662,6 +667,7 @@ public class TerminalControl : FrameworkElement
                     new Rect(ix, 6, iw, ih), 4, 4);
                 dc.DrawText(indicatorText, new Point(ix + 6, 8));
             }
+            } // lock (buffer.SyncRoot)
         }
         catch (Exception ex)
         {
@@ -865,6 +871,23 @@ public class TerminalControl : FrameworkElement
         return false;
     }
 
+    private static void TrySetClipboardText(string text)
+    {
+        for (int i = 0; i < 3; i++)
+        {
+            try
+            {
+                Clipboard.SetText(text);
+                return;
+            }
+            catch (System.Runtime.InteropServices.COMException)
+            {
+                if (i < 2)
+                    System.Threading.Thread.Sleep(50);
+            }
+        }
+    }
+
     private bool CopySelectionToClipboard()
     {
         if (_session == null || !_selection.HasSelection)
@@ -874,7 +897,7 @@ public class TerminalControl : FrameworkElement
         if (string.IsNullOrEmpty(text))
             return false;
 
-        Clipboard.SetText(text);
+        TrySetClipboardText(text);
         _selection.ClearSelection();
         return true;
     }
@@ -994,7 +1017,7 @@ public class TerminalControl : FrameworkElement
             {
                 var text = _selection.GetSelectedText(_session.Buffer, _scrollOffset);
                 if (!string.IsNullOrEmpty(text))
-                    Clipboard.SetText(text);
+                    TrySetClipboardText(text);
                 _selection.ClearSelection();
                 return;
             }
@@ -1586,7 +1609,7 @@ public class TerminalControl : FrameworkElement
             if (_session != null)
             {
                 var text = _selection.GetSelectedText(_session.Buffer, _scrollOffset);
-                if (!string.IsNullOrEmpty(text)) Clipboard.SetText(text);
+                if (!string.IsNullOrEmpty(text)) TrySetClipboardText(text);
                 _selection.ClearSelection();
             }
         };
@@ -1674,11 +1697,14 @@ public class TerminalControl : FrameworkElement
     {
         if (_session == null) return;
 
-        _session.Buffer.EraseInDisplay(3);
-        _session.Buffer.MoveCursorTo(0, 0);
+        lock (_session.Buffer.SyncRoot)
+        {
+            _session.Buffer.EraseInDisplay(3);
+            _session.Buffer.MoveCursorTo(0, 0);
+            _lastScrollbackCount = _session.Buffer.ScrollbackCount;
+        }
         _scrollOffset = 0;
         _followOutput = true;
-        _lastScrollbackCount = _session.Buffer.ScrollbackCount;
         RequestRender(System.Windows.Threading.DispatcherPriority.Render);
 
         // Ask shell to repaint prompt where supported.

@@ -6,6 +6,7 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Linq;
 using Cmux.ViewModels;
+using Cmux.Core.Config;
 using Cmux.Core.Services;
 using Cmux.Services;
 
@@ -106,16 +107,23 @@ public partial class SurfaceTabBar : UserControl
         if (DataContext is not WorkspaceViewModel workspace) return;
         if (sender is not Button button) return;
 
+        var effectiveDefault = !string.IsNullOrWhiteSpace(workspace.DefaultShell)
+            ? workspace.DefaultShell
+            : SettingsService.Current.DefaultShell;
+
         var shells = ShellDetector.DetectShells();
         var menu = new ContextMenu();
         for (int i = 0; i < shells.Count; i++)
         {
             var shell = shells[i];
+            var isDefault = string.Equals(effectiveDefault, shell.Path, StringComparison.OrdinalIgnoreCase);
             var item = new MenuItem
             {
                 Header = shell.Name,
                 Tag = shell.Path,
-                Icon = shell.Icon,
+                Icon = isDefault
+                    ? new System.Windows.Controls.TextBlock { Text = "✓", FontWeight = FontWeights.Bold }
+                    : (object)shell.Icon,
                 InputGestureText = i < 9 ? $"Ctrl+Shift+{i + 1}" : null,
             };
             item.Click += (s, _) =>
