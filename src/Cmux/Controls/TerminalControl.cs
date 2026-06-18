@@ -136,8 +136,10 @@ public class TerminalControl : FrameworkElement
             SearchHitBackground = termTheme.SearchHitBg,
             SearchHitBackgroundCurrent = termTheme.SearchHitBgCurrent,
             SearchHitForeground = termTheme.SearchHitFg,
-            FontFamily = settings.FontFamily,
-            FontSize = settings.FontSize,
+            FontFamily = string.IsNullOrWhiteSpace(settings.TerminalFontFamily)
+                ? settings.FontFamily : settings.TerminalFontFamily.Trim(),
+            FontSize = settings.TerminalFontSize > 0
+                ? settings.TerminalFontSize : settings.FontSize,
         };
         _visual = new DrawingVisual();
         // Only register in the visual tree. AddLogicalChild would also place the

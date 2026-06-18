@@ -42,6 +42,7 @@ public partial class SettingsWindow : Window
             .ToList();
         FontFamilyCombo.ItemsSource = fontFamilies;
         AgentChatFontFamilyCombo.ItemsSource = fontFamilies;
+        TerminalFontFamilyCombo.ItemsSource = fontFamilies;
 
         // Detect available shells
         var shells = ShellDetector.DetectShells();
@@ -100,6 +101,21 @@ public partial class SettingsWindow : Window
         VisualBellCheck.IsChecked = s.VisualBell;
         BracketedPasteCheck.IsChecked = s.BracketedPaste;
         AmbiguousWidthDoubleCheck.IsChecked = s.AmbiguousWidthDouble;
+
+        // Terminal font override
+        if (string.IsNullOrWhiteSpace(s.TerminalFontFamily))
+        {
+            TerminalFontFamilyCombo.SelectedItem = null;
+            TerminalFontFamilyCombo.Text = "";
+        }
+        else
+        {
+            TerminalFontFamilyCombo.SelectedItem = s.TerminalFontFamily;
+            if (TerminalFontFamilyCombo.SelectedItem == null)
+                TerminalFontFamilyCombo.Text = s.TerminalFontFamily;
+        }
+        TerminalFontSizeSlider.Value = Math.Clamp(s.TerminalFontSize, 0, 28);
+        UpdateTerminalFontSizeText();
 
         RestoreSessionCheck.IsChecked = s.RestoreSessionOnStartup;
         ConfirmCloseCheck.IsChecked = s.ConfirmOnClose;
@@ -216,6 +232,8 @@ public partial class SettingsWindow : Window
         s.VisualBell = VisualBellCheck.IsChecked == true;
         s.BracketedPaste = BracketedPasteCheck.IsChecked == true;
         s.AmbiguousWidthDouble = AmbiguousWidthDoubleCheck.IsChecked == true;
+        s.TerminalFontFamily = (TerminalFontFamilyCombo.SelectedItem as string ?? TerminalFontFamilyCombo.Text ?? "").Trim();
+        s.TerminalFontSize = (int)Math.Round(TerminalFontSizeSlider.Value);
 
         s.RestoreSessionOnStartup = RestoreSessionCheck.IsChecked == true;
         s.ConfirmOnClose = ConfirmCloseCheck.IsChecked == true;
@@ -914,6 +932,20 @@ public partial class SettingsWindow : Window
     private void FontSizeSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
     {
         UpdateFontSizeText();
+    }
+
+    private void UpdateTerminalFontSizeText()
+    {
+        if (TerminalFontSizeValueText == null) return;
+        int value = (int)Math.Round(TerminalFontSizeSlider.Value);
+        TerminalFontSizeValueText.Text = value == 0
+            ? LanguageService.Lang("Settings_TerminalFontSizeAuto")
+            : $"{value} px";
+    }
+
+    private void TerminalFontSizeSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+    {
+        UpdateTerminalFontSizeText();
     }
 
     private static string? NormalizeHexColor(string? text)

@@ -23,12 +23,16 @@
             <Setter Property="BorderBrush" Value="Transparent" />
             <Setter Property="BorderThickness" Value="0" />
             <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" />
+            <Setter Property="FontFamily" Value="{DynamicResource AppFontFamily}" />
+            <Setter Property="FontSize" Value="{DynamicResource AppFontSize}" />
             <Setter Property="Padding" Value="4,2" />
         </Style>
 
         <Style x:Key="AppMenuTopItemStyle" TargetType="MenuItem">
             <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" />
             <Setter Property="Background" Value="Transparent" />
+            <Setter Property="FontFamily" Value="{DynamicResource AppFontFamily}" />
+            <Setter Property="FontSize" Value="{DynamicResource AppFontSizeMinus1}" />
             <Setter Property="Padding" Value="8,3" />
             <Setter Property="Margin" Value="0,0,2,0" />
             <Setter Property="FocusVisualStyle" Value="{x:Null}" />
@@ -67,6 +71,8 @@
         <Style x:Key="AppMenuSubItemStyle" TargetType="MenuItem">
             <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" />
             <Setter Property="Background" Value="Transparent" />
+            <Setter Property="FontFamily" Value="{DynamicResource AppFontFamily}" />
+            <Setter Property="FontSize" Value="{DynamicResource AppFontSizeMinus1}" />
             <Setter Property="Padding" Value="8,5" />
             <Setter Property="BorderThickness" Value="0" />
             <Setter Property="FocusVisualStyle" Value="{x:Null}" />
@@ -81,7 +87,7 @@
                                 </Grid.ColumnDefinitions>
                                 <ContentPresenter Grid.Column="0" ContentSource="Header" RecognizesAccessKey="True" />
                                 <TextBlock Grid.Column="1" Text="{TemplateBinding InputGestureText}" Margin="14,0,0,0"
-                                           Foreground="{DynamicResource ForegroundDimBrush}" FontSize="11" />
+                                           Foreground="{DynamicResource ForegroundDimBrush}" FontSize="{DynamicResource AppFontSizeMinus3}" />
                             </Grid>
                         </Border>
                         <ControlTemplate.Triggers>
@@ -138,7 +144,7 @@
                     <!-- Menu items (left side) -->
                     <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center"
                                 WindowChrome.IsHitTestVisibleInChrome="True">
-                        <TextBlock Text="{DynamicResource App_Brand}" FontSize="13" FontWeight="SemiBold"
+                        <TextBlock Text="{DynamicResource App_Brand}" FontSize="{DynamicResource AppFontSizeMinus1}" FontWeight="SemiBold"
                                    Foreground="{DynamicResource AccentBrush}"
                                    VerticalAlignment="Center" Margin="14,0,12,0" />
                         <Menu Style="{StaticResource AppMenuStyle}" VerticalAlignment="Center">
@@ -231,8 +237,8 @@
                                 </Grid.ColumnDefinitions>
 
                                 <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Vertical">
-                                    <TextBlock Text="{DynamicResource Sidebar_Workspaces}" Foreground="{DynamicResource ForegroundBrush}" FontSize="12" FontWeight="SemiBold" />
-                                    <TextBlock Text="{DynamicResource Sidebar_ManageSessions}" Foreground="{DynamicResource ForegroundDimBrush}" FontSize="10" />
+                                    <TextBlock Text="{DynamicResource Sidebar_Workspaces}" Foreground="{DynamicResource ForegroundBrush}" FontSize="{DynamicResource AppFontSizeMinus2}" FontWeight="SemiBold" />
+                                    <TextBlock Text="{DynamicResource Sidebar_ManageSessions}" Foreground="{DynamicResource ForegroundDimBrush}" FontSize="{DynamicResource AppFontSizeMinus4}" />
                                 </StackPanel>
 
                                 <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
@@ -338,7 +344,7 @@
                                     <StackPanel Orientation="Horizontal">
                                         <TextBlock Text="&#xE710;" FontFamily="Segoe MDL2 Assets" FontSize="12"
                                                    Margin="0,0,8,0" Opacity="0.6" />
-                                        <TextBlock Text="{DynamicResource Sidebar_NewWorkspace}" FontSize="12" />
+                                        <TextBlock Text="{DynamicResource Sidebar_NewWorkspace}" FontSize="{DynamicResource AppFontSizeMinus2}" />
                                     </StackPanel>
                                 </Button>
 
@@ -349,7 +355,7 @@
                                         <StackPanel Orientation="Horizontal">
                                             <TextBlock Text="&#xEA8F;" FontFamily="Segoe MDL2 Assets" FontSize="12"
                                                        Margin="0,0,8,0" Opacity="0.6" />
-                                            <TextBlock Text="{DynamicResource Sidebar_Notifications}" FontSize="12" />
+                                            <TextBlock Text="{DynamicResource Sidebar_Notifications}" FontSize="{DynamicResource AppFontSizeMinus2}" />
                                         </StackPanel>
                                         <Border CornerRadius="10"
                                                 Padding="6,2" HorizontalAlignment="Right"
@@ -475,14 +481,14 @@
                                 <TextBlock Text="&#xE8AD;" FontFamily="Segoe MDL2 Assets" FontSize="10"
                                            Foreground="{DynamicResource ForegroundDimBrush}" VerticalAlignment="Center"
                                            Margin="0,0,4,0" />
-                                <TextBlock Text="{Binding SelectedWorkspace.GitBranch, FallbackValue=''}" FontSize="11"
+                                <TextBlock Text="{Binding SelectedWorkspace.GitBranch, FallbackValue=''}" FontSize="{DynamicResource AppFontSizeMinus3}"
                                            Foreground="{DynamicResource AccentBrush}" VerticalAlignment="Center"
                                            Margin="0,0,16,0" />
                                 <!-- Working directory -->
                                 <TextBlock Text="&#xE8B7;" FontFamily="Segoe MDL2 Assets" FontSize="10"
                                            Foreground="{DynamicResource ForegroundDimBrush}" VerticalAlignment="Center"
                                            Margin="0,0,4,0" />
-                                <TextBlock Text="{Binding SelectedWorkspace.WorkingDirectory, FallbackValue=''}" FontSize="11"
+                                <TextBlock Text="{Binding SelectedWorkspace.WorkingDirectory, FallbackValue=''}" FontSize="{DynamicResource AppFontSizeMinus3}"
                                            Foreground="{DynamicResource ForegroundDimBrush}" VerticalAlignment="Center"
                                            TextTrimming="CharacterEllipsis" MaxWidth="300" />
                             </StackPanel>
@@ -491,7 +497,7 @@
                                 <TextBlock Text="&#xE737;" FontFamily="Segoe MDL2 Assets" FontSize="10"
                                            Foreground="{DynamicResource ForegroundDimBrush}" VerticalAlignment="Center"
                                            Margin="0,0,4,0" />
-                                <TextBlock x:Name="PaneCountText" Text="{DynamicResource Status_PanesSingular}" FontSize="11"
+                                <TextBlock x:Name="PaneCountText" Text="{DynamicResource Status_PanesSingular}" FontSize="{DynamicResource AppFontSizeMinus3}"
                                            Foreground="{DynamicResource ForegroundDimBrush}" VerticalAlignment="Center"
                                            Margin="0,0,12,0" />
                                 <!-- Daemon status -->
@@ -500,12 +506,12 @@
                                     <StackPanel Orientation="Horizontal">
                                         <Ellipse x:Name="DaemonStatusDot" Width="6" Height="6"
                                                  Fill="{DynamicResource ForegroundDimBrush}" Margin="0,0,4,0" VerticalAlignment="Center" />
-                                        <TextBlock x:Name="DaemonStatusText" Text="{DynamicResource Status_Daemon}" FontSize="10"
+                                        <TextBlock x:Name="DaemonStatusText" Text="{DynamicResource Status_Daemon}" FontSize="{DynamicResource AppFontSizeMinus4}"
                                                    Foreground="{DynamicResource ForegroundDimBrush}" VerticalAlignment="Center" />
                                     </StackPanel>
                                 </Border>
                                 <!-- Shortcuts hint -->
-                                <TextBlock Text="{DynamicResource Status_CommandsHint}" FontSize="10"
+                                <TextBlock Text="{DynamicResource Status_CommandsHint}" FontSize="{DynamicResource AppFontSizeMinus4}"
                                            Foreground="{DynamicResource ForegroundDimBrush}" VerticalAlignment="Center"
                                            Opacity="0.6" />
                             </StackPanel>
@@ -535,8 +541,8 @@
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
                                     <StackPanel Orientation="Vertical">
-                                        <TextBlock Text="{DynamicResource Agent_Title}" Foreground="{DynamicResource ForegroundBrush}" FontSize="13" FontWeight="SemiBold" />
-                                        <TextBlock Text="{DynamicResource Agent_Subtitle}" Foreground="{DynamicResource ForegroundDimBrush}" FontSize="10" />
+                                        <TextBlock Text="{DynamicResource Agent_Title}" Foreground="{DynamicResource ForegroundBrush}" FontSize="{DynamicResource AppFontSizeMinus1}" FontWeight="SemiBold" />
+                                        <TextBlock Text="{DynamicResource Agent_Subtitle}" Foreground="{DynamicResource ForegroundDimBrush}" FontSize="{DynamicResource AppFontSizeMinus4}" />
                                     </StackPanel>
                                     <Button Grid.Column="1" Style="{StaticResource IconButton}" ToolTip="{DynamicResource Agent_HideChat}"
                                             Click="ToggleAgentChat_Click">
@@ -575,17 +581,17 @@
                                 <ListBox.ItemTemplate>
                                     <DataTemplate>
                                         <StackPanel Margin="4,3">
-                                            <TextBlock Text="{Binding Title}" Foreground="{DynamicResource ForegroundBrush}" FontSize="11" />
-                                            <TextBlock Text="{Binding Meta}" Foreground="{DynamicResource ForegroundDimBrush}" FontSize="10" />
+                                            <TextBlock Text="{Binding Title}" Foreground="{DynamicResource ForegroundBrush}" FontSize="{DynamicResource AppFontSizeMinus3}" />
+                                            <TextBlock Text="{Binding Meta}" Foreground="{DynamicResource ForegroundDimBrush}" FontSize="{DynamicResource AppFontSizeMinus4}" />
                                         </StackPanel>
                                     </DataTemplate>
                                 </ListBox.ItemTemplate>
                             </ListBox>
 
                             <StackPanel Grid.Row="3" Margin="10,0,10,6">
-                                <TextBlock x:Name="AgentStatusText" Text="{DynamicResource Agent_Idle}" Foreground="{DynamicResource ForegroundDimBrush}" FontSize="10" />
-                                <TextBlock x:Name="AgentUsageText" Text="{DynamicResource Agent_UsageDefault}" Foreground="{DynamicResource ForegroundDimBrush}" FontSize="10" />
-                                <TextBlock x:Name="AgentContextText" Text="{DynamicResource Agent_ContextDefault}" Foreground="{DynamicResource ForegroundDimBrush}" FontSize="10" />
+                                <TextBlock x:Name="AgentStatusText" Text="{DynamicResource Agent_Idle}" Foreground="{DynamicResource ForegroundDimBrush}" FontSize="{DynamicResource AppFontSizeMinus4}" />
+                                <TextBlock x:Name="AgentUsageText" Text="{DynamicResource Agent_UsageDefault}" Foreground="{DynamicResource ForegroundDimBrush}" FontSize="{DynamicResource AppFontSizeMinus4}" />
+                                <TextBlock x:Name="AgentContextText" Text="{DynamicResource Agent_ContextDefault}" Foreground="{DynamicResource ForegroundDimBrush}" FontSize="{DynamicResource AppFontSizeMinus4}" />
                                 <Grid Margin="0,6,0,0">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto" />
@@ -609,9 +615,9 @@
                                         <Border Padding="8,6" Margin="4,3" CornerRadius="6" Background="{DynamicResource SidebarItemHoverBrush}"
                                                 HorizontalAlignment="Stretch">
                                             <StackPanel>
-                                                <TextBlock Text="{Binding Header}" Foreground="{DynamicResource ForegroundDimBrush}" FontSize="10" />
+                                                <TextBlock Text="{Binding Header}" Foreground="{DynamicResource ForegroundDimBrush}" FontSize="{DynamicResource AppFontSizeMinus4}" />
                                                 <TextBlock Text="{Binding Content}" Foreground="{DynamicResource ForegroundBrush}" TextWrapping="Wrap" />
-                                                <TextBlock Text="{Binding Meta}" Foreground="{DynamicResource ForegroundDimBrush}" FontSize="10" />
+                                                <TextBlock Text="{Binding Meta}" Foreground="{DynamicResource ForegroundDimBrush}" FontSize="{DynamicResource AppFontSizeMinus4}" />
                                             </StackPanel>
                                         </Border>
                                     </DataTemplate>

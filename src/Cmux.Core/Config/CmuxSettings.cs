@@ -37,6 +37,8 @@ public class CmuxSettings
     public bool BracketedPaste { get; set; } = true;
     public string WordSeparators { get; set; } = " \t\n{}[]()\"'`,:;<>";
     public bool AmbiguousWidthDouble { get; set; } = false;
+    public string TerminalFontFamily { get; set; } = "";
+    public int TerminalFontSize { get; set; } = 0;
 
     // ── Behavior ────────────────────────────────────────────────
 

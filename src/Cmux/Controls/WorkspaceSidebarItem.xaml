@@ -158,13 +158,13 @@
                 <Grid Grid.Column="1" x:Name="NameHost">
                     <TextBlock x:Name="NameDisplay" Text="{Binding Name}"
                                Foreground="{DynamicResource ForegroundBrush}"
-                               FontSize="13" FontWeight="SemiBold"
+                               FontSize="{DynamicResource AppFontSizeMinus1}" FontWeight="SemiBold"
                                TextTrimming="CharacterEllipsis"
                                MouseLeftButtonDown="NameDisplay_MouseLeftButtonDown" />
                     <TextBox x:Name="NameEditor" Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                              Foreground="{DynamicResource ForegroundBrush}"
                              Background="{DynamicResource SidebarItemHoverBrush}" BorderBrush="{DynamicResource AccentBrush}" BorderThickness="1"
-                             FontSize="13" FontWeight="SemiBold" Padding="2,0"
+                             FontSize="{DynamicResource AppFontSizeMinus1}" FontWeight="SemiBold" Padding="2,0"
                              Visibility="Collapsed"
                              LostFocus="NameEditor_LostFocus"
                              KeyDown="NameEditor_KeyDown" />
@@ -177,7 +177,7 @@
                     Padding="5,1" Margin="4,0,0,0"
                     Visibility="{Binding HasNotification, Converter={StaticResource BoolToVisibility}}">
                 <TextBlock Text="{Binding UnreadNotificationCount}"
-                           Foreground="{DynamicResource AccentForegroundBrush}" FontSize="10" />
+                           Foreground="{DynamicResource AccentForegroundBrush}" FontSize="{DynamicResource AppFontSizeMinus4}" />
             </Border>
         </Grid>
 
@@ -190,9 +190,9 @@
             </Border.Background>
             <StackPanel Orientation="Horizontal">
                 <TextBlock Text="{Binding AgentIcon}" FontFamily="Segoe MDL2 Assets"
-                           FontSize="9" Foreground="{DynamicResource AccentForegroundBrush}" Margin="0,0,4,0"
+                           FontSize="{DynamicResource AppFontSizeMinus5}" Foreground="{DynamicResource AccentForegroundBrush}" Margin="0,0,4,0"
                            VerticalAlignment="Center" />
-                <TextBlock Text="{Binding AgentLabel}" FontSize="10"
+                <TextBlock Text="{Binding AgentLabel}" FontSize="{DynamicResource AppFontSizeMinus4}"
                            Foreground="{DynamicResource AccentForegroundBrush}" FontWeight="SemiBold" />
             </StackPanel>
         </Border>
@@ -205,7 +205,7 @@
                        VerticalAlignment="Center" />
             <TextBlock Text="{Binding GitBranch}"
                        Foreground="{DynamicResource AccentBrush}"
-                       FontSize="11" TextTrimming="CharacterEllipsis"
+                       FontSize="{DynamicResource AppFontSizeMinus3}" TextTrimming="CharacterEllipsis"
                        VerticalAlignment="Center" />
             <Ellipse Width="6" Height="6" Margin="5,0,0,0"
                      Fill="{DynamicResource WarningBrush}"
@@ -216,7 +216,7 @@
         <!-- Working directory -->
         <TextBlock x:Name="WorkingDirInfo" Grid.Row="3" Text="{Binding WorkingDirectory}"
                    Foreground="{DynamicResource ForegroundDimBrush}"
-                   FontSize="10" Margin="0,2,0,0"
+                   FontSize="{DynamicResource AppFontSizeMinus4}" Margin="0,2,0,0"
                    TextTrimming="CharacterEllipsis"
                    Visibility="{Binding WorkingDirectory, Converter={StaticResource NullToCollapsed}}" />
 
@@ -227,7 +227,7 @@
             <TextBlock Text="&#xE968;" FontFamily="Segoe MDL2 Assets" FontSize="10"
                        Foreground="{DynamicResource ForegroundDimBrush}" Margin="0,0,4,0"
                        VerticalAlignment="Center" ToolTip="Listening ports"/>
-            <TextBlock Text="{Binding ListeningPorts}" FontSize="10"
+            <TextBlock Text="{Binding ListeningPorts}" FontSize="{DynamicResource AppFontSizeMinus4}"
                        Foreground="{DynamicResource ForegroundDimBrush}"
                        TextTrimming="CharacterEllipsis" MaxWidth="140"
                        VerticalAlignment="Center"/>
@@ -253,7 +253,7 @@
                                    Foreground="{DynamicResource ForegroundDimBrush}"
                                    Margin="0,0,4,0" VerticalAlignment="Center"
                                    Visibility="{Binding Icon, Converter={StaticResource NullToCollapsed}}"/>
-                        <TextBlock Text="{Binding Value}" FontSize="10"
+                        <TextBlock Text="{Binding Value}" FontSize="{DynamicResource AppFontSizeMinus4}"
                                    Foreground="{DynamicResource ForegroundDimBrush}"
                                    TextTrimming="CharacterEllipsis" MaxWidth="140"/>
                     </StackPanel>
@@ -264,7 +264,7 @@
         <!-- Latest notification text -->
         <TextBlock x:Name="LatestNotificationInfo" Grid.Row="6" Text="{Binding LatestNotificationText}"
                    Foreground="{DynamicResource ForegroundDimBrush}"
-                   FontSize="10" Margin="0,2,0,0"
+                   FontSize="{DynamicResource AppFontSizeMinus4}" Margin="0,2,0,0"
                    TextTrimming="CharacterEllipsis" FontStyle="Italic"
                    Visibility="{Binding LatestNotificationText, Converter={StaticResource NullToCollapsed}}" />
     </Grid>

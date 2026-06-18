@@ -7,6 +7,7 @@ using System.Windows.Input;
 using System.Windows.Threading;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Documents;
 using System.Windows.Media;
 using Cmux.Controls;
 using Cmux.Core.Config;
@@ -92,16 +93,44 @@ public partial class MainWindow : Window
         Opacity = Math.Clamp(settings.Opacity, 0.5, 1.0);
         Core.Terminal.UnicodeWidth.AmbiguousIsWide = settings.AmbiguousWidthDouble;
 
+        // Apply Appearance font globally (DynamicResource for popups/menus, TextElement for visual tree)
+        System.Windows.Media.FontFamily uiFont;
+        try
+        {
+            uiFont = new System.Windows.Media.FontFamily(settings.FontFamily);
+        }
+        catch
+        {
+            uiFont = new System.Windows.Media.FontFamily("Cascadia Code");
+        }
+        var uiFontSize = (double)Math.Clamp(settings.FontSize, 9, 28);
+        Application.Current.Resources["AppFontFamily"] = uiFont;
+        Application.Current.Resources["AppFontSize"] = uiFontSize;
+        Application.Current.Resources["AppFontSizeMinus1"] = Math.Max(uiFontSize - 1, 8.0);
+        Application.Current.Resources["AppFontSizeMinus2"] = Math.Max(uiFontSize - 2, 8.0);
+        Application.Current.Resources["AppFontSizeMinus3"] = Math.Max(uiFontSize - 3, 8.0);
+        Application.Current.Resources["AppFontSizeMinus4"] = Math.Max(uiFontSize - 4, 7.0);
+        Application.Current.Resources["AppFontSizeMinus5"] = Math.Max(uiFontSize - 5, 7.0);
+        TextElement.SetFontFamily(WindowBorder, uiFont);
+        TextElement.SetFontSize(WindowBorder, uiFontSize);
+
+        // Resolve terminal font (override or fallback to Appearance)
+        var terminalFontFamily = string.IsNullOrWhiteSpace(settings.TerminalFontFamily)
+            ? settings.FontFamily
+            : settings.TerminalFontFamily.Trim();
+        var terminalFontSize = settings.TerminalFontSize > 0
+            ? settings.TerminalFontSize
+            : settings.FontSize;
+
         // Update all visible terminal controls
         foreach (var workspace in ViewModel.Workspaces)
         {
             foreach (var surface in workspace.Surfaces)
             {
-                // Find the SplitPaneContainer for this surface and update terminals
                 var container = FindVisualChild<SplitPaneContainer>(ContentArea, null);
                 if (container != null)
                 {
-                    container.UpdateAllTerminals(theme, settings.FontFamily, settings.FontSize);
+                    container.UpdateAllTerminals(theme, terminalFontFamily, terminalFontSize);
                 }
             }
         }

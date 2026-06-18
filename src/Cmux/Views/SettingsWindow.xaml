@@ -324,6 +324,36 @@
                         <TextBlock Text="{DynamicResource Settings_Terminal}" FontSize="18" FontWeight="SemiBold"
                                    Foreground="{DynamicResource ForegroundBrush}" Margin="0,0,0,20" />
 
+                        <!-- Terminal Font Family (optional override) -->
+                        <Grid Margin="0,0,0,10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="160" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="{DynamicResource Settings_TerminalFontFamily}" Style="{StaticResource SectionLabel}" />
+                            <ComboBox x:Name="TerminalFontFamilyCombo" Grid.Column="1"
+                                      Width="320" HorizontalAlignment="Left"
+                                      IsEditable="True" IsTextSearchEnabled="True"
+                                      ToolTip="{DynamicResource Settings_TerminalFontFamilyTooltip}" />
+                        </Grid>
+
+                        <!-- Terminal Font Size (optional override) -->
+                        <Grid Margin="0,0,0,10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="160" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="{DynamicResource Settings_TerminalFontSize}" Style="{StaticResource SectionLabel}" />
+                            <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                                <Slider x:Name="TerminalFontSizeSlider" Minimum="0" Maximum="28"
+                                        Width="220" VerticalAlignment="Center"
+                                        TickFrequency="1" IsSnapToTickEnabled="True"
+                                        ValueChanged="TerminalFontSizeSlider_ValueChanged" />
+                                <TextBlock x:Name="TerminalFontSizeValueText" Foreground="{DynamicResource ForegroundDimBrush}"
+                                           VerticalAlignment="Center" Margin="10,0,0,0" FontSize="12" />
+                            </StackPanel>
+                        </Grid>
+
                         <!-- Color Preset -->
                         <Grid Margin="0,0,0,10">
                             <Grid.ColumnDefinitions>
