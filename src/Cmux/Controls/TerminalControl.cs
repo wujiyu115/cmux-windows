@@ -237,6 +237,9 @@ public class TerminalControl : FrameworkElement
 
     private void OnBell()
     {
+        if (!SettingsService.Current.VisualBell)
+            return;
+
         _bellFlashUntil = DateTime.UtcNow.AddMilliseconds(150);
         RequestRender(System.Windows.Threading.DispatcherPriority.Render);
 
