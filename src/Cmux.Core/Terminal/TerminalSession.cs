@@ -67,6 +67,7 @@ public sealed class TerminalSession : IDisposable
             switch (b)
             {
                 case 0x07: // BEL
+                    DevLogService.Log("Terminal", $"BEL pane={PaneId}");
                     BellReceived?.Invoke();
                     break;
                 case 0x08: // BS (Backspace)
@@ -121,6 +122,7 @@ public sealed class TerminalSession : IDisposable
 
         _parser.OnOscDispatch = osc =>
         {
+            DevLogService.Log("Terminal", $"OSC pane={PaneId} data={osc[..Math.Min(osc.Length, 80)]}");
             _oscHandler.Handle(osc);
         };
 
