@@ -140,8 +140,10 @@ public class TerminalControl : FrameworkElement
             FontSize = settings.FontSize,
         };
         _visual = new DrawingVisual();
+        // Only register in the visual tree. AddLogicalChild would also place the
+        // DrawingVisual in the logical tree, which can cause WPF to render it
+        // twice (ghosting/residue that doesn't clear on partial repaints).
         AddVisualChild(_visual);
-        AddLogicalChild(_visual);
 
         _fontSize = _theme.FontSize;
         _typeface = new Typeface(new FontFamily(_theme.FontFamily), FontStyles.Normal, FontWeights.Normal, FontStretches.Normal);

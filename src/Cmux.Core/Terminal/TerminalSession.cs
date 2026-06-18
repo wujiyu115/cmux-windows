@@ -261,6 +261,9 @@ public sealed class TerminalSession : IDisposable
 
                 var chunk = buffer.AsSpan(0, bytesRead).ToArray();
 
+                if (DevLogService.IsEnabled)
+                    DevLogService.Log("Terminal.Raw", $"pane={PaneId} bytes={EscapeForLog(chunk)}");
+
                 lock (_lock)
                 {
                     try
@@ -287,6 +290,34 @@ public sealed class TerminalSession : IDisposable
         {
             // Expected on shutdown
         }
+    }
+
+    /// <summary>
+    /// Escapes a raw byte chunk into a readable form for dev logging:
+    /// printable ASCII as-is, control bytes as C0/C1 mnemonics.
+    /// </summary>
+    private static string EscapeForLog(byte[] bytes)
+    {
+        var sb = new StringBuilder(bytes.Length * 2);
+        foreach (var b in bytes)
+        {
+            switch (b)
+            {
+                case 0x07: sb.Append("\\a"); break;       // BEL
+                case 0x08: sb.Append("\\b"); break;       // BS
+                case 0x09: sb.Append("\\t"); break;       // HT
+                case 0x0A: sb.Append("\\n"); break;       // LF
+                case 0x0D: sb.Append("\\r"); break;       // CR
+                case 0x1B: sb.Append("\\e"); break;       // ESC
+                case 0x7F: sb.Append("\\x7f"); break;     // DEL
+                default:
+                    if (b < 0x20) sb.Append($"\\x{b:X2}");
+                    else if (b >= 0x7F) sb.Append($"\\x{b:X2}");
+                    else sb.Append((char)b);
+                    break;
+            }
+        }
+        return sb.ToString();
     }
 
     /// <summary>
