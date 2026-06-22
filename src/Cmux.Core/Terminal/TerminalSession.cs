@@ -165,17 +165,27 @@ public sealed class TerminalSession : IDisposable
             ? fallbackDirectory
             : workingDirectory;
 
-        // CreateProcess doesn't support UNC paths as working directory.
+        // CreateProcess doesn't support UNC or Linux paths as working directory.
         // For WSL, pass the path via --cd; for others, fall back to user profile.
         var processCommand = command;
         var processCwd = effectiveWorkingDirectory;
-        if (processCwd.StartsWith(@"\\"))
+        bool isWsl = !string.IsNullOrEmpty(processCommand) &&
+                     processCommand.Contains("wsl", StringComparison.OrdinalIgnoreCase);
+
+        if (processCwd.StartsWith('/'))
+        {
+            DevLogService.Log("Terminal", $"Linux path detected, falling back CWD. original=\"{processCwd}\"");
+            processCwd = fallbackDirectory;
+
+            if (isWsl)
+                processCommand = $"{processCommand} --cd \"{effectiveWorkingDirectory}\"";
+        }
+        else if (processCwd.StartsWith(@"\\"))
         {
             DevLogService.Log("Terminal", $"UNC path detected, falling back CWD. original=\"{processCwd}\"");
             processCwd = fallbackDirectory;
 
-            if (!string.IsNullOrEmpty(processCommand) &&
-                processCommand.Contains("wsl", StringComparison.OrdinalIgnoreCase))
+            if (isWsl)
             {
                 var wslPath = ConvertUncToWslPath(effectiveWorkingDirectory);
                 if (wslPath != null)
