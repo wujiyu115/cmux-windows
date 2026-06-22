@@ -50,6 +50,7 @@ public class TerminalControl : FrameworkElement
     // Visual bell
     private DateTime _bellFlashUntil;
     private System.Windows.Threading.DispatcherTimer? _bellTimer;
+    private DateTime _lastOutputTime;
 
     // URL detection
     private (int row, int startCol, int endCol, string url)? _hoveredUrl;
@@ -236,12 +237,16 @@ public class TerminalControl : FrameworkElement
 
             _lastScrollbackCount = currentScrollback;
         }
+        _lastOutputTime = DateTime.UtcNow;
         RequestRender();
     }
 
     private void OnBell()
     {
         if (!SettingsService.Current.VisualBell)
+            return;
+
+        if ((DateTime.UtcNow - _lastOutputTime).TotalMilliseconds < 500)
             return;
 
         _bellFlashUntil = DateTime.UtcNow.AddMilliseconds(150);
