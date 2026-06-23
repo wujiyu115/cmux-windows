@@ -179,7 +179,7 @@ public partial class MainViewModel : ObservableObject
         EventBus.Publish("workspace.created", new { id = workspace.Id, name = workspace.Name });
     }
 
-    public void CreateNewWorkspace(string? name, string? defaultShell, string? accentColor)
+    public void CreateNewWorkspace(string? name, string? defaultShell, string? accentColor, string? groupId = null)
     {
         var workspace = new Workspace
         {
@@ -189,6 +189,8 @@ public partial class MainViewModel : ObservableObject
             workspace.DefaultShell = defaultShell;
         if (!string.IsNullOrWhiteSpace(accentColor))
             workspace.AccentColor = accentColor;
+        if (!string.IsNullOrWhiteSpace(groupId))
+            workspace.GroupId = groupId;
 
         var surface = new Surface { Name = LanguageService.Lang("Default_Terminal1") };
         workspace.Surfaces.Add(surface);

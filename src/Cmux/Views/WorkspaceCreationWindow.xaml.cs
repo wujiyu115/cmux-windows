@@ -2,6 +2,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using Cmux.Core.Models;
 using Cmux.Core.Services;
 using Cmux.Services;
 
@@ -12,8 +13,9 @@ public partial class WorkspaceCreationWindow : Window
     public string WorkspaceName => NameBox.Text;
     public string? SelectedShell { get; private set; }
     public string SelectedColor { get; private set; } = "#FF818CF8";
+    public string? SelectedGroupId { get; private set; }
 
-    public WorkspaceCreationWindow(string defaultName)
+    public WorkspaceCreationWindow(string defaultName, IEnumerable<WorkspaceGroup>? groups = null)
     {
         InitializeComponent();
         WindowAppearance.Apply(this);
@@ -33,6 +35,19 @@ public partial class WorkspaceCreationWindow : Window
         ShellCombo.SelectedValuePath = "Path";
         ShellCombo.SelectedIndex = 0;
 
+        var groupItems = new List<GroupDisplayItem>
+        {
+            new(LanguageService.Lang("WorkspaceCreate_NoGroup"), null),
+        };
+        if (groups != null)
+            foreach (var g in groups)
+                groupItems.Add(new GroupDisplayItem(g.Name, g.Id));
+
+        GroupCombo.ItemsSource = groupItems;
+        GroupCombo.DisplayMemberPath = "Name";
+        GroupCombo.SelectedValuePath = "Id";
+        GroupCombo.SelectedIndex = 0;
+
         HighlightColorButton("#FF818CF8");
 
         Loaded += (_, _) =>
@@ -45,6 +60,7 @@ public partial class WorkspaceCreationWindow : Window
     private void Create_Click(object sender, RoutedEventArgs e)
     {
         SelectedShell = ShellCombo.SelectedValue as string;
+        SelectedGroupId = GroupCombo.SelectedValue as string;
         DialogResult = true;
         Close();
     }
@@ -108,4 +124,5 @@ public partial class WorkspaceCreationWindow : Window
     }
 
     private record ShellDisplayItem(string Name, string? Path);
+    private record GroupDisplayItem(string Name, string? Id);
 }

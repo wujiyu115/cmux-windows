@@ -148,6 +148,8 @@
     <system:String x:Key="WorkspaceCreate_Title">New Workspace</system:String>
     <system:String x:Key="WorkspaceCreate_Name">Workspace Name</system:String>
     <system:String x:Key="WorkspaceCreate_Shell">Default Terminal</system:String>
+    <system:String x:Key="WorkspaceCreate_Group">Group</system:String>
+    <system:String x:Key="WorkspaceCreate_NoGroup">No Group</system:String>
     <system:String x:Key="WorkspaceCreate_Color">Accent Color</system:String>
     <system:String x:Key="WorkspaceCreate_Create">Create</system:String>
     <system:String x:Key="WorkspaceCreate_Cancel">Cancel</system:String>

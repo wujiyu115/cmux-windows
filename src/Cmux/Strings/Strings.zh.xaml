@@ -148,6 +148,8 @@
     <system:String x:Key="WorkspaceCreate_Title">新建工作区</system:String>
     <system:String x:Key="WorkspaceCreate_Name">工作区名称</system:String>
     <system:String x:Key="WorkspaceCreate_Shell">默认终端</system:String>
+    <system:String x:Key="WorkspaceCreate_Group">分组</system:String>
+    <system:String x:Key="WorkspaceCreate_NoGroup">无分组</system:String>
     <system:String x:Key="WorkspaceCreate_Color">主题色</system:String>
     <system:String x:Key="WorkspaceCreate_Create">创建</system:String>
     <system:String x:Key="WorkspaceCreate_Cancel">取消</system:String>

@@ -682,13 +682,13 @@ public partial class MainWindow : Window
     private void ShowWorkspaceCreationDialog()
     {
         var defaultName = LanguageService.Lang("Default_Workspace", ViewModel.Workspaces.Count + 1);
-        var dialog = new WorkspaceCreationWindow(defaultName)
+        var dialog = new WorkspaceCreationWindow(defaultName, ViewModel.WorkspaceGroups)
         {
             Owner = this,
         };
 
         if (dialog.ShowDialog() == true)
-            ViewModel.CreateNewWorkspace(dialog.WorkspaceName, dialog.SelectedShell, dialog.SelectedColor);
+            ViewModel.CreateNewWorkspace(dialog.WorkspaceName, dialog.SelectedShell, dialog.SelectedColor, dialog.SelectedGroupId);
     }
     private void MenuOpenKeyboardShortcuts_Click(object sender, RoutedEventArgs e)
     {
