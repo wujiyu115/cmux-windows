@@ -70,3 +70,12 @@ $RECYCLE.BIN/
 *.log
 [Ll]og/
 [Ll]ogs/
+
+# =========================
+# Local build outputs at repo root
+# =========================
+/*.exe
+/*.pdb
+
+# Local Claude Code tooling
+.claude/
