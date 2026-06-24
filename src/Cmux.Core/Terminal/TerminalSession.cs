@@ -287,9 +287,20 @@ public sealed class TerminalSession : IDisposable
                     }
                 }
 
-                RawOutputReceived?.Invoke(chunk);
-                OutputReceived?.Invoke();
-                Redraw?.Invoke();
+                // Event invocations run user code (handlers). A throwing handler
+                // must never escape this thread — in .NET an unhandled exception
+                // on a Thread proc terminates the whole process, which would kill
+                // the daemon and every surviving session. Catch and log instead.
+                try
+                {
+                    RawOutputReceived?.Invoke(chunk);
+                    OutputReceived?.Invoke();
+                    Redraw?.Invoke();
+                }
+                catch (Exception ex)
+                {
+                    DaemonClient.LogDaemon($"[TerminalSession:{PaneId}] Event handler error (suppressed): {ex.GetType().Name}: {ex.Message}");
+                }
             }
         }
         catch (IOException) when (_disposed)
@@ -299,6 +310,11 @@ public sealed class TerminalSession : IDisposable
         catch (ObjectDisposedException)
         {
             // Expected on shutdown
+        }
+        catch (Exception ex)
+        {
+            // Last-resort: never let the read thread take down the process.
+            DaemonClient.LogDaemon($"[TerminalSession:{PaneId}] ReadLoop fatal (suppressed): {ex.GetType().Name}: {ex.Message}");
         }
     }
 

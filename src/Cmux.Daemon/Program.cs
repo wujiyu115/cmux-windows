@@ -12,6 +12,21 @@ if (!createdNew)
 
 Log($"[cmux-daemon] Starting (PID {Environment.ProcessId})...");
 
+// Capture any unhandled exception so we have a clue why the daemon died.
+// Without this, an exception escaping a background thread terminates the
+// process silently — taking every surviving session with it, and leaving
+// no trace in the Windows event log.
+AppDomain.CurrentDomain.UnhandledException += (s, args) =>
+{
+    var ex = args.ExceptionObject as Exception;
+    Log($"[cmux-daemon] UNHANDLED EXCEPTION (isTerminating={args.IsTerminating}): {ex?.GetType().Name}: {ex?.Message}\n{ex?.StackTrace}");
+};
+System.Threading.Tasks.TaskScheduler.UnobservedTaskException += (s, args) =>
+{
+    Log($"[cmux-daemon] UNOBSERVED TASK: {args.Exception.GetType().Name}: {args.Exception.Message}");
+    args.SetObserved();
+};
+
 var sessionManager = new DaemonSessionManager();
 var pipeServer = new DaemonPipeServer(sessionManager);
 

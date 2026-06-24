@@ -85,6 +85,15 @@ public sealed class DaemonPipeServer
                 LogDaemon($"[PipeServer] Pipe error: {ex.Message}");
                 Thread.Sleep(100);
             }
+            catch (Exception ex)
+            {
+                // Never let the accept loop die — a dead acceptor leaves the
+                // process alive (holding the single-instance mutex) but
+                // unreachable, so the client can neither connect nor start a
+                // replacement daemon. Log and keep accepting.
+                LogDaemon($"[PipeServer] Accept error (suppressed): {ex.GetType().Name}: {ex.Message}");
+                Thread.Sleep(100);
+            }
         }
     }
 
@@ -121,6 +130,10 @@ public sealed class DaemonPipeServer
                     catch (IOException) { }
                     catch (OperationCanceledException) { }
                     catch (ObjectDisposedException) { }
+                    catch (Exception ex)
+                    {
+                        LogDaemon($"[PipeServer] Writer error (suppressed): {ex.GetType().Name}: {ex.Message}");
+                    }
                 })
                 {
                     IsBackground = true,
