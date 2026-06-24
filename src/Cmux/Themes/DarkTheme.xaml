@@ -373,11 +373,17 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Separator">
-                    <Border Height="1" Background="{DynamicResource BorderBrush}" Margin="6,3" />
+                    <Rectangle Height="1" Margin="8,4"
+                               Stroke="{DynamicResource BorderBrush}"
+                               StrokeDashArray="2 2" StrokeThickness="1"
+                               SnapsToDevicePixels="True" Opacity="0.45" />
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
     </Style>
+
+    <!-- Separators rendered inside Menu / ContextMenu use this keyed style, not the generic one -->
+    <Style x:Key="{x:Static MenuItem.SeparatorStyleKey}" TargetType="Separator" BasedOn="{StaticResource {x:Type Separator}}" />
 
     <!-- ═══════════════════════════════════════════════════════════════════
          WindowChromeButton — flat title bar buttons (min/max/close)

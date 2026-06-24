@@ -336,7 +336,7 @@ public static class TerminalThemes
         {
             Name = "Solarized Light",
             Author = "Ethan Schoonover",
-            Background = new TerminalColor(0xFD, 0xF6, 0xE3),
+            Background = new TerminalColor(0xB1, 0xAC, 0x9F),
             Foreground = new TerminalColor(0x65, 0x7B, 0x83),
             CursorColor = new TerminalColor(0x58, 0x6E, 0x75),
             SelectionBg = new TerminalColor(0xA7, 0xCB, 0xDC),
@@ -355,7 +355,7 @@ public static class TerminalThemes
         {
             Name = "Catppuccin Latte",
             Author = "Catppuccin",
-            Background = new TerminalColor(0xEF, 0xF1, 0xF5),
+            Background = new TerminalColor(0xA7, 0xA8, 0xAB),
             Foreground = new TerminalColor(0x4C, 0x4F, 0x69),
             CursorColor = new TerminalColor(0xDC, 0x8A, 0x78),
             AccentColor = new TerminalColor(0x88, 0x39, 0xEF),
@@ -375,7 +375,7 @@ public static class TerminalThemes
         {
             Name = "GitHub Light",
             Author = "GitHub",
-            Background = new TerminalColor(0xFF, 0xFF, 0xFF),
+            Background = new TerminalColor(0xB2, 0xB2, 0xB2),
             Foreground = new TerminalColor(0x1F, 0x23, 0x28),
             CursorColor = new TerminalColor(0x24, 0x29, 0x2F),
             SelectionBg = new TerminalColor(0x9D, 0xC3, 0xF0),
@@ -394,7 +394,7 @@ public static class TerminalThemes
         {
             Name = "Rose Pine Dawn",
             Author = "Rose Pine",
-            Background = new TerminalColor(0xFA, 0xF4, 0xED),
+            Background = new TerminalColor(0xAF, 0xAA, 0xA5),
             Foreground = new TerminalColor(0x57, 0x52, 0x79),
             CursorColor = new TerminalColor(0xCE, 0xCA, 0xCD),
             AccentColor = new TerminalColor(0xB4, 0x63, 0x7A),
@@ -414,7 +414,7 @@ public static class TerminalThemes
         {
             Name = "One Light",
             Author = "Atom",
-            Background = new TerminalColor(0xFA, 0xFA, 0xFA),
+            Background = new TerminalColor(0xAF, 0xAF, 0xAF),
             Foreground = new TerminalColor(0x38, 0x3A, 0x42),
             CursorColor = new TerminalColor(0x38, 0x3A, 0x42),
             SelectionBg = new TerminalColor(0xE2, 0xE8, 0xFC),
@@ -433,7 +433,7 @@ public static class TerminalThemes
         {
             Name = "Tokyo Night Light",
             Author = "enkia",
-            Background = new TerminalColor(0xD5, 0xD6, 0xDB),
+            Background = new TerminalColor(0x95, 0x95, 0x99),
             Foreground = new TerminalColor(0x37, 0x60, 0xBF),
             CursorColor = new TerminalColor(0x37, 0x60, 0xBF),
             SelectionBg = new TerminalColor(0xC9, 0xD4, 0xE4),
@@ -452,7 +452,7 @@ public static class TerminalThemes
         {
             Name = "Everforest Light",
             Author = "sainnhe",
-            Background = new TerminalColor(0xFD, 0xF6, 0xE3),
+            Background = new TerminalColor(0xB1, 0xAC, 0x9F),
             Foreground = new TerminalColor(0x5C, 0x6A, 0x72),
             CursorColor = new TerminalColor(0x5C, 0x6A, 0x72),
             AccentColor = new TerminalColor(0x8D, 0xA1, 0x01),
@@ -472,7 +472,7 @@ public static class TerminalThemes
         {
             Name = "Ayu Light",
             Author = "Ike Ku",
-            Background = new TerminalColor(0xFA, 0xFA, 0xFA),
+            Background = new TerminalColor(0xAF, 0xAF, 0xAF),
             Foreground = new TerminalColor(0x57, 0x5F, 0x66),
             CursorColor = new TerminalColor(0xFF, 0x99, 0x40),
             SelectionBg = new TerminalColor(0xEA, 0xF1, 0xF8),
@@ -491,7 +491,7 @@ public static class TerminalThemes
         {
             Name = "Nord Light",
             Author = "Arctic Ice Studio",
-            Background = new TerminalColor(0xEC, 0xEF, 0xF4),
+            Background = new TerminalColor(0xA5, 0xA7, 0xAA),
             Foreground = new TerminalColor(0x2E, 0x34, 0x40),
             CursorColor = new TerminalColor(0x2E, 0x34, 0x40),
             SelectionBg = new TerminalColor(0xE4, 0xE8, 0xF0),
@@ -510,7 +510,7 @@ public static class TerminalThemes
         {
             Name = "Gruvbox Light",
             Author = "Pavel Pertsev",
-            Background = new TerminalColor(0xFB, 0xF1, 0xC7),
+            Background = new TerminalColor(0xAF, 0xA8, 0x8B),
             Foreground = new TerminalColor(0x3C, 0x38, 0x36),
             CursorColor = new TerminalColor(0x3C, 0x38, 0x36),
             AccentColor = new TerminalColor(0x07, 0x66, 0x78),
@@ -530,7 +530,7 @@ public static class TerminalThemes
         {
             Name = "Dracula Light",
             Author = "Zeno Rocha",
-            Background = new TerminalColor(0xFF, 0xFB, 0xEB),
+            Background = new TerminalColor(0xB2, 0xAF, 0xA4),
             Foreground = new TerminalColor(0x1F, 0x1F, 0x1F),
             CursorColor = new TerminalColor(0x1F, 0x1F, 0x1F),
             SelectionBg = new TerminalColor(0xCF, 0xCF, 0xDE),
