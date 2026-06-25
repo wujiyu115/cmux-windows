@@ -26,6 +26,10 @@ public sealed class TerminalSession : IDisposable
     private object _lock => Buffer.SyncRoot;
     private readonly object _writeLock = new();
     private Timer? _cwdPollTimer;
+    // True when the spawned process is the WSL launcher (wsl.exe). Its PEB cwd is
+    // a Windows fallback dir, not the inner Linux shell's cwd, so we must not poll
+    // it — doing so clobbers the real cwd (StartDirectory / OSC 7) with the fallback.
+    private bool _isWsl;
 
     public TerminalBuffer Buffer { get; }
     public string PaneId { get; }
@@ -171,6 +175,7 @@ public sealed class TerminalSession : IDisposable
         var processCwd = effectiveWorkingDirectory;
         bool isWsl = !string.IsNullOrEmpty(processCommand) &&
                      processCommand.Contains("wsl", StringComparison.OrdinalIgnoreCase);
+        _isWsl = isWsl;
 
         if (processCwd.StartsWith('/'))
         {
@@ -239,6 +244,13 @@ public sealed class TerminalSession : IDisposable
                 _cwdPollTimer?.Change(Timeout.Infinite, Timeout.Infinite);
                 return;
             }
+
+            // The spawned process for WSL is wsl.exe; its PEB cwd is the Windows
+            // fallback dir, not the Linux shell's cwd. Polling it would overwrite
+            // the real cwd with a stale Windows path, so leave WSL tracking to
+            // OSC 7 / the StartDirectory instead.
+            if (_isWsl)
+                return;
 
             var dir = ProcessCwdReader.GetCurrentDirectory(_process.ProcessHandle);
             if (string.IsNullOrEmpty(dir))
