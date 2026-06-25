@@ -2,6 +2,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using Cmux.Core.Config;
 using Cmux.Core.Models;
 using Cmux.Core.Services;
 using Cmux.Services;
@@ -24,15 +25,16 @@ public partial class WorkspaceCreationWindow : Window
         NameBox.Text = defaultName;
 
         var shells = ShellDetector.DetectShells();
+        var configuredDefault = SettingsService.Current.DefaultShell;
         var items = new List<ShellDisplayItem>
         {
-            new(LanguageService.Lang("Workspace_ShellGlobalDefault"), null),
+            new(LanguageService.Lang("Workspace_ShellGlobalDefault"), null, false),
         };
         foreach (var s in shells)
-            items.Add(new ShellDisplayItem(s.Name, s.Path));
+            items.Add(new ShellDisplayItem(s.Name, s.Path,
+                string.Equals(s.Path, configuredDefault, StringComparison.OrdinalIgnoreCase)));
 
         ShellCombo.ItemsSource = items;
-        ShellCombo.DisplayMemberPath = "Name";
         ShellCombo.SelectedValuePath = "Path";
         ShellCombo.SelectedIndex = 0;
 
@@ -141,6 +143,6 @@ public partial class WorkspaceCreationWindow : Window
         }
     }
 
-    private record ShellDisplayItem(string Name, string? Path);
+    private record ShellDisplayItem(string Name, string? Path, bool IsCurrentDefault);
     private record GroupDisplayItem(string Name, string? Id);
 }

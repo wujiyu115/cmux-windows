@@ -59,7 +59,23 @@
                         <!-- Default Terminal -->
                         <TextBlock Text="{DynamicResource WorkspaceCreate_Shell}"
                                    Foreground="{DynamicResource ForegroundBrush}" FontSize="12" Margin="0,10,0,4" />
-                        <ComboBox x:Name="ShellCombo" />
+                        <ComboBox x:Name="ShellCombo">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="18" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0" Text="✓" FontWeight="Bold"
+                                                   VerticalAlignment="Center"
+                                                   Foreground="{DynamicResource AccentBrush}"
+                                                   Visibility="{Binding IsCurrentDefault, Converter={StaticResource BoolToVisibility}}" />
+                                        <TextBlock Grid.Column="1" Text="{Binding Name}" VerticalAlignment="Center" />
+                                    </Grid>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
 
                         <!-- Group -->
                         <TextBlock Text="{DynamicResource WorkspaceCreate_Group}"
