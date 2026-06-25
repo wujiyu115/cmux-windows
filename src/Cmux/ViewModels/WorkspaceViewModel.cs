@@ -298,6 +298,9 @@ public partial class WorkspaceViewModel : ObservableObject, IDisposable
     partial void OnStartDirectoryChanged(string? value)
     {
         Workspace.StartDirectory = value;
+        // Push to existing surfaces so new splits/tabs honor the updated directory.
+        foreach (var surface in Surfaces)
+            surface.UpdateStartDirectory(value);
     }
 
     private static bool IsPrivateUseGlyph(string? value)

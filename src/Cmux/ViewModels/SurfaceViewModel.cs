@@ -18,7 +18,7 @@ public partial class SurfaceViewModel : ObservableObject, IDisposable
     private readonly Dictionary<string, TerminalSession> _sessions = [];
     private readonly Dictionary<string, List<string>> _paneCommandHistory = [];
     private readonly Dictionary<string, string?> _paneShells = [];
-    private readonly string? _workspaceStartDirectory;
+    private string? _workspaceStartDirectory;
     private readonly string? _workspaceDefaultShell;
     private readonly Dictionary<string, string>? _workspaceEnvVars;
     private readonly HashSet<string> _daemonPanes = [];
@@ -185,6 +185,15 @@ public partial class SurfaceViewModel : ObservableObject, IDisposable
     public TerminalSession? GetSession(string paneId)
     {
         return _sessions.GetValueOrDefault(paneId);
+    }
+
+    /// <summary>
+    /// Updates the workspace start directory so subsequently created panes (splits,
+    /// new tabs) honor a working directory changed after this surface was created.
+    /// </summary>
+    public void UpdateStartDirectory(string? startDirectory)
+    {
+        _workspaceStartDirectory = startDirectory;
     }
 
     public string GetPaneTitle(string paneId, string? fallbackTitle)
@@ -592,7 +601,11 @@ public partial class SurfaceViewModel : ObservableObject, IDisposable
         if (newChild.PaneId != null)
         {
             var currentSession = GetSession(FocusedPaneId);
-            var cwd = currentSession?.WorkingDirectory;
+            // Honor the workspace's configured working directory for new panes when set;
+            // otherwise inherit the focused pane's live cwd (tmux-style).
+            var cwd = !string.IsNullOrWhiteSpace(_workspaceStartDirectory)
+                ? _workspaceStartDirectory
+                : currentSession?.WorkingDirectory;
             var effectiveShell = shell ?? _paneShells.GetValueOrDefault(FocusedPaneId);
             StartSession(newChild.PaneId, cwd, null, effectiveShell);
             FocusedPaneId = newChild.PaneId;
