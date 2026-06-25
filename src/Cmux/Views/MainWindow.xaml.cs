@@ -688,7 +688,7 @@ public partial class MainWindow : Window
         };
 
         if (dialog.ShowDialog() == true)
-            ViewModel.CreateNewWorkspace(dialog.WorkspaceName, dialog.SelectedShell, dialog.SelectedColor, dialog.SelectedGroupId);
+            ViewModel.CreateNewWorkspace(dialog.WorkspaceName, dialog.SelectedShell, dialog.SelectedColor, dialog.SelectedGroupId, dialog.SelectedWorkingDirectory);
     }
     private void MenuOpenKeyboardShortcuts_Click(object sender, RoutedEventArgs e)
     {

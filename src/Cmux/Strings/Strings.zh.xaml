@@ -151,6 +151,9 @@
     <system:String x:Key="WorkspaceCreate_Group">分组</system:String>
     <system:String x:Key="WorkspaceCreate_NoGroup">无分组</system:String>
     <system:String x:Key="WorkspaceCreate_Color">主题色</system:String>
+    <system:String x:Key="WorkspaceCreate_WorkingDirectory">工作目录</system:String>
+    <system:String x:Key="WorkspaceCreate_WorkingDirectoryHint">留空使用默认目录；支持 WSL 路径如 /home/user/project</system:String>
+    <system:String x:Key="WorkspaceCreate_Browse">浏览</system:String>
     <system:String x:Key="WorkspaceCreate_Create">创建</system:String>
     <system:String x:Key="WorkspaceCreate_Cancel">取消</system:String>
 

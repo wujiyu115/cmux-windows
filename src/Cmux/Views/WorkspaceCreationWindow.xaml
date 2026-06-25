@@ -1,7 +1,7 @@
 <Window x:Class="Cmux.Views.WorkspaceCreationWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="{DynamicResource WorkspaceCreate_Title}" Height="340" Width="420"
+        Title="{DynamicResource WorkspaceCreate_Title}" Height="460" Width="460"
         WindowStartupLocation="CenterOwner"
         WindowStyle="None" AllowsTransparency="True"
         Background="Transparent"
@@ -43,69 +43,81 @@
             <!-- Content -->
             <Grid Grid.Row="1" Margin="14">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <!-- Name -->
-                <TextBlock Grid.Row="0" Text="{DynamicResource WorkspaceCreate_Name}"
-                           Foreground="{DynamicResource ForegroundBrush}" FontSize="12" Margin="0,0,0,4" />
-                <TextBox x:Name="NameBox" Grid.Row="1" Style="{StaticResource CmuxTextBox}"
-                         KeyDown="NameBox_KeyDown" />
+                <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto"
+                              HorizontalScrollBarVisibility="Disabled">
+                    <StackPanel>
+                        <!-- Name -->
+                        <TextBlock Text="{DynamicResource WorkspaceCreate_Name}"
+                                   Foreground="{DynamicResource ForegroundBrush}" FontSize="12" Margin="0,0,0,4" />
+                        <TextBox x:Name="NameBox" Style="{StaticResource CmuxTextBox}"
+                                 KeyDown="NameBox_KeyDown" />
 
-                <!-- Default Terminal -->
-                <TextBlock Grid.Row="2" Text="{DynamicResource WorkspaceCreate_Shell}"
-                           Foreground="{DynamicResource ForegroundBrush}" FontSize="12" Margin="0,10,0,4" />
-                <ComboBox x:Name="ShellCombo" Grid.Row="3" />
+                        <!-- Default Terminal -->
+                        <TextBlock Text="{DynamicResource WorkspaceCreate_Shell}"
+                                   Foreground="{DynamicResource ForegroundBrush}" FontSize="12" Margin="0,10,0,4" />
+                        <ComboBox x:Name="ShellCombo" />
 
-                <!-- Group -->
-                <TextBlock Grid.Row="4" Text="{DynamicResource WorkspaceCreate_Group}"
-                           Foreground="{DynamicResource ForegroundBrush}" FontSize="12" Margin="0,10,0,4" />
-                <ComboBox x:Name="GroupCombo" Grid.Row="5" />
+                        <!-- Group -->
+                        <TextBlock Text="{DynamicResource WorkspaceCreate_Group}"
+                                   Foreground="{DynamicResource ForegroundBrush}" FontSize="12" Margin="0,10,0,4" />
+                        <ComboBox x:Name="GroupCombo" />
 
-                <!-- Accent Color -->
-                <TextBlock Grid.Row="6" Text="{DynamicResource WorkspaceCreate_Color}"
-                           Foreground="{DynamicResource ForegroundBrush}" FontSize="12" Margin="0,10,0,4" />
-                <StackPanel Grid.Row="7" Orientation="Horizontal" x:Name="ColorPanel">
-                    <Button Tag="#FF818CF8" Click="ColorPreset_Click" Style="{StaticResource IconButton}" Width="28" Height="28" Margin="0,0,4,0">
-                        <Ellipse Width="18" Height="18" Fill="#FF818CF8" />
-                    </Button>
-                    <Button Tag="#FF10B981" Click="ColorPreset_Click" Style="{StaticResource IconButton}" Width="28" Height="28" Margin="0,0,4,0">
-                        <Ellipse Width="18" Height="18" Fill="#FF10B981" />
-                    </Button>
-                    <Button Tag="#FFF59E0B" Click="ColorPreset_Click" Style="{StaticResource IconButton}" Width="28" Height="28" Margin="0,0,4,0">
-                        <Ellipse Width="18" Height="18" Fill="#FFF59E0B" />
-                    </Button>
-                    <Button Tag="#FFEF4444" Click="ColorPreset_Click" Style="{StaticResource IconButton}" Width="28" Height="28" Margin="0,0,4,0">
-                        <Ellipse Width="18" Height="18" Fill="#FFEF4444" />
-                    </Button>
-                    <Button Tag="#FF06B6D4" Click="ColorPreset_Click" Style="{StaticResource IconButton}" Width="28" Height="28" Margin="0,0,4,0">
-                        <Ellipse Width="18" Height="18" Fill="#FF06B6D4" />
-                    </Button>
-                    <Button Tag="#FFA855F7" Click="ColorPreset_Click" Style="{StaticResource IconButton}" Width="28" Height="28" Margin="0,0,4,0">
-                        <Ellipse Width="18" Height="18" Fill="#FFA855F7" />
-                    </Button>
-                    <Button Tag="#FF64748B" Click="ColorPreset_Click" Style="{StaticResource IconButton}" Width="28" Height="28" Margin="0,0,4,0">
-                        <Ellipse Width="18" Height="18" Fill="#FF64748B" />
-                    </Button>
-                    <Button Tag="#FFEC4899" Click="ColorPreset_Click" Style="{StaticResource IconButton}" Width="28" Height="28" Margin="0,0,4,0">
-                        <Ellipse Width="18" Height="18" Fill="#FFEC4899" />
-                    </Button>
-                    <Button Click="ColorCustom_Click" Style="{StaticResource IconButton}" Width="28" Height="28" ToolTip="Custom...">
-                        <TextBlock Text="＋" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource ForegroundBrush}" />
-                    </Button>
-                </StackPanel>
+                        <!-- Working Directory -->
+                        <TextBlock Text="{DynamicResource WorkspaceCreate_WorkingDirectory}"
+                                   Foreground="{DynamicResource ForegroundBrush}" FontSize="12" Margin="0,10,0,4" />
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBox x:Name="WorkingDirBox" Grid.Column="0" Style="{StaticResource CmuxTextBox}"
+                                     ToolTip="{DynamicResource WorkspaceCreate_WorkingDirectoryHint}" />
+                            <Button Grid.Column="1" Content="{DynamicResource WorkspaceCreate_Browse}"
+                                    Style="{StaticResource CmuxButton}" Padding="10,6" Margin="6,0,0,0"
+                                    Click="Browse_Click" />
+                        </Grid>
+
+                        <!-- Accent Color -->
+                        <TextBlock Text="{DynamicResource WorkspaceCreate_Color}"
+                                   Foreground="{DynamicResource ForegroundBrush}" FontSize="12" Margin="0,10,0,4" />
+                        <StackPanel Orientation="Horizontal" x:Name="ColorPanel">
+                            <Button Tag="#FF818CF8" Click="ColorPreset_Click" Style="{StaticResource IconButton}" Width="28" Height="28" Margin="0,0,4,0">
+                                <Ellipse Width="18" Height="18" Fill="#FF818CF8" />
+                            </Button>
+                            <Button Tag="#FF10B981" Click="ColorPreset_Click" Style="{StaticResource IconButton}" Width="28" Height="28" Margin="0,0,4,0">
+                                <Ellipse Width="18" Height="18" Fill="#FF10B981" />
+                            </Button>
+                            <Button Tag="#FFF59E0B" Click="ColorPreset_Click" Style="{StaticResource IconButton}" Width="28" Height="28" Margin="0,0,4,0">
+                                <Ellipse Width="18" Height="18" Fill="#FFF59E0B" />
+                            </Button>
+                            <Button Tag="#FFEF4444" Click="ColorPreset_Click" Style="{StaticResource IconButton}" Width="28" Height="28" Margin="0,0,4,0">
+                                <Ellipse Width="18" Height="18" Fill="#FFEF4444" />
+                            </Button>
+                            <Button Tag="#FF06B6D4" Click="ColorPreset_Click" Style="{StaticResource IconButton}" Width="28" Height="28" Margin="0,0,4,0">
+                                <Ellipse Width="18" Height="18" Fill="#FF06B6D4" />
+                            </Button>
+                            <Button Tag="#FFA855F7" Click="ColorPreset_Click" Style="{StaticResource IconButton}" Width="28" Height="28" Margin="0,0,4,0">
+                                <Ellipse Width="18" Height="18" Fill="#FFA855F7" />
+                            </Button>
+                            <Button Tag="#FF64748B" Click="ColorPreset_Click" Style="{StaticResource IconButton}" Width="28" Height="28" Margin="0,0,4,0">
+                                <Ellipse Width="18" Height="18" Fill="#FF64748B" />
+                            </Button>
+                            <Button Tag="#FFEC4899" Click="ColorPreset_Click" Style="{StaticResource IconButton}" Width="28" Height="28" Margin="0,0,4,0">
+                                <Ellipse Width="18" Height="18" Fill="#FFEC4899" />
+                            </Button>
+                            <Button Click="ColorCustom_Click" Style="{StaticResource IconButton}" Width="28" Height="28" ToolTip="Custom...">
+                                <TextBlock Text="＋" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource ForegroundBrush}" />
+                            </Button>
+                        </StackPanel>
+                    </StackPanel>
+                </ScrollViewer>
 
                 <!-- Buttons -->
-                <StackPanel Grid.Row="9" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,12,0,0">
+                <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,12,0,0">
                     <Button Content="{DynamicResource WorkspaceCreate_Cancel}" Style="{StaticResource CmuxButton}" Padding="12,6" Margin="0,0,8,0" Click="Cancel_Click" />
                     <Button Content="{DynamicResource WorkspaceCreate_Create}" Style="{StaticResource AccentButton}" Padding="14,6" Click="Create_Click" />
                 </StackPanel>

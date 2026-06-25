@@ -151,6 +151,9 @@
     <system:String x:Key="WorkspaceCreate_Group">Group</system:String>
     <system:String x:Key="WorkspaceCreate_NoGroup">No Group</system:String>
     <system:String x:Key="WorkspaceCreate_Color">Accent Color</system:String>
+    <system:String x:Key="WorkspaceCreate_WorkingDirectory">Working Directory</system:String>
+    <system:String x:Key="WorkspaceCreate_WorkingDirectoryHint">Leave empty for default; WSL paths like /home/user/project supported</system:String>
+    <system:String x:Key="WorkspaceCreate_Browse">Browse</system:String>
     <system:String x:Key="WorkspaceCreate_Create">Create</system:String>
     <system:String x:Key="WorkspaceCreate_Cancel">Cancel</system:String>
 

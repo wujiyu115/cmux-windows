@@ -14,6 +14,7 @@ public partial class WorkspaceCreationWindow : Window
     public string? SelectedShell { get; private set; }
     public string SelectedColor { get; private set; } = "#FF818CF8";
     public string? SelectedGroupId { get; private set; }
+    public string? SelectedWorkingDirectory { get; private set; }
 
     public WorkspaceCreationWindow(string defaultName, IEnumerable<WorkspaceGroup>? groups = null)
     {
@@ -61,8 +62,25 @@ public partial class WorkspaceCreationWindow : Window
     {
         SelectedShell = ShellCombo.SelectedValue as string;
         SelectedGroupId = GroupCombo.SelectedValue as string;
+        SelectedWorkingDirectory = string.IsNullOrWhiteSpace(WorkingDirBox.Text) ? null : WorkingDirBox.Text.Trim();
         DialogResult = true;
         Close();
+    }
+
+    private void Browse_Click(object sender, RoutedEventArgs e)
+    {
+        var dialog = new Microsoft.Win32.OpenFolderDialog
+        {
+            Title = LanguageService.Lang("WorkspaceCreate_WorkingDirectory"),
+        };
+
+        // Pre-select the current value if it points at a real directory.
+        var current = WorkingDirBox.Text.Trim();
+        if (!string.IsNullOrWhiteSpace(current) && System.IO.Directory.Exists(current))
+            dialog.InitialDirectory = current;
+
+        if (dialog.ShowDialog() == true && !string.IsNullOrWhiteSpace(dialog.FolderName))
+            WorkingDirBox.Text = dialog.FolderName;
     }
 
     private void Cancel_Click(object sender, RoutedEventArgs e)
