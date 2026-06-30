@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -37,6 +38,7 @@ public partial class WorkspaceCreationWindow : Window
         ShellCombo.ItemsSource = items;
         ShellCombo.SelectedValuePath = "Path";
         ShellCombo.SelectedIndex = 0;
+        ShellCombo.SelectionChanged += ShellCombo_SelectionChanged;
 
         var groupItems = new List<GroupDisplayItem>
         {
@@ -143,6 +145,41 @@ public partial class WorkspaceCreationWindow : Window
         }
     }
 
-    private record ShellDisplayItem(string Name, string? Path, bool IsCurrentDefault);
+    private void ShellCombo_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (ShellCombo.ItemsSource is not List<ShellDisplayItem> items)
+            return;
+        var selected = ShellCombo.SelectedItem as ShellDisplayItem;
+        foreach (var item in items)
+            item.IsCurrentDefault = item == selected;
+    }
+
+    private class ShellDisplayItem : INotifyPropertyChanged
+    {
+        public string Name { get; }
+        public string? Path { get; }
+
+        private bool _isCurrentDefault;
+        public bool IsCurrentDefault
+        {
+            get => _isCurrentDefault;
+            set
+            {
+                if (_isCurrentDefault == value) return;
+                _isCurrentDefault = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsCurrentDefault)));
+            }
+        }
+
+        public ShellDisplayItem(string name, string? path, bool isCurrentDefault)
+        {
+            Name = name;
+            Path = path;
+            _isCurrentDefault = isCurrentDefault;
+        }
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+    }
+
     private record GroupDisplayItem(string Name, string? Id);
 }

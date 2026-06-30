@@ -121,9 +121,7 @@ public partial class SurfaceTabBar : UserControl
             {
                 Header = shell.Name,
                 Tag = shell.Path,
-                Icon = isDefault
-                    ? new System.Windows.Controls.TextBlock { Text = "✓", FontWeight = FontWeights.Bold }
-                    : (object)shell.Icon,
+                Icon = isDefault ? "" : null,
                 InputGestureText = i < 9 ? $"Ctrl+Shift+{i + 1}" : null,
             };
             item.Click += (s, _) =>

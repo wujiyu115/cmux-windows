@@ -223,7 +223,7 @@ public partial class WorkspaceSidebarItem : UserControl
             Header = LanguageService.Lang("Workspace_ShellGlobalDefault"),
         };
         if (string.IsNullOrWhiteSpace(Vm.DefaultShell))
-            globalItem.Icon = new TextBlock { Text = "✓", FontWeight = FontWeights.Bold };
+            globalItem.Icon = "";
         globalItem.Click += (_, _) => Vm.DefaultShell = null;
         menu.Items.Add(globalItem);
 
@@ -237,10 +237,9 @@ public partial class WorkspaceSidebarItem : UserControl
                 Header = shell.Name,
                 Tag = shell.Path,
             };
-            if (string.Equals(Vm.DefaultShell, shell.Path, StringComparison.OrdinalIgnoreCase))
-                item.Icon = new TextBlock { Text = "✓", FontWeight = FontWeights.Bold };
-            else
-                item.Icon = new TextBlock { Text = shell.Icon, FontSize = 14 };
+            item.Icon = string.Equals(Vm.DefaultShell, shell.Path, StringComparison.OrdinalIgnoreCase)
+                ? ""
+                : null;
 
             item.Click += (s, _) =>
             {
