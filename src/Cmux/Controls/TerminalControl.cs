@@ -71,6 +71,9 @@ public class TerminalControl : FrameworkElement
     private Typeface? _typefaceBold;
     private Typeface? _typefaceItalic;
     private Typeface? _typefaceBoldItalic;
+    private readonly Dictionary<(bool bold, bool italic), GlyphTypeface?> _glyphTypefaceCache = [];
+    private readonly List<ushort> _glyphIndices = [];
+    private readonly List<double> _glyphAdvances = [];
     private readonly StringBuilder _textRunBuffer = new();
     private readonly List<int> _textRunWidths = [];
     private bool _suppressNextEnterTextInput;
@@ -162,6 +165,13 @@ public class TerminalControl : FrameworkElement
         AllowDrop = true;
 
         _selection.SelectionChanged += () => RequestRender(System.Windows.Threading.DispatcherPriority.Render);
+
+        // Renders are skipped while hidden; repaint when the pane becomes visible again.
+        IsVisibleChanged += (_, _) =>
+        {
+            if (IsVisible)
+                RequestRender(System.Windows.Threading.DispatcherPriority.Render);
+        };
 
         InputMethod.SetIsInputMethodEnabled(this, true);
         InputMethod.SetPreferredImeState(this, InputMethodState.DoNotCare);
@@ -338,7 +348,11 @@ public class TerminalControl : FrameworkElement
         }
     }
 
-    private void RequestRender(System.Windows.Threading.DispatcherPriority priority = System.Windows.Threading.DispatcherPriority.Background)
+    // Render priority (not Background): output redraw is the only high-frequency
+    // caller and at Background it was starved under load, leaving stale frames
+    // (残影) that cleared only on a forced repaint (window switch). The _renderQueued
+    // flag still coalesces bursts to ~one render per dispatcher frame.
+    private void RequestRender(System.Windows.Threading.DispatcherPriority priority = System.Windows.Threading.DispatcherPriority.Render)
     {
         if (Dispatcher.HasShutdownStarted || Dispatcher.HasShutdownFinished)
             return;
@@ -411,6 +425,7 @@ public class TerminalControl : FrameworkElement
         _typefaceBold = null;
         _typefaceItalic = null;
         _typefaceBoldItalic = null;
+        _glyphTypefaceCache.Clear();
     }
 
     private Typeface GetTypeface(bool bold, bool italic)
@@ -421,9 +436,28 @@ public class TerminalControl : FrameworkElement
         return _typefaceBoldItalic ??= new Typeface(new FontFamily(_theme.FontFamily), FontStyles.Italic, FontWeights.Bold, FontStretches.Normal);
     }
 
+    /// <summary>
+    /// Cached GlyphTypeface for the run's style, or null if the font can't provide
+    /// one (falls back to FormattedText). GlyphRun skips per-frame text shaping,
+    /// which is the main UI-thread cost that caused input/IME lag under heavy output.
+    /// </summary>
+    private GlyphTypeface? GetGlyphTypeface(bool bold, bool italic)
+    {
+        var key = (bold, italic);
+        if (_glyphTypefaceCache.TryGetValue(key, out var cached))
+            return cached;
+
+        GetTypeface(bold, italic).TryGetGlyphTypeface(out var gtf);
+        _glyphTypefaceCache[key] = gtf; // may be null; cached to avoid retrying
+        return gtf;
+    }
+
     private void Render()
     {
         if (_session == null) return;
+        // Skip hidden/zero-size panes: no point rebuilding a full grid nobody sees.
+        // Becoming visible re-renders via IsVisibleChanged / OnRenderSizeChanged.
+        if (!IsVisible || ActualWidth <= 0 || ActualHeight <= 0) return;
 
         try
         {
@@ -711,7 +745,10 @@ public class TerminalControl : FrameworkElement
 
         if (hasWideChars)
         {
-            // Draw each character individually at its correct cell position
+            // Draw each character individually at its correct cell position, clipped to
+            // its cell box. A CJK glyph pulled from font fallback is often wider than
+            // two mono cells; without the clip its ink bleeds over the next cell's text
+            // (the "方案dering" overlap).
             double charX = x;
             string runStr = _textRunBuffer.ToString();
             for (int i = 0; i < runStr.Length; i++)
@@ -725,12 +762,16 @@ public class TerminalControl : FrameworkElement
                     _fontSize,
                     brush,
                     dpi);
+                dc.PushClip(new RectangleGeometry(new Rect(charX, y, charCellWidth, _cellHeight)));
                 dc.DrawText(charText, new Point(charX, y));
+                dc.Pop();
                 charX += charCellWidth;
             }
         }
-        else
+        else if (!TryDrawGlyphRun(dc, x, y, dpi, brush, bold, italic))
         {
+            // Font can't supply glyphs for every char (e.g. a symbol not in the map):
+            // fall back to FormattedText for the whole run.
             var text = new FormattedText(
                 _textRunBuffer.ToString(),
                 CultureInfo.CurrentCulture,
@@ -755,6 +796,40 @@ public class TerminalControl : FrameworkElement
             pen.Freeze();
             dc.DrawLine(pen, new Point(x, y + _cellHeight / 2), new Point(x + runWidth, y + _cellHeight / 2));
         }
+    }
+
+    /// <summary>
+    /// Draws the current narrow-cell run as a single GlyphRun (no per-frame text
+    /// shaping). Returns false if the font lacks a glyph for any character in the
+    /// run, in which case the caller falls back to FormattedText.
+    /// </summary>
+    private bool TryDrawGlyphRun(DrawingContext dc, double x, double y, double dpi, Brush brush, bool bold, bool italic)
+    {
+        var gtf = GetGlyphTypeface(bold, italic);
+        if (gtf == null) return false;
+
+        _glyphIndices.Clear();
+        _glyphAdvances.Clear();
+
+        for (int i = 0; i < _textRunBuffer.Length; i++)
+        {
+            if (!gtf.CharacterToGlyphMap.TryGetValue(_textRunBuffer[i], out var gi))
+                return false; // unmapped char (e.g. surrogate/symbol) — let caller fall back
+            _glyphIndices.Add(gi);
+            _glyphAdvances.Add(_textRunWidths[i] * _cellWidth);
+        }
+
+        if (_glyphIndices.Count == 0) return true;
+
+        double baseline = y + gtf.Baseline * _fontSize;
+        var run = new GlyphRun(
+            gtf, 0, false, _fontSize, (float)dpi,
+            _glyphIndices.ToArray(),
+            new Point(x, baseline),
+            _glyphAdvances.ToArray(),
+            null, null, null, null, null, null);
+        dc.DrawGlyphRun(brush, run);
+        return true;
     }
 
     private TerminalColor ResolveColor(TerminalColor c)
